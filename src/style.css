@@ -170,6 +170,12 @@ body {
   height: 100%;
   object-fit: cover;
   display: block;
+  opacity: 0; /* Initially hidden to show poster */
+  transition: opacity 200ms ease;
+}
+
+.reel-media-wrapper.playing .reel-video {
+  opacity: 1; /* Show video when playing */
 }
 
 /* Press/source label for press releases */
@@ -3484,7 +3490,7 @@ body.menu-open {
 .parallel-video-section {
   position: relative;
   width: 100%;
-  height: 400px; /* Fixed height for horizontal video display */
+  height: 100vh; /* Full screen height for cinematic video display */
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -3492,8 +3498,7 @@ body.menu-open {
 }
 
 .parallel-video-section.full-video-bg {
-  min-height: 400px;
-  max-height: 500px;
+  min-height: 100vh;
 }
 
 .video-background-wrapper {
@@ -3565,9 +3570,8 @@ body.menu-open {
 
 @media (max-width: 1024px) and (min-width: 769px) {
   .parallel-video-section {
-    height: 350px; /* Fixed height for horizontal video display on tablet */
-    min-height: 350px;
-    max-height: 400px;
+    height: 100vh; /* Full screen height on tablet for better video experience */
+    min-height: 100vh;
   }
 
   .video-background-wrapper {
