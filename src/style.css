@@ -401,7 +401,7 @@ nav a:hover {
   flex: 1;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start; /* Align content to the right on desktop */
   padding: 0 10%;
   position: relative;
   width: 100vw;
