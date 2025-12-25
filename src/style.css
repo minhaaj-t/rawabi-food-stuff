@@ -1114,9 +1114,16 @@ p {
   position: relative;
 }
 
-.about-section .btn-box .btn {
-  margin-top: 0;
-}
+  .about-section .btn-box .btn {
+    margin-top: 0;
+    max-width: 200px; /* Further reduced width */
+  }
+
+  @media (min-width: 1200px) {
+    .about-section .btn-box .btn {
+      max-width: 250px; /* Further reduced width on very wide screens */
+    }
+  }
 
 .about-section .content-column {
   position: relative;
