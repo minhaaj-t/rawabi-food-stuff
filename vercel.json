@@ -13,5 +13,13 @@
         }
       ]
     }
+  ],
+  "rewrites": [
+    { "source": "/products", "destination": "/products.html" },
+    { "source": "/contact", "destination": "/contact.html" },
+    { "source": "/about", "destination": "/about.html" },
+    { "source": "/cookies", "destination": "/cookies.html" },
+    { "source": "/terms", "destination": "/terms.html" },
+    { "source": "/privacy", "destination": "/privacy.html" }
   ]
 }
