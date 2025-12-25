@@ -55,10 +55,132 @@ const featuredProducts = [
     type: 'Durable Goods',
     quantities: ['770 ML', '1.5 LTR', '1.8 LTR', '3 LTR', '5 LTR'],
     featured: true
+  },
+  {
+    id: 4,
+    title: 'Chukku Kappy',
+    image: '/public/assets/images/archieves/kerala-kitchen/4.png',
+    type: 'Durable Goods',
+    quantities: ['150 GM'],
+    brand: 'Kerala Kitchen',
+    featured: true
+  },
+  {
+    id: 5,
+    title: 'Coconut Oil',
+    image: '/public/assets/images/archieves/kerala-kitchen/5.png',
+    type: 'Durable Goods',
+    quantities: ['500 ML', '1 LTR', '2 LTR', '5 LTR'],
+    brand: 'Kerala Kitchen',
+    featured: true
+  },
+  {
+    id: 6,
+    title: 'Appam/ Pathirippodi',
+    image: '/public/assets/images/archieves/kerala-kitchen/6.png',
+    type: 'Durable Goods',
+    quantities: ['1 KG'],
+    brand: 'Kerala Kitchen',
+    featured: true
+  },
+  {
+    id: 7,
+    title: 'Biriyani Masala',
+    image: '/public/assets/images/archieves/kerala-kitchen/7.png',
+    type: 'Durable Goods',
+    quantities: ['100 GM'],
+    brand: 'Kerala Kitchen',
+    featured: true
+  },
+  {
+    id: 8,
+    title: 'Chana Masala',
+    image: '/public/assets/images/archieves/kerala-kitchen/8.png',
+    type: 'Durable Goods',
+    quantities: ['100 GM'],
+    brand: 'Kerala Kitchen',
+    featured: true
+  },
+  {
+    id: 9,
+    title: 'Vegitable Masala',
+    image: '/public/assets/images/archieves/kerala-kitchen/9.png',
+    type: 'Durable Goods',
+    quantities: ['100 GM'],
+    brand: 'Kerala Kitchen',
+    featured: true
+  },
+  {
+    id: 10,
+    title: 'Chat Masala',
+    image: '/public/assets/images/archieves/kerala-kitchen/10.png',
+    type: 'Durable Goods',
+    quantities: ['100 GM'],
+    brand: 'Kerala Kitchen',
+    featured: true
+  },
+  {
+    id: 11,
+    title: 'Rasam Powder',
+    image: '/public/assets/images/archieves/kerala-kitchen/11.png',
+    type: 'Durable Goods',
+    quantities: ['100 GM'],
+    brand: 'Kerala Kitchen',
+    featured: true
+  },
+  {
+    id: 12,
+    title: 'Sambar Masala',
+    image: '/public/assets/images/archieves/kerala-kitchen/12.png',
+    type: 'Durable Goods',
+    quantities: ['200 GM', '1 KG'],
+    brand: 'Kerala Kitchen',
+    featured: true
+  },
+  {
+    id: 13,
+    title: 'Dosa Podi',
+    image: '/public/assets/images/archieves/kerala-kitchen/13.png',
+    type: 'Durable Goods',
+    quantities: ['1 KG'],
+    brand: 'Kerala Kitchen',
+    featured: true
   }
 ];
 
 const MAX_VISIBLE = 8;
+
+// Update the browser URL to reflect current brand filter (no reload)
+function setURLFilter(filterName) {
+  try {
+    const url = new URL(window.location.href);
+    if (filterName && filterName !== 'ALL') {
+      url.searchParams.set('brand', filterName);
+    } else {
+      url.searchParams.delete('brand');
+    }
+    history.replaceState(null, '', url.toString());
+  } catch (e) {
+    // graceful fallback: use hash
+    if (filterName && filterName !== 'ALL') {
+      window.location.hash = `brand=${encodeURIComponent(filterName)}`;
+    } else {
+      history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+  }
+}
+
+function getURLFilter() {
+  const params = new URLSearchParams(window.location.search);
+  const brand = params.get('brand');
+  if (brand) return brand;
+  // fallback to hash parsing
+  if (window.location.hash) {
+    const m = window.location.hash.match(/brand=([^&]+)/);
+    if (m) return decodeURIComponent(m[1]);
+  }
+  return null;
+}
 
 function createAllButton() {
   // Create a single circular "ALL" control styled like logos
@@ -74,6 +196,9 @@ function createAllButton() {
     const allButtons = document.querySelectorAll('.logo-circle.filter-all');
     allButtons.forEach(btn => btn.classList.add('active'));
     renderLogos('ALL', false);
+    // Show all products
+    renderProductCards();
+    setURLFilter('ALL');
   });
 
   return allBtn;
@@ -87,10 +212,11 @@ function renderLogos(filter = 'ALL', expanded = false) {
   const allBtn = createAllButton();
   grid.appendChild(allBtn);
 
-  const filtered = filter === 'ALL' ? logos : logos.filter(l => l.name === filter);
+  // Always display the full logos list in the grid; use `filter` only to mark the active brand.
+  const displayLogos = logos;
 
-  const showCount = expanded ? filtered.length : Math.min(filtered.length, MAX_VISIBLE - 1); // -1 because ALL button takes one spot
-  filtered.slice(0, showCount).forEach((logo, idx) => {
+  const showCount = expanded ? displayLogos.length : Math.min(displayLogos.length, MAX_VISIBLE - 1); // -1 because ALL button takes one spot
+  displayLogos.slice(0, showCount).forEach((logo, idx) => {
     const item = document.createElement('div');
     item.className = 'logo-circle';
     item.title = logo.name;
@@ -98,15 +224,27 @@ function renderLogos(filter = 'ALL', expanded = false) {
     img.src = logo.src;
     img.alt = logo.name;
     item.appendChild(img);
+    // mark active if this matches the current filter
+    if (filter !== 'ALL' && logo.name === filter) {
+      item.classList.add('active');
+    }
+
+    // clicking a logo filters product cards to that brand
+    item.addEventListener('click', () => {
+      // re-render logos with this item marked active and show its products
+      renderLogos(logo.name, false);
+      renderProductCards(logo.name);
+      setURLFilter(logo.name);
+    });
     grid.appendChild(item);
   });
 
   // If there are more items and not expanded, render the "+N" circle
-  if (!expanded && filtered.length > MAX_VISIBLE - 1) {
+  if (!expanded && displayLogos.length > MAX_VISIBLE - 1) {
     const more = document.createElement('button');
     more.className = 'logo-circle more-btn';
     more.type = 'button';
-    more.innerHTML = `<span class="more-count">+${filtered.length - (MAX_VISIBLE - 1)}</span>`;
+    more.innerHTML = `<span class="more-count">+${displayLogos.length - (MAX_VISIBLE - 1)}</span>`;
     more.addEventListener('click', () => {
       renderLogos(filter, true);
     });
@@ -114,13 +252,17 @@ function renderLogos(filter = 'ALL', expanded = false) {
   }
 }
 
-function renderProductCards() {
+function renderProductCards(filterBrand = null) {
   const grid = document.getElementById('productsCardsGrid');
   if (!grid) return;
 
   grid.innerHTML = '';
 
-  featuredProducts.forEach((product, index) => {
+  const toRender = filterBrand
+    ? featuredProducts.filter(p => p.brand === filterBrand)
+    : featuredProducts;
+
+  toRender.forEach((product, index) => {
     const card = document.createElement('div');
     card.className = 'product-card';
 
@@ -147,9 +289,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (filterBar) {
     filterBar.remove();
   }
-
-  renderLogos('ALL', false);
-  renderProductCards();
+  const initialFilter = getURLFilter() || 'ALL';
+  renderLogos(initialFilter, false);
+  renderProductCards(getURLFilter() || null);
 });
 
 

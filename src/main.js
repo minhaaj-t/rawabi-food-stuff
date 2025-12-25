@@ -226,9 +226,9 @@ document.addEventListener('DOMContentLoaded', () => {
   );
   animatedElements.forEach(el => observer.observe(el));
 
-  // Enhanced Parallax scroll for hero section
+  // Enhanced Parallax scroll for hero section (desktop only)
   const heroSection = document.querySelector('.hero');
-  if (heroSection) {
+  if (heroSection && window.innerWidth > 1024) {
     let ticking = false;
 
     const updateParallax = () => {
@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const heroHeight = heroSection.offsetHeight;
       const scrollPercent = scrollPosition / heroHeight;
 
-      // Parallax background
+      // Parallax background (only for desktop)
       heroSection.style.backgroundPositionY = `${-scrollPosition * 0.3}px`;
 
       // Fade out hero content as user scrolls
@@ -337,16 +337,28 @@ document.addEventListener('DOMContentLoaded', () => {
     updateAboutParallax();
   }
 
-  // Brands Carousel Panel - 3D Carousel Effect
+  // Brands Carousel Panel - Responsive Carousel Effect
   const brandsCarouselPanel = document.getElementById('brands-carousel-panel');
-  if (brandsCarouselPanel) {
-    const carouselContainer = brandsCarouselPanel.querySelector('.brands-carousel-container');
-    const brandCards = brandsCarouselPanel.querySelectorAll('.brand-card');
+  const mobileBrandsCarouselPanel = document.getElementById('brands-carousel-panel-mobile');
+
+  // Function to initialize carousel for a given panel
+  function initializeCarousel(carouselPanel) {
+    console.log('initializeCarousel called for panel:', carouselPanel.id);
+
+    const carouselContainer = carouselPanel.querySelector('.brands-carousel-container');
+    const brandCards = carouselPanel.querySelectorAll('.brand-card');
+    const carouselWrapper = carouselPanel.querySelector('.brands-carousel-wrapper');
+
+    console.log('Found', brandCards.length, 'brand cards in', carouselPanel.id);
     let isDragging = false;
     let startX = 0;
     let currentX = 0;
     let currentIndex = 3; // Start at center card (index 3) to show 3 logos on each side
     const totalCards = 7;
+
+    // Check if we're on mobile/tablet (simplified carousel)
+    const isSimplifiedCarousel = window.innerWidth <= 1024;
+    console.log('Carousel panel:', carouselPanel.id, 'isSimplifiedCarousel:', isSimplifiedCarousel, 'window width:', window.innerWidth);
 
     // Array of all available logo URLs (at least 15 for 3 categories)
     const allLogos = [
@@ -420,202 +432,423 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize carousel positions
     function updateCarouselPositions() {
-      brandCards.forEach((card, index) => {
-        const offset = index - currentIndex;
-        const absOffset = Math.abs(offset);
-        const img = card.querySelector('.brand-card-image');
-        
-        // Change image based on position
-        if (img) {
-          const actualLogoIndex = (currentIndex + offset + allLogos.length) % allLogos.length;
-          const logoSource = allLogos[actualLogoIndex];
+      if (isSimplifiedCarousel) {
+        // Simplified carousel for mobile/tablet - just update images
+        brandCards.forEach((card, index) => {
+          const img = card.querySelector('.brand-card-image');
+
+          if (img) {
+            const actualLogoIndex = (currentLogoSet * 7 + index) % allLogos.length;
+            const logoSource = allLogos[actualLogoIndex];
+
+            // Check if this card should show product image (center logic simplified)
+            const centerIndex = Math.floor(brandCards.length / 2);
+            if (index === centerIndex) {
+              card.classList.add('center-card');
+              const mappedProductImage = logoToProductMapping[logoSource] || defaultProductImageUrl;
+              if (img.src !== mappedProductImage) {
+                img.src = mappedProductImage;
+                img.alt = 'Product Image';
+              }
+            } else {
+              card.classList.remove('center-card');
+              if (img.src !== logoSource) {
+                img.src = logoSource;
+                img.alt = 'Brand Logo';
+              }
+            }
+          }
+        });
+      } else {
+        // Desktop 3D carousel effect
+        brandCards.forEach((card, index) => {
+          const offset = index - currentIndex;
+          const absOffset = Math.abs(offset);
+          const img = card.querySelector('.brand-card-image');
+
+          // Change image based on position
+          if (img) {
+            const actualLogoIndex = (currentIndex + offset + allLogos.length) % allLogos.length;
+            const logoSource = allLogos[actualLogoIndex];
+
+            if (offset === 0) {
+              // Center card - show product image and add center-card class
+              card.classList.add('center-card');
+              // Use mapped product image or default based on the logo
+              const mappedProductImage = logoToProductMapping[logoSource] || defaultProductImageUrl;
+              if (img.src !== mappedProductImage) {
+                img.src = mappedProductImage;
+                img.alt = 'Product Image';
+              }
+            } else {
+              // Side cards - remove center-card class and show original logo
+              card.classList.remove('center-card');
+              if (img.src !== logoSource) {
+                img.src = logoSource;
+                img.alt = 'Brand Logo';
+              }
+            }
+          }
+
+          // Calculate position and scale based on offset
+          let left = 50; // Start at center (50%)
+          let scale = 1;
+          let zIndex = 10;
+          let opacity = 1;
+          let width = 321;
+          let height = 321;
+
+          const baseWidth = 400; // Max width for the center card (increased)
+          const baseHeight = 400; // Max height for the center card (increased)
+
+          // Pixel offsets from center for proper spacing - wider for desktop
+          const innerOffset1 = 300; // Distance for first side logos
+          const innerOffset2 = 500; // Distance for second side logos
+          const innerOffset3 = 650; // Distance for third side logos
 
           if (offset === 0) {
-            // Center card - show product image and add center-card class
+            // Center card
+            scale = 1;
+            zIndex = 10;
+            opacity = 1;
+            width = baseWidth;
+            height = baseHeight;
+            left = '50%';
+          } else if (absOffset === 1) {
+            // First side cards (index 2 and 4 when center is 3)
+            scale = 0.75;
+            zIndex = 9;
+            opacity = 0.7;
+            width = baseWidth * 0.75;
+            height = baseHeight * 0.75;
+            left = offset > 0 ? `calc(50% + ${innerOffset1}px)` : `calc(50% - ${innerOffset1}px)`;
+          } else if (absOffset === 2) {
+            // Second side cards (index 1 and 5 when center is 3)
+            scale = 0.55;
+            zIndex = 8;
+            opacity = 0.5;
+            width = baseWidth * 0.55;
+            height = baseHeight * 0.55;
+            left = offset > 0 ? `calc(50% + ${innerOffset2}px)` : `calc(50% - ${innerOffset2}px)`;
+          } else if (absOffset === 3) {
+            // Third side cards (index 0 and 6 when center is 3)
+            scale = 0.4;
+            zIndex = 7;
+            opacity = 0.3;
+            width = baseWidth * 0.4;
+            height = baseHeight * 0.4;
+            left = offset > 0 ? `calc(50% + ${innerOffset3}px)` : `calc(50% - ${innerOffset3}px)`;
+          } else {
+            // Farthest cards (barely visible or off-screen)
+            scale = 0.2;
+            zIndex = 6;
+            opacity = 0.1;
+            width = baseWidth * 0.2;
+            height = baseHeight * 0.2;
+            left = offset > 0 ? `calc(50% + ${innerOffset3 + 150}px)` : `calc(50% - ${innerOffset3 + 150}px)`;
+          }
+
+          card.style.left = left;
+          card.style.width = `${width}px`;
+          card.style.height = `${height}px`;
+          card.style.transform = `translate(-50%, -50%) scale(${scale})`;
+          card.style.zIndex = zIndex;
+          card.style.opacity = opacity;
+        });
+      }
+    }
+
+    if (!isSimplifiedCarousel) {
+      // Mouse events for desktop only
+      carouselContainer.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        startX = e.clientX;
+        carouselContainer.style.cursor = 'grabbing';
+      });
+
+      document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        currentX = e.clientX - startX;
+
+        // Calculate rotation based on drag distance
+        const dragThreshold = 100;
+        if (Math.abs(currentX) > dragThreshold) {
+          if (currentX > 0) {
+            // Swipe right - previous card (infinite scroll)
+            currentIndex = currentIndex > 0 ? currentIndex - 1 : totalCards - 1;
+            startX = e.clientX;
+            updateCarouselPositions();
+          } else if (currentX < 0) {
+            // Swipe left - next card (infinite scroll)
+            currentIndex = currentIndex < totalCards - 1 ? currentIndex + 1 : 0;
+            startX = e.clientX;
+            updateCarouselPositions();
+          }
+        }
+      });
+
+      document.addEventListener('mouseup', () => {
+        if (isDragging) {
+          isDragging = false;
+          carouselContainer.style.cursor = 'grab';
+          currentX = 0;
+        }
+      });
+    } else {
+      // Mobile/tablet: Add scroll snap and center detection
+      carouselWrapper.style.scrollBehavior = 'smooth';
+      carouselWrapper.style.scrollSnapType = 'x mandatory';
+
+      let currentCenterCard = brandCards[Math.floor(brandCards.length / 2)]; // Start with middle card
+      console.log('Mobile carousel initialized with', brandCards.length, 'cards, starting center:', Math.floor(brandCards.length / 2));
+
+      // Function to find center card
+      function findCenterCard() {
+        const wrapperRect = carouselWrapper.getBoundingClientRect();
+        const wrapperCenter = wrapperRect.left + wrapperRect.width / 2;
+
+        let closestCard = null;
+        let closestDistance = Infinity;
+
+        brandCards.forEach((card) => {
+          const cardRect = card.getBoundingClientRect();
+          const cardCenter = cardRect.left + cardRect.width / 2;
+          const distance = Math.abs(wrapperCenter - cardCenter);
+
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            closestCard = card;
+          }
+        });
+
+        return closestCard;
+      }
+
+      // Function to update card images based on center card
+      function updateCenterCardImages(centerCard) {
+        currentCenterCard = centerCard;
+
+        brandCards.forEach((card, index) => {
+          card.classList.remove('center-card');
+
+          // Get the image element for this card
+          const img = card.querySelector('.brand-card-image');
+          if (!img) return;
+
+          // Get the actual logo index based on current set and position
+          const actualLogoIndex = (currentLogoSet * brandCards.length + index) % allLogos.length;
+          const logoSource = allLogos[actualLogoIndex];
+
+          if (card === centerCard) {
+            // This is the center card - show product image
             card.classList.add('center-card');
-            // Use mapped product image or default based on the logo
             const mappedProductImage = logoToProductMapping[logoSource] || defaultProductImageUrl;
             if (img.src !== mappedProductImage) {
               img.src = mappedProductImage;
               img.alt = 'Product Image';
             }
           } else {
-            // Side cards - remove center-card class and show original logo
-            card.classList.remove('center-card');
+            // This is a side card - show brand logo
             if (img.src !== logoSource) {
               img.src = logoSource;
               img.alt = 'Brand Logo';
             }
           }
+        });
+      }
+
+      // Add scroll event listener to detect center card
+      carouselWrapper.addEventListener('scroll', () => {
+        const centerCard = findCenterCard();
+        if (centerCard && centerCard !== currentCenterCard) {
+          console.log('Scroll detected center card change');
+          updateCenterCardImages(centerCard);
         }
-        
-        // Calculate position and scale based on offset
-        let left = 50; // Start at center (50%)
-        let scale = 1;
-        let zIndex = 10;
-        let opacity = 1;
-        let width = 321;
-        let height = 321;
-
-        const baseWidth = 400; // Max width for the center card (increased)
-        const baseHeight = 400; // Max height for the center card (increased)
-        
-        // Pixel offsets from center for proper spacing - wider for desktop
-        const innerOffset1 = 300; // Distance for first side logos
-        const innerOffset2 = 500; // Distance for second side logos
-        const innerOffset3 = 650; // Distance for third side logos
-
-        if (offset === 0) {
-          // Center card
-          scale = 1;
-          zIndex = 10;
-          opacity = 1;
-          width = baseWidth;
-          height = baseHeight;
-          left = '50%';
-        } else if (absOffset === 1) {
-          // First side cards (index 2 and 4 when center is 3)
-          scale = 0.75;
-          zIndex = 9;
-          opacity = 0.7;
-          width = baseWidth * 0.75;
-          height = baseHeight * 0.75;
-          left = offset > 0 ? `calc(50% + ${innerOffset1}px)` : `calc(50% - ${innerOffset1}px)`;
-        } else if (absOffset === 2) {
-          // Second side cards (index 1 and 5 when center is 3)
-          scale = 0.55;
-          zIndex = 8;
-          opacity = 0.5;
-          width = baseWidth * 0.55;
-          height = baseHeight * 0.55;
-          left = offset > 0 ? `calc(50% + ${innerOffset2}px)` : `calc(50% - ${innerOffset2}px)`;
-        } else if (absOffset === 3) {
-          // Third side cards (index 0 and 6 when center is 3)
-          scale = 0.4;
-          zIndex = 7;
-          opacity = 0.3;
-          width = baseWidth * 0.4;
-          height = baseHeight * 0.4;
-          left = offset > 0 ? `calc(50% + ${innerOffset3}px)` : `calc(50% - ${innerOffset3}px)`;
-        } else {
-          // Farthest cards (barely visible or off-screen)
-          scale = 0.2;
-          zIndex = 6;
-          opacity = 0.1;
-          width = baseWidth * 0.2;
-          height = baseHeight * 0.2;
-          left = offset > 0 ? `calc(50% + ${innerOffset3 + 150}px)` : `calc(50% - ${innerOffset3 + 150}px)`;
-        }
-
-        card.style.left = left;
-        card.style.width = `${width}px`;
-        card.style.height = `${height}px`;
-        card.style.transform = `translate(-50%, -50%) scale(${scale})`;
-        card.style.zIndex = zIndex;
-        card.style.opacity = opacity;
       });
+
+      // Add navigation buttons for mobile carousel
+      const prevBtn = carouselPanel.querySelector('.carousel-prev-btn');
+      const nextBtn = carouselPanel.querySelector('.carousel-next-btn');
+
+      let isScrolling = false; // Prevent multiple simultaneous scrolls
+
+      if (prevBtn && nextBtn) {
+        // Function to scroll to a specific card and update center tracking
+        function scrollToCard(cardIndex) {
+          if (isScrolling) return; // Prevent multiple simultaneous scrolls
+
+          // Ensure cardIndex is within bounds
+          const safeIndex = Math.max(0, Math.min(cardIndex, brandCards.length - 1));
+          const card = brandCards[safeIndex];
+          if (card) {
+            console.log('Scrolling to card index:', safeIndex);
+            isScrolling = true;
+
+            card.scrollIntoView({
+              behavior: 'smooth',
+              block: 'nearest',
+              inline: 'center'
+            });
+
+            // Update current center card after a short delay to allow scroll to complete
+            setTimeout(() => {
+              updateCenterCardImages(card);
+              isScrolling = false;
+            }, 300); // Match the CSS transition duration
+          } else {
+            console.warn('Could not find card at index:', safeIndex);
+            isScrolling = false;
+          }
+        }
+
+        // Previous button - wrap around from first to last
+        prevBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const currentCenterIndex = Array.from(brandCards).indexOf(currentCenterCard);
+          const prevIndex = currentCenterIndex > 0 ? currentCenterIndex - 1 : brandCards.length - 1;
+          console.log('Previous button: currentIndex', currentCenterIndex, '-> prevIndex', prevIndex);
+          scrollToCard(prevIndex);
+        });
+
+        // Next button - wrap around from last to first
+        nextBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const currentCenterIndex = Array.from(brandCards).indexOf(currentCenterCard);
+          const nextIndex = currentCenterIndex < brandCards.length - 1 ? currentCenterIndex + 1 : 0;
+          console.log('Next button: currentIndex', currentCenterIndex, '-> nextIndex', nextIndex);
+          scrollToCard(nextIndex);
+        });
+      }
+
+      // Initialize with center card
+      updateCenterCardImages(currentCenterCard);
     }
 
-    // Mouse events
-    carouselContainer.addEventListener('mousedown', (e) => {
-      isDragging = true;
-      startX = e.clientX;
-      carouselContainer.style.cursor = 'grabbing';
-    });
-
-    document.addEventListener('mousemove', (e) => {
-      if (!isDragging) return;
-      currentX = e.clientX - startX;
-
-      // Calculate rotation based on drag distance
-      const dragThreshold = 100;
-      if (Math.abs(currentX) > dragThreshold) {
-        if (currentX > 0) {
-          // Swipe right - previous card (infinite scroll)
-          currentIndex = currentIndex > 0 ? currentIndex - 1 : totalCards - 1;
-          startX = e.clientX;
-          updateCarouselPositions();
-        } else if (currentX < 0) {
-          // Swipe left - next card (infinite scroll)
-          currentIndex = currentIndex < totalCards - 1 ? currentIndex + 1 : 0;
-          startX = e.clientX;
-          updateCarouselPositions();
-        }
-      }
-    });
-
-    document.addEventListener('mouseup', () => {
-      if (isDragging) {
-        isDragging = false;
-        carouselContainer.style.cursor = 'grab';
-        currentX = 0;
-      }
-    });
-
-    // Touch events for mobile
+    // Touch events for mobile (enhanced swipe support)
     let touchStartX = 0;
+    let touchStartY = 0;
     let touchEndX = 0;
+    let isSwipe = false;
 
     carouselContainer.addEventListener('touchstart', (e) => {
       touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      isSwipe = false;
+    });
+
+    carouselContainer.addEventListener('touchmove', (e) => {
+      if (!isSwipe) {
+        const touchX = e.touches[0].clientX;
+        const touchY = e.touches[0].clientY;
+        const deltaX = Math.abs(touchX - touchStartX);
+        const deltaY = Math.abs(touchY - touchStartY);
+
+        // If horizontal movement is greater, it's a swipe
+        if (deltaX > deltaY && deltaX > 10) {
+          isSwipe = true;
+          e.preventDefault(); // Prevent default scrolling
+        }
+      }
     });
 
     carouselContainer.addEventListener('touchend', (e) => {
-      touchEndX = e.changedTouches[0].clientX;
-      handleSwipe();
+      if (!isSimplifiedCarousel) {
+        touchEndX = e.changedTouches[0].clientX;
+        handleSwipe();
+      }
     });
 
     function handleSwipe() {
+      if (isScrolling) return; // Prevent swipe during programmatic scrolling
+
       const swipeThreshold = 50;
       const diff = touchStartX - touchEndX;
 
       if (Math.abs(diff) > swipeThreshold) {
+        isScrolling = true;
+
         if (diff > 0) {
-          // Swipe left - next card (infinite scroll)
-          currentIndex = currentIndex < totalCards - 1 ? currentIndex + 1 : 0;
+          // Swipe left - next card (wrap around from last to first)
+          const currentCenterIndex = Array.from(brandCards).indexOf(currentCenterCard);
+          const nextIndex = currentCenterIndex < brandCards.length - 1 ? currentCenterIndex + 1 : 0;
+          const nextCard = brandCards[nextIndex];
+          if (nextCard) {
+            console.log('Swipe left to card:', nextIndex);
+            nextCard.scrollIntoView({
+              behavior: 'smooth',
+              block: 'nearest',
+              inline: 'center'
+            });
+            // Update center card tracking after delay
+            setTimeout(() => {
+              updateCenterCardImages(nextCard);
+              isScrolling = false;
+            }, 300);
+          } else {
+            isScrolling = false;
+          }
         } else if (diff < 0) {
-          // Swipe right - previous card (infinite scroll)
-          currentIndex = currentIndex > 0 ? currentIndex - 1 : totalCards - 1;
+          // Swipe right - previous card (wrap around from first to last)
+          const currentCenterIndex = Array.from(brandCards).indexOf(currentCenterCard);
+          const prevIndex = currentCenterIndex > 0 ? currentCenterIndex - 1 : brandCards.length - 1;
+          const prevCard = brandCards[prevIndex];
+          if (prevCard) {
+            console.log('Swipe right to card:', prevIndex);
+            prevCard.scrollIntoView({
+              behavior: 'smooth',
+              block: 'nearest',
+              inline: 'center'
+            });
+            // Update center card tracking after delay
+            setTimeout(() => {
+              updateCenterCardImages(prevCard);
+              isScrolling = false;
+            }, 300);
+          } else {
+            isScrolling = false;
+          }
         }
-        updateCarouselPositions();
       }
     }
 
 
-    // Navigation button handlers
-    const prevBtn = brandsCarouselPanel.querySelector('.carousel-prev-btn');
-    const nextBtn = brandsCarouselPanel.querySelector('.carousel-next-btn');
+    // Navigation button handlers (desktop only)
+    if (!isSimplifiedCarousel) {
+      const prevBtn = carouselPanel.querySelector('.carousel-prev-btn');
+      const nextBtn = carouselPanel.querySelector('.carousel-next-btn');
 
-    if (prevBtn) {
-      prevBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        // Infinite scroll: wrap around to end if at beginning
-        currentIndex = currentIndex > 0 ? currentIndex - 1 : totalCards - 1;
-        updateCarouselPositions();
-      });
-    }
+      if (prevBtn) {
+        prevBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          // Infinite scroll: wrap around to end if at beginning
+          currentIndex = currentIndex > 0 ? currentIndex - 1 : totalCards - 1;
+          updateCarouselPositions();
+        });
+      }
 
-    if (nextBtn) {
-      nextBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        // Infinite scroll: wrap around to beginning if at end
-        currentIndex = currentIndex < totalCards - 1 ? currentIndex + 1 : 0;
-        updateCarouselPositions();
-      });
+      if (nextBtn) {
+        nextBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          // Infinite scroll: wrap around to beginning if at end
+          currentIndex = currentIndex < totalCards - 1 ? currentIndex + 1 : 0;
+          updateCarouselPositions();
+        });
+      }
     }
 
     // Initialize carousel
     updateCarouselPositions();
 
-    // Category button handlers
-    const categoryButtons = document.querySelectorAll('.category-btn');
+    // Category button handlers - scoped to this carousel's section
+    const carouselSection = carouselPanel.closest('.brands-carousel-section');
+    const categoryButtons = carouselSection.querySelectorAll('.category-btn');
     categoryButtons.forEach((btn, index) => {
       btn.addEventListener('click', () => {
-        // Remove active class from all buttons
+        // Remove active class from buttons in this section only
         categoryButtons.forEach(b => b.classList.remove('active'));
         // Add active class to clicked button
         btn.classList.add('active');
-        
+
         // Show next 5 logos based on category
         currentLogoSet = index * 5; // Featured = 0, Food = 5, Drinks = 10
         // The actual logo assignment is now handled directly by updateCarouselPositions
@@ -632,13 +865,28 @@ document.addEventListener('DOMContentLoaded', () => {
     //   updateCarouselPositions();
     // }, 5000);
 
-    // Explore Brands Button - Navigate to Products Page
-    const exploreBrandsBtn = document.querySelector('.explore-brands-btn');
+    // Explore Brands Button - Navigate to Products Page (scoped to this carousel)
+    const exploreBrandsBtn = carouselSection.querySelector('.explore-brands-btn');
     if (exploreBrandsBtn) {
       exploreBrandsBtn.addEventListener('click', () => {
         window.location.href = '/products.html';
       });
     }
+    return carouselPanel; // Return for potential use
+  }
+
+  // Initialize both desktop and mobile carousels if they exist
+  console.log('Initializing carousels...');
+  console.log('Desktop carousel found:', !!brandsCarouselPanel);
+  console.log('Mobile carousel found:', !!mobileBrandsCarouselPanel);
+
+  if (brandsCarouselPanel) {
+    console.log('Initializing desktop carousel');
+    initializeCarousel(brandsCarouselPanel);
+  }
+  if (mobileBrandsCarouselPanel) {
+    console.log('Initializing mobile carousel');
+    initializeCarousel(mobileBrandsCarouselPanel);
   }
 
   // Customer Impressions - Instagram Reels Style Video Cards
