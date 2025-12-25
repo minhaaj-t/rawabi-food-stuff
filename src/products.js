@@ -35,7 +35,7 @@ const featuredProducts = [
   {
     id: 1,
     title: 'Tomato Paste',
-    image: '/public/assets/images/archieves/1.png',
+    image: '/assets/images/archieves/1.png',
     type: 'Durable Goods',
     quantities: ['800 GM'],
     featured: true
@@ -43,7 +43,7 @@ const featuredProducts = [
   {
     id: 2,
     title: 'Macroni Fusilli',
-    image: '/public/assets/images/archieves/2.png',
+    image: '/assets/images/archieves/2.png',
     type: 'Durable Goods',
     quantities: ['400 GM'],
     featured: true
@@ -51,7 +51,7 @@ const featuredProducts = [
   {
     id: 3,
     title: 'Sunflower Oil',
-    image: '/public/assets/images/archieves/3.png',
+    image: '/assets/images/archieves/3.png',
     type: 'Durable Goods',
     quantities: ['770 ML', '1.5 LTR', '1.8 LTR', '3 LTR', '5 LTR'],
     featured: true
@@ -59,7 +59,7 @@ const featuredProducts = [
   {
     id: 4,
     title: 'Chukku Kappy',
-    image: '/public/assets/images/archieves/kerala-kitchen/4.png',
+    image: '/assets/images/archieves/kerala-kitchen/4.png',
     type: 'Durable Goods',
     quantities: ['150 GM'],
     brand: 'Kerala Kitchen',
@@ -68,7 +68,7 @@ const featuredProducts = [
   {
     id: 5,
     title: 'Coconut Oil',
-    image: '/public/assets/images/archieves/kerala-kitchen/5.png',
+    image: '/assets/images/archieves/kerala-kitchen/5.png',
     type: 'Durable Goods',
     quantities: ['500 ML', '1 LTR', '2 LTR', '5 LTR'],
     brand: 'Kerala Kitchen',
@@ -77,7 +77,7 @@ const featuredProducts = [
   {
     id: 6,
     title: 'Appam/ Pathirippodi',
-    image: '/public/assets/images/archieves/kerala-kitchen/6.png',
+    image: '/assets/images/archieves/kerala-kitchen/6.png',
     type: 'Durable Goods',
     quantities: ['1 KG'],
     brand: 'Kerala Kitchen',
@@ -86,7 +86,7 @@ const featuredProducts = [
   {
     id: 7,
     title: 'Biriyani Masala',
-    image: '/public/assets/images/archieves/kerala-kitchen/7.png',
+    image: '/assets/images/archieves/kerala-kitchen/7.png',
     type: 'Durable Goods',
     quantities: ['100 GM'],
     brand: 'Kerala Kitchen',
@@ -95,7 +95,7 @@ const featuredProducts = [
   {
     id: 8,
     title: 'Chana Masala',
-    image: '/public/assets/images/archieves/kerala-kitchen/8.png',
+    image: '/assets/images/archieves/kerala-kitchen/8.png',
     type: 'Durable Goods',
     quantities: ['100 GM'],
     brand: 'Kerala Kitchen',
@@ -104,7 +104,7 @@ const featuredProducts = [
   {
     id: 9,
     title: 'Vegitable Masala',
-    image: '/public/assets/images/archieves/kerala-kitchen/9.png',
+    image: '/assets/images/archieves/kerala-kitchen/9.png',
     type: 'Durable Goods',
     quantities: ['100 GM'],
     brand: 'Kerala Kitchen',
@@ -113,7 +113,7 @@ const featuredProducts = [
   {
     id: 10,
     title: 'Chat Masala',
-    image: '/public/assets/images/archieves/kerala-kitchen/10.png',
+    image: '/assets/images/archieves/kerala-kitchen/10.png',
     type: 'Durable Goods',
     quantities: ['100 GM'],
     brand: 'Kerala Kitchen',
@@ -122,7 +122,7 @@ const featuredProducts = [
   {
     id: 11,
     title: 'Rasam Powder',
-    image: '/public/assets/images/archieves/kerala-kitchen/11.png',
+    image: '/assets/images/archieves/kerala-kitchen/11.png',
     type: 'Durable Goods',
     quantities: ['100 GM'],
     brand: 'Kerala Kitchen',
@@ -131,7 +131,7 @@ const featuredProducts = [
   {
     id: 12,
     title: 'Sambar Masala',
-    image: '/public/assets/images/archieves/kerala-kitchen/12.png',
+    image: '/assets/images/archieves/kerala-kitchen/12.png',
     type: 'Durable Goods',
     quantities: ['200 GM', '1 KG'],
     brand: 'Kerala Kitchen',
@@ -140,7 +140,7 @@ const featuredProducts = [
   {
     id: 13,
     title: 'Dosa Podi',
-    image: '/public/assets/images/archieves/kerala-kitchen/13.png',
+    image: '/assets/images/archieves/kerala-kitchen/13.png',
     type: 'Durable Goods',
     quantities: ['1 KG'],
     brand: 'Kerala Kitchen',
