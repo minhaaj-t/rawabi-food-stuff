@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us — Al Rawabi Foodstuff</title>
+  <link rel="stylesheet" href="/src/style.css" />
+  <style>
+    /* Page-specific minimal layout adjustments */
+    .about-hero {
+      padding: 10rem 2rem 6rem 2rem;
+      background: linear-gradient(135deg, rgba(7,45,37,0.95) 0%, rgba(7,45,37,0.8) 100%);
+      color: var(--text-white);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .about-hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('/assets/hero_bg.png') center/cover;
+      opacity: 0.1;
+      z-index: -1;
+    }
+
+    .hero-content {
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+
+    .hero-content p {
+      text-align: center;
+      margin: 0 auto;
+      max-width: 600px;
+    }
+
+    .about-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    /* Mission & Vision Section */
+    .mission-vision-section {
+      padding: 6rem 0;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e0 100%);
+      position: relative;
+    }
+
+    .mission-vision-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #d4ff4d, #a8d5a8, #68d391);
+    }
+
+    .mission-vision-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .mission-card, .vision-card {
+      background: white;
+      border-radius: 20px;
+      padding: 3rem 2rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mission-card::before, .vision-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #d4ff4d, #68d391);
+    }
+
+    .card-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 1.5rem;
+      background: linear-gradient(135deg, #d4ff4d, #68d391);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(212, 255, 77, 0.3);
+    }
+
+    .card-icon svg {
+      width: 36px;
+      height: 36px;
+      color: #1a202c;
+    }
+
+    .card-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #1a202c;
+      margin-bottom: 1rem;
+    }
+
+    .card-description {
+      color: #4a5568;
+      line-height: 1.7;
+      font-size: 1rem;
+    }
+
+
+
+
+
+
+    /* Hero Stats */
+    .hero-stats {
+      display: flex;
+      gap: 2rem;
+      margin-top: 2rem;
+      justify-content: center;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .stat-number {
+      display: block;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #d4ff4d;
+      line-height: 1;
+    }
+
+    .stat-label {
+      display: block;
+      font-size: 0.9rem;
+      color: #cbd5e0;
+      margin-top: 0.25rem;
+      font-weight: 500;
+    }
+
+    /* Brand Portfolio Section */
+    .brand-portfolio-section {
+      padding: 6rem 0;
+      background: white;
+      position: relative;
+    }
+
+    /* Wide screen portfolio section */
+    @media (min-width: 1440px) {
+      .brand-portfolio-section {
+        padding: 8rem 0;
+      }
+    }
+
+    @media (min-width: 1920px) {
+      .brand-portfolio-section {
+        padding: 10rem 0;
+      }
+    }
+
+    .portfolio-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* Wide screen portfolio container */
+    @media (min-width: 1440px) {
+      .portfolio-container {
+        max-width: 1600px;
+        padding: 0 3rem;
+      }
+    }
+
+    @media (min-width: 1920px) {
+      .portfolio-container {
+        max-width: 1800px;
+        padding: 0 4rem;
+      }
+    }
+
+    .portfolio-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    /* Wide screen portfolio header */
+    @media (min-width: 1440px) {
+      .portfolio-header {
+        margin-bottom: 5rem;
+      }
+    }
+
+    @media (min-width: 1920px) {
+      .portfolio-header {
+        margin-bottom: 6rem;
+      }
+    }
+
+    .portfolio-title {
+      font-size: 3rem;
+      font-weight: 800;
+      color: #1a202c;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #1a202c 0%, #4a5568 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Wide screen portfolio title */
+    @media (min-width: 1440px) {
+      .portfolio-title {
+        font-size: 3.5rem;
+      }
+    }
+
+    @media (min-width: 1920px) {
+      .portfolio-title {
+        font-size: 4rem;
+      }
+    }
+
+    .portfolio-subtitle {
+      font-size: 1.25rem;
+      color: #718096;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    /* Wide screen portfolio subtitle */
+    @media (min-width: 1440px) {
+      .portfolio-subtitle {
+        font-size: 1.4rem;
+        max-width: 900px;
+      }
+    }
+
+    @media (min-width: 1920px) {
+      .portfolio-subtitle {
+        font-size: 1.5rem;
+        max-width: 1000px;
+      }
+    }
+
+    .brands-showcase {
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+    }
+
+    .brand-category {
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      border-radius: 16px;
+      padding: 2rem;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+    }
+
+    /* Wide screen brand category */
+    @media (min-width: 1440px) {
+      .brand-category {
+        padding: 2.5rem;
+        border-radius: 20px;
+      }
+    }
+
+    @media (min-width: 1920px) {
+      .brand-category {
+        padding: 3rem;
+        border-radius: 24px;
+      }
+    }
+
+    .brand-category h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #2d3748;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    /* Wide screen brand category headers */
+    @media (min-width: 1440px) {
+      .brand-category h3 {
+        font-size: 1.8rem;
+        margin-bottom: 2rem;
+      }
+    }
+
+    @media (min-width: 1920px) {
+      .brand-category h3 {
+        font-size: 2rem;
+        margin-bottom: 2.5rem;
+      }
+    }
+
+    .brand-logos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 2rem;
+      justify-items: center;
+    }
+
+    /* Wide screen brand logos */
+    @media (min-width: 1440px) {
+      .brand-logos {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 2.5rem;
+      }
+    }
+
+    @media (min-width: 1920px) {
+      .brand-logos {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 3rem;
+      }
+    }
+
+    .brand-logo-item {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      width: 120px;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Wide screen brand logo items */
+    @media (min-width: 1440px) {
+      .brand-logo-item {
+        width: 140px;
+        height: 140px;
+        padding: 2rem;
+      }
+    }
+
+    @media (min-width: 1920px) {
+      .brand-logo-item {
+        width: 160px;
+        height: 160px;
+        padding: 2.5rem;
+      }
+    }
+
+    .brand-logo-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .brand-logo-item img {
+      max-width: 80px;
+      max-height: 80px;
+      object-fit: contain;
+    }
+
+    /* Wide screen brand logo images */
+    @media (min-width: 1440px) {
+      .brand-logo-item img {
+        max-width: 100px;
+        max-height: 100px;
+      }
+    }
+
+    @media (min-width: 1920px) {
+      .brand-logo-item img {
+        max-width: 120px;
+        max-height: 120px;
+      }
+    }
+
+    /* Purpose & Values Section */
+    .purpose-values-section {
+      padding: 6rem 0;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e0 100%);
+      position: relative;
+    }
+
+    /* Wide screen purpose section */
+    @media (min-width: 1440px) {
+      .purpose-values-section {
+        padding: 8rem 0;
+      }
+    }
+
+    @media (min-width: 1920px) {
+      .purpose-values-section {
+        padding: 10rem 0;
+      }
+    }
+
+    .purpose-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* Wide screen purpose container */
+    @media (min-width: 1440px) {
+      .purpose-container {
+        max-width: 1600px;
+        padding: 0 3rem;
+      }
+    }
+
+    @media (min-width: 1920px) {
+      .purpose-container {
+        max-width: 1800px;
+        padding: 0 4rem;
+      }
+    }
+
+    .purpose-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    /* Wide screen purpose header */
+    @media (min-width: 1440px) {
+      .purpose-header {
+        margin-bottom: 5rem;
+      }
+    }
+
+    @media (min-width: 1920px) {
+      .purpose-header {
+        margin-bottom: 6rem;
+      }
+    }
+
+    .purpose-title {
+      font-size: 3rem;
+      font-weight: 800;
+      color: #1a202c;
+      margin-bottom: 1rem;
+    }
+
+    /* Wide screen purpose title */
+    @media (min-width: 1440px) {
+      .purpose-title {
+        font-size: 3.5rem;
+      }
+    }
+
+    @media (min-width: 1920px) {
+      .purpose-title {
+        font-size: 4rem;
+      }
+    }
+
+    .purpose-subtitle {
+      font-size: 1.25rem;
+      color: #718096;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    /* Wide screen purpose subtitle */
+    @media (min-width: 1440px) {
+      .purpose-subtitle {
+        font-size: 1.4rem;
+        max-width: 900px;
+      }
+    }
+
+    @media (min-width: 1920px) {
+      .purpose-subtitle {
+        font-size: 1.5rem;
+        max-width: 1000px;
+      }
+    }
+
+    .purpose-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      margin-bottom: 4rem;
+      align-items: center;
+    }
+
+    /* Wide screen purpose content */
+    @media (min-width: 1440px) {
+      .purpose-content {
+        gap: 6rem;
+        margin-bottom: 5rem;
+      }
+    }
+
+    @media (min-width: 1920px) {
+      .purpose-content {
+        gap: 8rem;
+        margin-bottom: 6rem;
+      }
+    }
+
+    .purpose-text {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: #4a5568;
+    }
+
+    /* Wide screen purpose text */
+    @media (min-width: 1440px) {
+      .purpose-text {
+        font-size: 1.2rem;
+      }
+    }
+
+    @media (min-width: 1920px) {
+      .purpose-text {
+        font-size: 1.3rem;
+      }
+    }
+
+    .purpose-text p {
+      margin-bottom: 1.5rem;
+    }
+
+    .purpose-image {
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+
+    /* Wide screen purpose image */
+    @media (min-width: 1440px) {
+      .purpose-image img {
+        height: 400px;
+      }
+    }
+
+    @media (min-width: 1920px) {
+      .purpose-image img {
+        height: 450px;
+      }
+    }
+
+    .purpose-image:hover img {
+      transform: scale(1.05);
+    }
+
+    .core-values-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    /* Wide screen values grid */
+    @media (min-width: 1440px) {
+      .core-values-grid {
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 2.5rem;
+      }
+    }
+
+    @media (min-width: 1920px) {
+      .core-values-grid {
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 3rem;
+      }
+    }
+
+    .value-item {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .value-item:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    }
+
+    .value-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #d4ff4d, #68d391);
+    }
+
+    .value-icon {
+      width: 70px;
+      height: 70px;
+      margin: 0 auto 1.5rem;
+      background: linear-gradient(135deg, #d4ff4d, #68d391);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(212, 255, 77, 0.3);
+    }
+
+    .value-icon svg {
+      width: 32px;
+      height: 32px;
+      color: #1a202c;
+    }
+
+    .value-item h4 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1a202c;
+      margin-bottom: 1rem;
+    }
+
+    /* Wide screen value item title */
+    @media (min-width: 1440px) {
+      .value-item h4 {
+        font-size: 1.7rem;
+      }
+    }
+
+    @media (min-width: 1920px) {
+      .value-item h4 {
+        font-size: 1.8rem;
+      }
+    }
+
+    .value-item p {
+      color: #4a5568;
+      line-height: 1.6;
+    }
+
+    /* Wide screen value item description */
+    @media (min-width: 1440px) {
+      .value-item p {
+        font-size: 1.1rem;
+      }
+    }
+
+    @media (min-width: 1920px) {
+      .value-item p {
+        font-size: 1.2rem;
+      }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .hero-stats {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .purpose-content, .story-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .brands-showcase {
+        gap: 2rem;
+      }
+
+      .brand-logos {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+      }
+
+      .brand-logo-item {
+        width: 100px;
+        height: 100px;
+        padding: 1rem;
+      }
+
+      .brand-logo-item img {
+        max-width: 60px;
+        max-height: 60px;
+      }
+
+      .core-values-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .purpose-title, .portfolio-title, .story-title, .values-title, .leadership-title, .stats-title, .cta-title {
+        font-size: 2.5rem;
+      }
+
+      .hero-content h1 {
+        font-size: 2.5rem;
+      }
+
+      /* Wide screen overrides for mobile */
+      @media (min-width: 1440px) {
+        .purpose-content {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        .core-values-grid {
+          grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        }
+      }
+
+      @media (min-width: 1920px) {
+        .purpose-content {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        .core-values-grid {
+          grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        }
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="scroll-progress"></div>
+    <header class="navbar">
+      <div class="logo"><img src="/public/favicon.png" alt="Al Rawabi Foodstuff Logo" class="logo-img"></div>
+      <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/products">Products</a></li>
+        <li><a href="#wholesale">Wholesale</a></li>
+        <li><a href="/about" aria-current="page">About Us</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+      </nav>
+      <div class="nav-actions">
+        <a href="/contact" class="btn btn-primary contact"><span class="arrow">→</span> <span class="btn-text">Contact
+            Us</span></a>
+      </div>
+    </header>
+
+    <main>
+      <section class="about-hero">
+        <div class="hero-content">
+          <h1>Our Story</h1>
+          <p>Powering Qatar's food industry with quality, innovation, and sustainability since 2004</p>
+          <div class="hero-stats">
+            <div class="stat-item">
+              <span class="stat-number">20+</span>
+              <span class="stat-label">Years</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">500+</span>
+              <span class="stat-label">Partners</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">1000+</span>
+              <span class="stat-label">Products</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="about-container">
+        <!-- Brand Portfolio Section -->
+        <section class="brand-portfolio-section">
+          <div class="portfolio-container">
+            <div class="portfolio-header">
+              <h2 class="portfolio-title">Our Brand Partners</h2>
+              <p class="portfolio-subtitle">Delivering Qatar's most trusted food brands to your business</p>
+            </div>
+            <div class="brands-showcase">
+              <div class="brand-category">
+                <h3>Beverages & Refreshments</h3>
+                <div class="brand-logos">
+                  <div class="brand-logo-item">
+                    <img src="https://www.alrawabigroup.com/uploads/brands/logo229813.png" alt="Pepsi" />
+                  </div>
+                  <div class="brand-logo-item">
+                    <img src="https://www.alrawabigroup.com/uploads/brands/logo571366.png" alt="Lipton" />
+                  </div>
+                  <div class="brand-logo-item">
+                    <img src="https://www.alrawabigroup.com/uploads/brands/logo311295.png" alt="Coca-Cola" />
+                  </div>
+                </div>
+              </div>
+              <div class="brand-category">
+                <h3>Snacks & Confectionery</h3>
+                <div class="brand-logos">
+                  <div class="brand-logo-item">
+                    <img src="https://www.alrawabigroup.com/uploads/brands/logo125706.png" alt="Lay's" />
+                  </div>
+                  <div class="brand-logo-item">
+                    <img src="https://www.alrawabigroup.com/uploads/brands/logo229817.png" alt="Doritos" />
+                  </div>
+                  <div class="brand-logo-item">
+                    <img src="https://www.alrawabigroup.com/uploads/brands/logo129906.png" alt="Oreo" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Purpose & Values Section -->
+        <section class="purpose-values-section">
+          <div class="purpose-container">
+            <div class="purpose-header">
+              <h2 class="purpose-title">Our Purpose</h2>
+              <p class="purpose-subtitle">Nourishing Qatar, one partnership at a time</p>
+            </div>
+
+            <div class="purpose-content">
+              <div class="purpose-text">
+                <p>At Al Rawabi Foodstuff, we believe in the power of quality food to bring people together. Every product we supply, every partnership we build, and every community we serve contributes to a healthier, more connected Qatar.</p>
+                <p>We're not just suppliers – we're enablers of culinary excellence, supporting the businesses that feed our nation and create memorable experiences for families across Qatar.</p>
+              </div>
+              <div class="purpose-image">
+                <img src="/assets/images/status.png" alt="Quality commitment" />
+              </div>
+            </div>
+
+            <div class="core-values-grid">
+              <div class="value-item">
+                <div class="value-icon">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  </svg>
+                </div>
+                <h4>Quality First</h4>
+                <p>Rigorous quality control ensures every product meets international standards</p>
+              </div>
+              <div class="value-item">
+                <div class="value-icon">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M16.24 3.56l4.95 4.94c.78.79.78 2.05 0 2.84L12 20.53a1.5 1.5 0 0 1-2.12 0L3.56 13.3c-.78-.79-.78-2.05 0-2.84l4.95-4.94c.78-.79 2.05-.79 2.83 0L12 5.83l2.41-2.27c.78-.79 2.05-.79 2.83 0z"/>
+                  </svg>
+                </div>
+                <h4>Sustainable Growth</h4>
+                <p>Committed to environmentally responsible practices and ethical sourcing</p>
+              </div>
+              <div class="value-item">
+                <div class="value-icon">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                  </svg>
+                </div>
+                <h4>Innovation Focus</h4>
+                <p>Embracing new technologies and solutions to better serve our partners</p>
+              </div>
+              <div class="value-item">
+                <div class="value-icon">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A2.01 2.01 0 0 0 18.06 7H15V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v3H5.04c-.77 0-1.47.48-1.79 1.21L.5 16H3v6c0 1.11.89 2 2 2h6c1.11 0 2-.89 2-2v-2h4v2c0 1.11.89 2 2 2s2-.89 2-2z"/>
+                  </svg>
+                </div>
+                <h4>Partnership Excellence</h4>
+                <p>Building lasting relationships based on trust, reliability, and mutual success</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+
+
+
+      </div>
+    </main>
+
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator">
+      <div class="scroll-indicator-arrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M7 13l5 5 5-5M7 6l5 5 5-5"/>
+        </svg>
+      </div>
+      <span class="scroll-indicator-text">Scroll</span>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+
+  <!-- Modern Footer -->
+  <footer class="modern-footer">
+    <div class="footer-container">
+      <div class="footer-content">
+        <div class="footer-section company-info">
+          <div class="footer-logo">
+            <img src="/public/favicon.png" alt="Al Rawabi Foodstuff Logo" class="footer-logo-img">
+          </div>
+          <p class="footer-description">
+            Al Rawabi Foodstuff - Wholesale Division: Qatar's trusted source for bulk food supply. We provide rice, pulses, spices, sugar, oils, canned items and other essentials to retailers, hotels, restaurants and large-scale buyers with a commitment to quality, competitive pricing and timely delivery.
+          </p>
+          <div class="footer-social">
+            <a href="#" class="social-link" aria-label="Facebook">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+              </svg>
+            </a>
+            <a href="#" class="social-link" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12.017 0C8.396 0 7.917.017 6.69.076 5.463.135 4.624.333 3.893.646c-.787.333-1.457.774-2.124 1.441C.99 2.776.548 3.446.215 4.233c-.313.731-.511 1.57-.57 2.797C-.017 7.917 0 8.396 0 12.017s-.017 4.1.076 5.327c.059 1.227.257 2.066.57 2.797.333.787.774 1.457 1.441 2.124.767.767 1.437 1.208 2.224 1.541.731.313 1.57.511 2.797.57C7.917 24.017 8.396 24 12.017 24s4.1-.017 5.327-.076c1.227-.059 2.066-.257 2.797-.57.787-.333 1.457-.774 2.124-1.441.767-.767 1.208-1.437 1.541-2.224.313-.731.511-1.57.57-2.797.059-1.227.076-1.706.076-5.327s.017-4.1-.076-5.327c-.059-1.227-.257-2.066-.57-2.797-.333-.787-.774-1.457-1.441-2.124C21.224.774 20.554.333 19.767 0c-.731-.313-1.57-.511-2.797-.57C16.117.017 15.638 0 12.017 0zm0 2.25c3.539 0 3.957.014 5.355.078 1.303.06 2.026.275 2.51.458.528.198.927.436 1.334.843.407.407.645.806.843 1.334.183.484.398 1.207.458 2.51.064 1.398.078 1.816.078 5.355s-.014 3.957-.078 5.355c-.06 1.303-.275 2.026-.458 2.51-.198.528-.436.927-.843 1.334-.407.407-.806.645-1.334.843-.484.183-1.207.398-2.51.458-1.398.064-1.816.078-5.355.078s-3.957-.014-5.355-.078c-1.303-.06-2.026-.275-2.51-.458-.528-.198-.927-.436-1.334-.843-.407-.407-.645-.806-.843-1.334-.183-.484-.398-1.207-.458-2.51C2.082 8.396 2.068 7.978 2.068 4.439s.014-3.957.078-5.355c.06-1.303.275-2.026.458-2.51.198-.528.436-.927.843-1.334.407-.407.806-.645 1.334-.843.484-.183 1.207-.398 2.51-.458C8.06 2.264 8.478 2.25 12.017 2.25z"/>
+                <circle cx="12.017" cy="12.017" r="3.847"/>
+              </svg>
+            </a>
+            <a href="#" class="social-link" aria-label="LinkedIn">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+              </svg>
+            </a>
+            <a href="#" class="social-link" aria-label="Twitter">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-section quick-links">
+          <h3 class="footer-title">Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/products">Products</a></li>
+            <li><a href="/contact">Contact Us</a></li>
+            <li><a href="#wholesale">Wholesale</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-section services">
+          <h3 class="footer-title">Our Services</h3>
+          <ul class="footer-links">
+            <li><a href="#catering">Premium Catering</a></li>
+            <li><a href="#food-stuff">Food Stuff Supply</a></li>
+            <li><a href="#events">Event Management</a></li>
+            <li><a href="#consultation">Consultation</a></li>
+            <li><a href="#delivery">Delivery Services</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-section contact-info">
+          <h3 class="footer-title">Contact Us</h3>
+          <div class="contact-details">
+            <div class="contact-item">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+              </svg>
+              <span>Industrial Area-37, Building No: 19, Doha - Qatar</span>
+            </div>
+            <div class="contact-item">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M6.62 10.79c1.44 2.83 3.76 5.15 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+              </svg>
+              <span>Tel: +974 4497 1777</span>
+            </div>
+            <div class="contact-item">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+              </svg>
+              <span>info@alrawabifoodstuff.qa</span>
+            </div>
+          </div>
+          <button class="btn btn-primary footer-cta">
+            <span class="arrow">→</span>
+            <span class="btn-text">Get In Touch</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-bottom-content">
+          <p class="copyright">&copy; 2024 FOOD-STUFF-SANAYYA. All rights reserved. Premium Food Stuff & Catering Services.</p>
+          <div class="footer-bottom-links">
+            <a href="/privacy">Privacy Policy</a>
+            <a href="/terms">Terms of Service</a>
+            <a href="/cookies">Cookie Policy</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
