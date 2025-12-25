@@ -896,7 +896,7 @@ p {
   justify-content: center;
   align-items: center;
   width: 100%;
-  margin-top: 3rem;
+  margin-top: 7rem; /* Increased from 3rem to 4rem for more top space */
   padding: 0 2rem;
 }
 
@@ -2045,7 +2045,7 @@ p {
   position: relative;
   width: 100%;
   max-width: 100%;
-  height: 317px;
+  height: 400px; /* Increased height to accommodate larger logos */
   margin: 0 auto;
 }
 

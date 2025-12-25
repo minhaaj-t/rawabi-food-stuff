@@ -498,13 +498,13 @@ document.addEventListener('DOMContentLoaded', () => {
           let width = 321;
           let height = 321;
 
-          const baseWidth = 400; // Max width for the center card (increased)
-          const baseHeight = 400; // Max height for the center card (increased)
+          const baseWidth = 500; // Max width for the center card (increased for desktop)
+          const baseHeight = 500; // Max height for the center card (increased for desktop)
 
           // Pixel offsets from center for proper spacing - wider for desktop
-          const innerOffset1 = 300; // Distance for first side logos
-          const innerOffset2 = 500; // Distance for second side logos
-          const innerOffset3 = 650; // Distance for third side logos
+          const innerOffset1 = 400; // Distance for first side logos (increased gap)
+          const innerOffset2 = 650; // Distance for second side logos (increased gap)
+          const innerOffset3 = 850; // Distance for third side logos (increased gap)
 
           if (offset === 0) {
             // Center card
