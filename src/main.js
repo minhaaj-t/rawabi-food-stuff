@@ -12,9 +12,18 @@ async function loadComponents() {
     // Parse and insert header
     const headerParser = new DOMParser();
     const headerDoc = headerParser.parseFromString(headerHtml, 'text/html');
-    const headerElement = headerDoc.querySelector('body');
+    const headerElement = headerDoc.querySelector('header');
+    const mobileMenuOverlayElement = headerDoc.querySelector('.mobile-menu-overlay');
+    const scrollProgressElement = headerDoc.querySelector('.scroll-progress');
+
     if (headerElement) {
       document.body.insertBefore(headerElement, document.body.firstChild);
+    }
+    if (mobileMenuOverlayElement) {
+      document.body.insertBefore(mobileMenuOverlayElement, document.body.firstChild);
+    }
+    if (scrollProgressElement) {
+      document.body.insertBefore(scrollProgressElement, document.body.firstChild);
     }
 
     // Parse and insert footer
