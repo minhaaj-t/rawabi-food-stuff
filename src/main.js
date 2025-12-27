@@ -1,4 +1,52 @@
-document.addEventListener('DOMContentLoaded', () => {
+// Function to load header and footer components
+async function loadComponents() {
+  try {
+    // Load header
+    const headerResponse = await fetch('/header.html');
+    const headerHtml = await headerResponse.text();
+
+    // Load footer
+    const footerResponse = await fetch('/footer.html');
+    const footerHtml = await footerResponse.text();
+
+    // Parse and insert header
+    const headerParser = new DOMParser();
+    const headerDoc = headerParser.parseFromString(headerHtml, 'text/html');
+    const headerElement = headerDoc.querySelector('body');
+    if (headerElement) {
+      document.body.insertBefore(headerElement, document.body.firstChild);
+    }
+
+    // Parse and insert footer
+    const footerParser = new DOMParser();
+    const footerDoc = footerParser.parseFromString(footerHtml, 'text/html');
+    const footerElement = footerDoc.querySelector('footer');
+    if (footerElement) {
+      document.body.appendChild(footerElement);
+    }
+
+    // Execute any scripts in the loaded components
+    const headerScripts = headerDoc.querySelectorAll('script');
+    const footerScripts = footerDoc.querySelectorAll('script');
+
+    [...headerScripts, ...footerScripts].forEach(script => {
+      const newScript = document.createElement('script');
+      if (script.src) {
+        newScript.src = script.src;
+      } else {
+        newScript.textContent = script.textContent;
+      }
+      document.head.appendChild(newScript);
+    });
+
+  } catch (error) {
+    console.error('Error loading components:', error);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  // Load header and footer components first
+  await loadComponents();
   const heroContent = document.querySelector('.glass-card');
   const videoPreview = document.querySelector('.video-preview');
   const brands = document.querySelectorAll('.brand-name');
