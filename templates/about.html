@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}About Us - AL RAWABI FOOD STUFF W.L.L{% endblock %}
+
+{% block content %}
+<!-- Full Screen Search Overlay Start -->
+    <div id="searchOverlay" class="search-overlay">
+        <div class="search-container">
+            <div class="search-content">
+                <button class="search-close" onclick="closeSearch()">&times;</button>
+                <div class="search-form">
+                    <input type="text" class="search-input" placeholder="Search..." id="searchInput">
+                    <button type="button" class="search-submit" onclick="performSearch()">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Full Screen Search Overlay End -->
+
+    <!-- Page Header Start -->
+    <div class="container-fluid page-header py-5 mb-5 wow fadeIn" data-wow-delay="0.1s">
+        <div class="container text-center py-5">
+            <h1 class="display-2 text-dark mb-4 animated slideInDown">About Us</h1>
+            <nav aria-label="breadcrumb animated slideInDown">
+                <ol class="breadcrumb justify-content-center mb-0">
+                    <li class="breadcrumb-item"><a href="{{ url_for('home') }}">Home</a></li>
+                    <li class="breadcrumb-item text-dark" aria-current="page">About Us</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+
+    <!-- About Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-6">
+                    <div class="row g-3">
+                        <div class="col-6 text-end">
+                            <img class="img-fluid bg-white w-100 mb-3 wow fadeIn" data-wow-delay="0.1s" src="{{ url_for('static', filename='img/about/1.png') }}" alt="" style="height: 280px; object-fit: cover;">
+                            <img class="img-fluid bg-white w-50 wow fadeIn" data-wow-delay="0.2s" src="{{ url_for('static', filename='img/about/3.png') }}" alt="" style="height: 140px; object-fit: cover;">
+                        </div>
+                        <div class="col-6">
+                            <img class="img-fluid bg-white w-50 mb-3 wow fadeIn" data-wow-delay="0.3s" src="{{ url_for('static', filename='img/about/4.png') }}" alt="" style="height: 140px; object-fit: cover;">
+                            <img class="img-fluid bg-white w-100 wow fadeIn" data-wow-delay="0.4s" src="{{ url_for('static', filename='img/about/2.png') }}" alt="" style="height: 280px; object-fit: cover;">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+                    <div class="section-title">
+                        <p class="fs-5 fw-medium fst-italic text-primary">About Us</p>
+                        <h1 class="display-6">Qatar's Most Established Wholesale Food Supplier</h1>
+                    </div>
+                    <div class="mb-4">
+                        <h5>Al Rawabi Foodstuff - Wholesale Division</h5>
+                        <p class="mb-0">One of Qatar's most established and reliable wholesale suppliers, serving the nation's leading hypermarkets, supermarkets, groceries, hotels, restaurants, cafés, catering companies, and institutional buyers.</p>
+                    </div>
+                    <div class="border-top mb-4"></div>
+                    <div>
+                        <h5>Comprehensive Wholesale Food Portfolio</h5>
+                        <p class="mb-0">With a strong distribution network and decades of market expertise, we supply a comprehensive portfolio of rice, pulses, spices, sugar, oils, canned items, dry food essentials, and specialty wholesale products sourced from trusted international and regional partners.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- About End -->
+{% endblock %}

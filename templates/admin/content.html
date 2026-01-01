@@ -1,0 +1,209 @@
+{% extends "admin/base.html" %}
+
+{% block page_title %}Content Management{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <!-- Sidebar Navigation -->
+    <div class="col-lg-3">
+        <div class="modern-card sticky-top" style="top: 100px;">
+            <div class="card-header bg-white border-0 pt-4">
+                <h6 class="text-muted mb-0">
+                    <i class="fas fa-sitemap me-2"></i>Content Sections
+                </h6>
+            </div>
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush">
+                    <a href="{{ url_for('admin_content', page='home', section='hero') }}"
+                       class="list-group-item list-group-item-action border-0 py-3 px-4 {{ 'active bg-primary text-white' if page == 'home' and section == 'hero' }}">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-home me-3"></i>
+                            <div>
+                                <div class="fw-semibold">Hero Section</div>
+                                <small class="{{ 'text-white-50' if page == 'home' and section == 'hero' else 'text-muted' }}">Homepage banner</small>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="{{ url_for('admin_content', page='home', section='about') }}"
+                       class="list-group-item list-group-item-action border-0 py-3 px-4 {{ 'active bg-primary text-white' if page == 'home' and section == 'about' }}">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-info-circle me-3"></i>
+                            <div>
+                                <div class="fw-semibold">About Section</div>
+                                <small class="{{ 'text-white-50' if page == 'home' and section == 'about' else 'text-muted' }}">Company info</small>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="{{ url_for('admin_content', page='home', section='contact') }}"
+                       class="list-group-item list-group-item-action border-0 py-3 px-4 {{ 'active bg-primary text-white' if page == 'home' and section == 'contact' }}">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-envelope me-3"></i>
+                            <div>
+                                <div class="fw-semibold">Contact Section</div>
+                                <small class="{{ 'text-white-50' if page == 'home' and section == 'contact' else 'text-muted' }}">Contact details</small>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="{{ url_for('admin_content', page='about', section='main') }}"
+                       class="list-group-item list-group-item-action border-0 py-3 px-4 {{ 'active bg-primary text-white' if page == 'about' and section == 'main' }}">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-building me-3"></i>
+                            <div>
+                                <div class="fw-semibold">About Page</div>
+                                <small class="{{ 'text-white-50' if page == 'about' and section == 'main' else 'text-muted' }}">Full about page</small>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="{{ url_for('admin_content', page='contact', section='main') }}"
+                       class="list-group-item list-group-item-action border-0 py-3 px-4 {{ 'active bg-primary text-white' if page == 'contact' and section == 'main' }}">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-phone me-3"></i>
+                            <div>
+                                <div class="fw-semibold">Contact Page</div>
+                                <small class="{{ 'text-white-50' if page == 'contact' and section == 'main' else 'text-muted' }}">Full contact page</small>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="col-lg-9">
+        <div class="modern-card">
+            <div class="card-header bg-white border-0 pt-4">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h5 class="mb-1">
+                            <i class="fas fa-edit text-primary me-2"></i>
+                            Edit {{ page|title }} - {{ section|title }} Content
+                        </h5>
+                        <p class="text-muted small mb-0">Update website content and messaging</p>
+                    </div>
+                    <span class="badge bg-primary badge-modern">
+                        <i class="fas fa-file-alt me-1"></i>{{ page }}/{{ section }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <form method="POST" novalidate>
+                    <!-- Title and Subtitle Row -->
+                    <div class="row g-4 mb-4">
+                        {% if 'title' in content_dict %}
+                        <div class="col-md-6">
+                            <label for="content_title" class="form-label fw-semibold">
+                                <i class="fas fa-heading me-2 text-primary"></i>Title
+                            </label>
+                            <input type="text" class="form-control form-control-modern" id="content_title" name="content_title"
+                                   value="{{ content_dict.title.value or '' }}" placeholder="Enter main title">
+                        </div>
+                        {% endif %}
+
+                        {% if 'subtitle' in content_dict %}
+                        <div class="col-md-6">
+                            <label for="content_subtitle" class="form-label fw-semibold">
+                                <i class="fas fa-tag me-2 text-info"></i>Subtitle
+                            </label>
+                            <input type="text" class="form-control form-control-modern" id="content_subtitle" name="content_subtitle"
+                                   value="{{ content_dict.subtitle.value or '' }}" placeholder="Enter subtitle">
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Description -->
+                    {% if 'description' in content_dict %}
+                    <div class="mb-4">
+                        <label for="content_description" class="form-label fw-semibold">
+                            <i class="fas fa-align-left me-2 text-success"></i>Description
+                        </label>
+                        <textarea class="form-control form-control-modern" id="content_description" name="content_description"
+                                  rows="4" placeholder="Enter detailed description">{{ content_dict.description.value or '' }}</textarea>
+                    </div>
+                    {% endif %}
+
+                    <!-- Main Content -->
+                    {% if 'content' in content_dict %}
+                    <div class="mb-4">
+                        <label for="content_content" class="form-label fw-semibold">
+                            <i class="fas fa-file-text me-2 text-warning"></i>Main Content
+                        </label>
+                        <textarea class="form-control form-control-modern" id="content_content" name="content_content"
+                                  rows="6" placeholder="Enter main content">{{ content_dict.content.value or '' }}</textarea>
+                    </div>
+                    {% endif %}
+
+                    <!-- Additional Fields -->
+                    {% if content_dict %}
+                    <div class="mb-4">
+                        <h6 class="text-muted mb-3">
+                            <i class="fas fa-plus-circle me-2"></i>Additional Fields
+                        </h6>
+                        <div class="row g-4">
+                            {% for key, content_item in content_dict.items() %}
+                                {% if key not in ['title', 'subtitle', 'description', 'content'] %}
+                                <div class="col-md-6">
+                                    <label for="content_{{ key }}" class="form-label fw-semibold">
+                                        <i class="fas fa-edit me-2 text-secondary"></i>{{ key|title }}
+                                    </label>
+                                    {% if content_item.content_type == 'html' %}
+                                    <textarea class="form-control form-control-modern" id="content_{{ key }}" name="content_{{ key }}"
+                                              rows="3" placeholder="Enter {{ key }}">{{ content_item.value or '' }}</textarea>
+                                    {% else %}
+                                    <input type="text" class="form-control form-control-modern" id="content_{{ key }}" name="content_{{ key }}"
+                                           value="{{ content_item.value or '' }}" placeholder="Enter {{ key }}">
+                                    {% endif %}
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex gap-3 pt-4 border-top">
+                        <button type="submit" class="btn btn-primary btn-modern flex-fill">
+                            <i class="fas fa-save me-2"></i>Save Changes
+                        </button>
+                        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary btn-modern">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                        </a>
+                        <a href="{{ url_for('home') }}" target="_blank" class="btn btn-outline-info btn-modern">
+                            <i class="fas fa-external-link-alt me-2"></i>Preview Site
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Content Tips -->
+        <div class="modern-card mt-4">
+            <div class="card-body">
+                <h6 class="text-muted mb-3">
+                    <i class="fas fa-lightbulb text-warning me-2"></i>Content Tips
+                </h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary mb-2">Best Practices:</h6>
+                        <ul class="text-muted small mb-0">
+                            <li>Keep titles concise and compelling</li>
+                            <li>Use clear, benefit-focused descriptions</li>
+                            <li>Include relevant keywords for SEO</li>
+                            <li>Test content on different screen sizes</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success mb-2">Quick Actions:</h6>
+                        <div class="d-flex flex-wrap gap-2">
+                            <a href="{{ url_for('admin_content', page='home', section='hero') }}" class="btn btn-sm btn-outline-primary">Hero</a>
+                            <a href="{{ url_for('admin_content', page='home', section='about') }}" class="btn btn-sm btn-outline-success">About</a>
+                            <a href="{{ url_for('admin_content', page='home', section='contact') }}" class="btn btn-sm btn-outline-info">Contact</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

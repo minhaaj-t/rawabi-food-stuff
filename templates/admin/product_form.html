@@ -1,0 +1,120 @@
+{% extends "admin/base.html" %}
+
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-xl-6">
+        <div class="modern-card">
+            <div class="card-header bg-white border-0 pt-4">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle bg-primary p-2 me-3">
+                        <i class="fas fa-box text-white"></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-1">{{ title }}</h5>
+                        <p class="text-muted small mb-0">Fill in the product details below</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <form method="POST" novalidate>
+                    {{ form.hidden_tag() }}
+
+                    <!-- Product Name -->
+                    <div class="mb-4">
+                        <label for="name" class="form-label fw-semibold">
+                            <i class="fas fa-tag me-2 text-primary"></i>Product Name *
+                        </label>
+                        {{ form.name(class="form-control form-control-modern", placeholder="Enter product name") }}
+                        {% if form.name.errors %}
+                            {% for error in form.name.errors %}
+                                <div class="text-danger small mt-1">
+                                    <i class="fas fa-exclamation-circle me-1"></i>{{ error }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <!-- Brand and Category Row -->
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label for="brand" class="form-label fw-semibold">
+                                <i class="fas fa-building me-2 text-success"></i>Brand
+                            </label>
+                            {{ form.brand(class="form-control form-control-modern", placeholder="Enter brand name") }}
+                        </div>
+
+                        <div class="col-md-6 mb-4">
+                            <label for="category" class="form-label fw-semibold">
+                                <i class="fas fa-folder me-2 text-info"></i>Category
+                            </label>
+                            {{ form.category(class="form-control form-control-modern", placeholder="e.g., Rice, Spices, Oils") }}
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="mb-4">
+                        <label for="description" class="form-label fw-semibold">
+                            <i class="fas fa-align-left me-2 text-warning"></i>Description
+                        </label>
+                        {{ form.description(class="form-control form-control-modern", rows=4, placeholder="Describe the product...") }}
+                    </div>
+
+                    <!-- Checkboxes -->
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="modern-card p-3 h-100">
+                                <div class="form-check d-flex align-items-center">
+                                    {{ form.is_featured(class="form-check-input me-3") }}
+                                    <div>
+                                        {{ form.is_featured.label(class="form-check-label fw-semibold mb-0") }}
+                                        <p class="text-muted small mb-0">Display as featured product</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-4">
+                            <div class="modern-card p-3 h-100">
+                                <div class="form-check d-flex align-items-center">
+                                    {{ form.is_active(class="form-check-input me-3") }}
+                                    <div>
+                                        {{ form.is_active.label(class="form-check-label fw-semibold mb-0") }}
+                                        <p class="text-muted small mb-0">Make product visible to customers</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex gap-3 pt-3 border-top">
+                        <button type="submit" class="btn btn-primary btn-modern flex-fill">
+                            <i class="fas fa-save me-2"></i>Save Product
+                        </button>
+                        <a href="{{ url_for('admin_products') }}" class="btn btn-outline-secondary btn-modern">
+                            <i class="fas fa-arrow-left me-2"></i>Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Form Tips -->
+        <div class="modern-card mt-3">
+            <div class="card-body">
+                <h6 class="text-muted mb-3">
+                    <i class="fas fa-lightbulb text-warning me-2"></i>Tips for Better Products
+                </h6>
+                <ul class="text-muted small mb-0">
+                    <li>Use clear, descriptive product names</li>
+                    <li>Include detailed descriptions with specifications</li>
+                    <li>Set appropriate categories for better organization</li>
+                    <li>Mark featured products to highlight premium items</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

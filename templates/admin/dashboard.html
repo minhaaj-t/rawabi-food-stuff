@@ -1,0 +1,221 @@
+{% extends "admin/base.html" %}
+
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<!-- Stats Cards -->
+<div class="row g-4 mb-4">
+    <div class="col-xl-3 col-md-6">
+        <div class="modern-card stats-card h-100">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h3 class="mb-1">{{ products|length }}</h3>
+                    <p class="mb-0 opacity-75">Total Products</p>
+                </div>
+                <div class="stats-icon">
+                    <i class="fas fa-box fa-2x opacity-75"></i>
+                </div>
+            </div>
+            <div class="mt-3">
+                <a href="{{ url_for('admin_products') }}" class="text-white text-decoration-none">
+                    <small><i class="fas fa-arrow-right me-1"></i>Manage Products</small>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="modern-card stats-card success h-100">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h3 class="mb-1">{{ messages|length }}</h3>
+                    <p class="mb-0 opacity-75">Total Messages</p>
+                </div>
+                <div class="stats-icon">
+                    <i class="fas fa-envelope fa-2x opacity-75"></i>
+                </div>
+            </div>
+            <div class="mt-3">
+                <a href="{{ url_for('admin_messages') }}" class="text-white text-decoration-none">
+                    <small><i class="fas fa-arrow-right me-1"></i>View Messages</small>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="modern-card stats-card info h-100">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h3 class="mb-1">{{ content_items|length }}</h3>
+                    <p class="mb-0 opacity-75">Content Items</p>
+                </div>
+                <div class="stats-icon">
+                    <i class="fas fa-edit fa-2x opacity-75"></i>
+                </div>
+            </div>
+            <div class="mt-3">
+                <a href="{{ url_for('admin_content') }}" class="text-white text-decoration-none">
+                    <small><i class="fas fa-arrow-right me-1"></i>Edit Content</small>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="modern-card stats-card warning h-100">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h3 class="mb-1">{{ products.select().where(products.c.is_featured == True).count() if products else 0 }}</h3>
+                    <p class="mb-0 opacity-75">Featured Products</p>
+                </div>
+                <div class="stats-icon">
+                    <i class="fas fa-star fa-2x opacity-75"></i>
+                </div>
+            </div>
+            <div class="mt-3">
+                <small class="opacity-75">Premium listings</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Activity Sections -->
+<div class="row g-4">
+    <div class="col-xl-6">
+        <div class="modern-card">
+            <div class="card-header bg-white border-0 pt-4">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-envelope text-primary me-2"></i>
+                    <h5 class="mb-0">Recent Messages</h5>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if messages %}
+                    <div class="list-group list-group-flush">
+                        {% for message in messages[:5] %}
+                            <div class="list-group-item border-0 px-0">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex align-items-center mb-1">
+                                            <strong class="text-dark">{{ message.name }}</strong>
+                                            {% if not message.is_read %}
+                                                <span class="badge bg-danger ms-2 badge-modern">New</span>
+                                            {% endif %}
+                                        </div>
+                                        <p class="text-muted small mb-1">{{ message.email }}</p>
+                                        <p class="text-muted small mb-0">
+                                            <i class="fas fa-clock me-1"></i>{{ message.created_at.strftime('%b %d, %Y') }}
+                                        </p>
+                                    </div>
+                                    <a href="{{ url_for('admin_mark_message_read', id=message.id) }}"
+                                       class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="text-center mt-3">
+                        <a href="{{ url_for('admin_messages') }}" class="btn btn-primary btn-modern">
+                            <i class="fas fa-list me-1"></i>View All Messages
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-envelope-open fa-3x text-muted mb-3"></i>
+                        <h6 class="text-muted">No messages yet</h6>
+                        <p class="text-muted small">Contact messages will appear here</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-6">
+        <div class="modern-card">
+            <div class="card-header bg-white border-0 pt-4">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-box text-success me-2"></i>
+                    <h5 class="mb-0">Recent Products</h5>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if products %}
+                    <div class="list-group list-group-flush">
+                        {% for product in products[:5] %}
+                            <div class="list-group-item border-0 px-0">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex align-items-center mb-1">
+                                            <strong class="text-dark">{{ product.name }}</strong>
+                                            {% if product.is_featured %}
+                                                <span class="badge bg-warning ms-2 badge-modern">
+                                                    <i class="fas fa-star me-1"></i>Featured
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                        {% if product.brand %}
+                                            <p class="text-muted small mb-1">{{ product.brand }}</p>
+                                        {% endif %}
+                                        <p class="text-muted small mb-0">
+                                            <span class="badge {{ 'bg-success' if product.is_active else 'bg-secondary' }} badge-modern">
+                                                {{ 'Active' if product.is_active else 'Inactive' }}
+                                            </span>
+                                        </p>
+                                    </div>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{{ url_for('admin_edit_product', id=product.id) }}"
+                                           class="btn btn-outline-primary">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="text-center mt-3">
+                        <a href="{{ url_for('admin_products') }}" class="btn btn-success btn-modern">
+                            <i class="fas fa-plus me-1"></i>Add New Product
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+                        <h6 class="text-muted">No products yet</h6>
+                        <p class="text-muted small">Start by adding your first product</p>
+                        <a href="{{ url_for('admin_add_product') }}" class="btn btn-primary btn-modern mt-3">
+                            <i class="fas fa-plus me-1"></i>Add First Product
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="modern-card">
+            <div class="card-body text-center">
+                <h6 class="text-muted mb-3">Quick Actions</h6>
+                <div class="d-flex flex-wrap justify-content-center gap-2">
+                    <a href="{{ url_for('admin_add_product') }}" class="btn btn-primary btn-modern">
+                        <i class="fas fa-plus me-1"></i>Add Product
+                    </a>
+                    <a href="{{ url_for('admin_content') }}" class="btn btn-info btn-modern">
+                        <i class="fas fa-edit me-1"></i>Edit Content
+                    </a>
+                    <a href="{{ url_for('admin_messages') }}" class="btn btn-success btn-modern">
+                        <i class="fas fa-envelope me-1"></i>View Messages
+                    </a>
+                    <a href="{{ url_for('home') }}" target="_blank" class="btn btn-secondary btn-modern">
+                        <i class="fas fa-external-link-alt me-1"></i>View Website
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

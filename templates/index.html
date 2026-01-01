@@ -1,0 +1,569 @@
+{% extends "base.html" %}
+
+{% block title %}Wholesale Food Supply Qatar - AL RAWABI FOOD STUFF W.L.L{% endblock %}
+
+{% block content %}
+<!-- Full Screen Search Overlay Start -->
+    <div id="searchOverlay" class="search-overlay">
+        <div class="search-container">
+            <div class="search-content">
+                <button class="search-close" onclick="closeSearch()">&times;</button>
+                <div class="search-form">
+                    <input type="text" class="search-input" placeholder="Search..." id="searchInput">
+                    <button type="button" class="search-submit" onclick="performSearch()">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Full Screen Search Overlay End -->
+
+    <!-- Carousel Start -->
+    <div class="container-fluid px-0 mb-5">
+        <div id="header-carousel" class="carousel slide">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <video class="w-100" autoplay muted loop playsinline style="object-fit: cover; position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+                        <source src="{{ url_for('static', filename='vid/banner-video1.mp4') }}" type="video/mp4">
+                    </video>
+                    <div class="carousel-caption" style="position: relative; z-index: 1;">
+                        <div class="container-fluid px-3 px-md-5">
+                            <div class="row justify-content-start align-items-center min-vh-100">
+                                <div class="col-12 col-md-8 col-lg-7 col-xl-6 text-start px-3 px-md-4">
+                                    <p class="fs-4 fs-md-3 fs-lg-4 text-white animated zoomIn mb-3 mb-md-4">Welcome to <strong style="color: #FDBC15;">AL RAWABI FOOD STUFF</strong></p>
+                                    <h1 class="display-1 display-md-2 display-lg-1 text-white mb-4 animated zoomIn" style="width: 100%; max-width: 800px; line-height: 1.1;">Qatar's Trusted Source for Bulk Food Supply</h1>
+                                    <a href="" class="btn btn-primary rounded-pill py-2 py-md-3 px-4 px-md-5 animated zoomIn mt-3">Explore More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img class="w-100" src="{{ url_for('static', filename='img/carousel-2.jpg') }}" alt="Image">
+                    <div class="carousel-caption">
+                        <div class="container-fluid px-3 px-md-5">
+                            <div class="row justify-content-center align-items-center min-vh-100">
+                                <div class="col-12 col-md-8 col-lg-7 col-xl-6 text-start px-3 px-md-4">
+                                    <p class="fs-4 fs-md-3 fs-lg-4 text-white animated zoomIn mb-3 mb-md-4">Welcome to <strong class="text-dark">TEA House</strong></p>
+                                    <h1 class="display-1 display-md-2 display-lg-1 text-dark mb-4 animated zoomIn" style="width: 100%; max-width: 800px; line-height: 1.1;">Organic & Quality Tea Production</h1>
+                                    <a href="" class="btn btn-light rounded-pill py-2 py-md-3 px-4 px-md-5 animated zoomIn mt-3">Explore More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Carousel End -->
+
+
+    <!-- Brand Logos Scroll Animation Start -->
+    <div class="container-fluid brand-logos py-5" style="background: white;">
+        <div class="container-fluid px-4">
+            <div class="logo-slider">
+                <div class="logo-track">
+                    <!-- First set of logos -->
+                    <div class="logo-item"
+                        <img src="{{ url_for('static', filename='img/rflogos/RAWABI-FRESH.png') }}" alt="Rawabi Fresh" class="img-fluid">
+                    </div>
+                    <div class="logo-item">
+                        <img src="{{ url_for('static', filename='img/rflogos/Metro.png') }}" alt="Metro" class="img-fluid">
+                    </div>
+                    <div class="logo-item">
+                        <img src="{{ url_for('static', filename='img/rflogos/Al-siha.png') }}" alt="Al Siha" class="img-fluid">
+                    </div>
+                    <div class="logo-item">
+                        <img src="{{ url_for('static', filename='img/rflogos/MAI-QATAR.png') }}" alt="MAI Qatar" class="img-fluid">
+                    </div>
+                    <div class="logo-item">
+                        <img src="{{ url_for('static', filename='img/rflogos/Galina-Logo.png') }}" alt="Galina" class="img-fluid">
+                    </div>
+                    <div class="logo-item">
+                        <img src="{{ url_for('static', filename='img/rflogos/JUMBO.png') }}" alt="Jumbo" class="img-fluid">
+                    </div>
+                    <div class="logo-item">
+                        <img src="{{ url_for('static', filename='img/rflogos/Royal-taj.png') }}" alt="Royal Taj" class="img-fluid">
+                    </div>
+                    <div class="logo-item">
+                        <img src="{{ url_for('static', filename='img/rflogos/Parrot.png') }}" alt="Parrot" class="img-fluid">
+                    </div>
+                    <!-- Duplicate set for seamless loop -->
+                    <div class="logo-item">
+                        <img src="{{ url_for('static', filename='img/rflogos/RAWABI-FRESH.png') }}" alt="Rawabi Fresh" class="img-fluid">
+                    </div>
+                    <div class="logo-item">
+                        <img src="{{ url_for('static', filename='img/rflogos/Metro.png') }}" alt="Metro" class="img-fluid">
+                    </div>
+                    <div class="logo-item">
+                        <img src="{{ url_for('static', filename='img/rflogos/Al-siha.png') }}" alt="Al Siha" class="img-fluid">
+                    </div>
+                    <div class="logo-item">
+                        <img src="{{ url_for('static', filename='img/rflogos/MAI-QATAR.png') }}" alt="MAI Qatar" class="img-fluid">
+                    </div>
+                    <div class="logo-item">
+                        <img src="{{ url_for('static', filename='img/rflogos/Galina-Logo.png') }}" alt="Galina" class="img-fluid">
+                    </div>
+                    <div class="logo-item">
+                        <img src="{{ url_for('static', filename='img/rflogos/JUMBO.png') }}" alt="Jumbo" class="img-fluid">
+                    </div>
+                    <div class="logo-item">
+                        <img src="{{ url_for('static', filename='img/rflogos/Royal-taj.png') }}" alt="Royal Taj" class="img-fluid">
+                    </div>
+                    <div class="logo-item">
+                        <img src="{{ url_for('static', filename='img/rflogos/Parrot.png') }}" alt="Parrot" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Brand Logos Scroll Animation End -->
+
+
+    <!-- About Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-6">
+                    <div class="row g-3">
+                        <div class="col-6 text-end">
+                            <img class="img-fluid bg-white w-100 mb-3 wow fadeIn" data-wow-delay="0.1s" src="{{ url_for('static', filename='img/about/1.png') }}" alt="" style="height: 280px; object-fit: cover;">
+                            <img class="img-fluid bg-white w-50 wow fadeIn" data-wow-delay="0.2s" src="{{ url_for('static', filename='img/about/3.png') }}" alt="" style="height: 140px; object-fit: cover;">
+                        </div>
+                        <div class="col-6">
+                            <img class="img-fluid bg-white w-50 mb-3 wow fadeIn" data-wow-delay="0.3s" src="{{ url_for('static', filename='img/about/4.png') }}" alt="" style="height: 140px; object-fit: cover;">
+                            <img class="img-fluid bg-white w-100 wow fadeIn" data-wow-delay="0.4s" src="{{ url_for('static', filename='img/about/2.png') }}" alt="" style="height: 280px; object-fit: cover;">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+                    <div class="section-title">
+                        <p class="fs-5 fw-medium fst-italic text-primary">About Us</p>
+                        <h1 class="display-6">Qatar's Most Established Wholesale Food Supplier</h1>
+                    </div>
+                    <div class="mb-4">
+                        <h5>Al Rawabi Foodstuff - Wholesale Division</h5>
+                        <p class="mb-0">One of Qatar's most established and reliable wholesale suppliers, serving the nation's leading hypermarkets, supermarkets, groceries, hotels, restaurants, cafés, catering companies, and institutional buyers.</p>
+                    </div>
+                    <div class="border-top mb-4"></div>
+                    <div>
+                        <h5>Comprehensive Wholesale Food Portfolio</h5>
+                        <p class="mb-0">With a strong distribution network and decades of market expertise, we supply a comprehensive portfolio of rice, pulses, spices, sugar, oils, canned items, dry food essentials, and specialty wholesale products sourced from trusted international and regional partners.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- About End -->
+
+
+    <!-- Products Start -->
+    <div class="container-fluid product py-5 my-5">
+        <div class="container py-5">
+            <div class="section-title text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+                <p class="fs-5 fw-medium fst-italic text-primary">Choose Your Favorite</p>
+                <h1 class="display-6">Our Product Collection</h1>
+            </div>
+            <div class="owl-carousel product-carousel wow fadeInUp" data-wow-delay="0.5s">
+                <div class="d-block product-item rounded text-center">
+                    <div class="bg-white shadow-sm p-4 mx-4">
+                        <div class="logo-display">
+                            <img src="{{ url_for('static', filename='img/rflogos/RAWABI-FRESH.png') }}" alt="Rawabi Fresh" class="img-fluid logo-img mb-3" style="max-height: 120px; object-fit: contain;">
+                            <h5 class="text-primary">Rawabi Fresh</h5>
+                        </div>
+                        <div class="product-display" style="display: none;">
+                            <img src="{{ url_for('static', filename='img/products/p1.png') }}" alt="Product 1" class="img-fluid product-img mb-3" style="max-height: 180px; object-fit: contain;">
+                            <h5 class="text-primary">Rawabi Fresh</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-block product-item rounded text-center">
+                    <div class="bg-white shadow-sm p-4 mx-4">
+                        <div class="logo-display">
+                            <img src="{{ url_for('static', filename='img/rflogos/Metro.png') }}" alt="Metro" class="img-fluid logo-img mb-3" style="max-height: 120px; object-fit: contain;">
+                            <h5 class="text-primary">Metro</h5>
+                        </div>
+                        <div class="product-display" style="display: none;">
+                            <img src="{{ url_for('static', filename='img/products/p2.png') }}" alt="Product 2" class="img-fluid product-img mb-3" style="max-height: 180px; object-fit: contain;">
+                            <h5 class="text-primary">Metro</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-block product-item rounded text-center">
+                    <div class="bg-white shadow-sm p-4 mx-4">
+                        <div class="logo-display">
+                            <img src="{{ url_for('static', filename='img/rflogos/Al-siha.png') }}" alt="Al Siha" class="img-fluid logo-img mb-3" style="max-height: 120px; object-fit: contain;">
+                            <h5 class="text-primary">Al Siha</h5>
+                        </div>
+                        <div class="product-display" style="display: none;">
+                            <img src="{{ url_for('static', filename='img/products/p3.png') }}" alt="Product 3" class="img-fluid product-img mb-3" style="max-height: 180px; object-fit: contain;">
+                            <h5 class="text-primary">Al Siha</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-block product-item rounded text-center">
+                    <div class="bg-white shadow-sm p-4 mx-4">
+                        <div class="logo-display">
+                            <img src="{{ url_for('static', filename='img/rflogos/MAI-QATAR.png') }}" alt="MAI Qatar" class="img-fluid logo-img mb-3" style="max-height: 120px; object-fit: contain;">
+                            <h5 class="text-primary">MAI Qatar</h5>
+                        </div>
+                        <div class="product-display" style="display: none;">
+                            <img src="{{ url_for('static', filename='img/products/p4.png') }}" alt="Product 4" class="img-fluid product-img mb-3" style="max-height: 180px; object-fit: contain;">
+                            <h5 class="text-primary">MAI Qatar</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-block product-item rounded text-center">
+                    <div class="bg-white shadow-sm p-4 mx-4">
+                        <div class="logo-display">
+                            <img src="{{ url_for('static', filename='img/rflogos/Galina-Logo.png') }}" alt="Galina" class="img-fluid logo-img mb-3" style="max-height: 120px; object-fit: contain;">
+                            <h5 class="text-primary">Galina</h5>
+                        </div>
+                        <div class="product-display" style="display: none;">
+                            <img src="{{ url_for('static', filename='img/products/p5.png') }}" alt="Product 5" class="img-fluid product-img mb-3" style="max-height: 180px; object-fit: contain;">
+                            <h5 class="text-primary">Galina</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-block product-item rounded text-center">
+                    <div class="bg-white shadow-sm p-4 mx-4">
+                        <div class="logo-display">
+                            <img src="{{ url_for('static', filename='img/rflogos/JUMBO.png') }}" alt="Jumbo" class="img-fluid logo-img mb-3" style="max-height: 120px; object-fit: contain;">
+                            <h5 class="text-primary">Jumbo</h5>
+                        </div>
+                        <div class="product-display" style="display: none;">
+                            <img src="{{ url_for('static', filename='img/products/p6.png') }}" alt="Product 6" class="img-fluid product-img mb-3" style="max-height: 180px; object-fit: contain;">
+                            <h5 class="text-primary">Jumbo</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-block product-item rounded text-center">
+                    <div class="bg-white shadow-sm p-4 mx-4">
+                        <div class="logo-display">
+                            <img src="{{ url_for('static', filename='img/rflogos/Royal-taj.png') }}" alt="Royal Taj" class="img-fluid logo-img mb-3" style="max-height: 120px; object-fit: contain;">
+                            <h5 class="text-primary">Royal Taj</h5>
+                        </div>
+                        <div class="product-display" style="display: none;">
+                            <img src="{{ url_for('static', filename='img/products/p7.png') }}" alt="Product 7" class="img-fluid product-img mb-3" style="max-height: 180px; object-fit: contain;">
+                            <h5 class="text-primary">Royal Taj</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-block product-item rounded text-center">
+                    <div class="bg-white shadow-sm p-4 mx-4">
+                        <div class="logo-display">
+                            <img src="{{ url_for('static', filename='img/rflogos/Parrot.png') }}" alt="Parrot" class="img-fluid logo-img mb-3" style="max-height: 120px; object-fit: contain;">
+                            <h5 class="text-primary">Parrot</h5>
+                        </div>
+                        <div class="product-display" style="display: none;">
+                            <img src="{{ url_for('static', filename='img/products/product1.png') }}" alt="Product 8" class="img-fluid product-img mb-3" style="max-height: 180px; object-fit: contain;">
+                            <h5 class="text-primary">Parrot</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Products End -->
+
+
+    <!-- Article Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-5 wow fadeIn parallax-container" data-wow-delay="0.1s">
+                    <img class="img-fluid parallax-image" src="{{ url_for('static', filename='img/cartoon.png') }}" alt="">
+                </div>
+                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+                    <div class="section-title">
+                        <p class="fs-5 fw-medium fst-italic text-primary">Featured Article</p>
+                        <h1 class="display-6">Quality Assurance in Wholesale Food Supply</h1>
+                    </div>
+                    <p class="mb-4">Our commitment to consistent quality, competitive wholesale pricing, and timely delivery has positioned us as a preferred partner across Qatar's food supply chain. We ensure every product meets the highest standards before reaching our customers.</p>
+                    <p class="mb-4">Backed by Al Rawabi Group's legacy, our wholesale division continues to strengthen market relationships through integrity, customer focus, and an unwavering promise of value. Trust and reliability are at the core of our operations.</p>
+                    <a href="" class="btn btn-primary rounded-pill py-3 px-5">Read More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Article End -->
+
+
+    <!-- Video Start -->
+    <div class="container-fluid video my-5">
+        <div class="container">
+            <div class="row g-0">
+                <div class="col-lg-6 py-5 wow fadeIn" data-wow-delay="0.1s">
+                    <div class="py-5">
+                        <h1 class="display-6 mb-4 text-primary-light">Quality Food Supply for <span class="text-primary">Qatar's</span> <span class="text-primary">Market</span></h1>
+                        <h5 class="fw-normal lh-base fst-italic text-white mb-5">Serving Qatar's leading hypermarkets, supermarkets, groceries, hotels, restaurants, cafés, and catering companies with reliable wholesale food supply solutions.</h5>
+                        <div class="row g-4 mb-5">
+                                <div class="col-sm-6">
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-shrink-0 btn-lg-square bg-white text-primary rounded-circle me-3">
+                                            <i class="fa fa-check"></i>
+                                        </div>
+                                        <span class="text-white">Bulk Food Supply</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-shrink-0 btn-lg-square bg-white text-primary rounded-circle me-3">
+                                            <i class="fa fa-check"></i>
+                                        </div>
+                                        <span class="text-white">Quality Assurance</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-shrink-0 btn-lg-square bg-white text-primary rounded-circle me-3">
+                                            <i class="fa fa-check"></i>
+                                        </div>
+                                        <span class="text-white">Timely Delivery</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-shrink-0 btn-lg-square bg-white text-primary rounded-circle me-3">
+                                            <i class="fa fa-check"></i>
+                                        </div>
+                                        <span class="text-white">Competitive Pricing</span>
+                                    </div>
+                                </div>
+                        </div>
+                        <a class="btn btn-primary rounded-pill py-3 px-5" href="">Explore More</a>
+                    </div>
+                </div>
+                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+                    <div class="h-100 d-flex align-items-center justify-content-center" style="min-height: 300px;">
+                        <button type="button" class="btn-play" data-bs-toggle="modal"
+                            data-src="https://www.youtube.com/embed/G0r5jPZZP3o" data-bs-target="#videoModal">
+                            <span></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Video End -->
+
+
+    <!-- Video Modal Start -->
+    <div class="modal modal-video fade" id="videoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content instagram-video-card">
+                <div class="modal-body p-0">
+                    <!-- Instagram-style 1.91:1 aspect ratio -->
+                    <div class="instagram-video-container">
+                        <iframe class="instagram-video-iframe" src="" id="video" allowfullscreen allowscriptaccess="always"
+                            allow="autoplay"></iframe>
+                    </div>
+                </div>
+                <button type="button" class="btn-close instagram-close-btn" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Video Modal End -->
+
+
+    <!-- Store Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="section-title text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+                <p class="fs-5 fw-medium fst-italic text-primary">Wholesale Products</p>
+                <h1 class="display-6">Quality Food Products for Bulk Supply</h1>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="store-item position-relative text-center">
+                        <img class="img-fluid" src="{{ url_for('static', filename='img/products/p1.png') }}" alt="">
+                        <div class="p-4">
+                            <div class="text-center mb-3">
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                            </div>
+                            <h4 class="mb-3">Premium Basmati Rice</h4>
+                            <p>Long-grain aromatic basmati rice, carefully sourced and processed for exceptional quality. Ideal for restaurants, caterers, and wholesale distributors seeking premium rice products.</p>
+                        </div>
+                        <div class="store-overlay">
+                            <a href="" class="btn btn-primary rounded-pill py-2 px-4 m-2">More Detail <i class="fa fa-arrow-right ms-2"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="store-item position-relative text-center">
+                        <img class="img-fluid" src="{{ url_for('static', filename='img/products/p2.png') }}" alt="">
+                        <div class="p-4">
+                            <div class="text-center mb-3">
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                            </div>
+                            <h4 class="mb-3">Organic Lentils</h4>
+                            <p>Nutritious organic lentils and pulses, organically grown and processed to maintain nutritional value. Perfect for health-conscious consumers and wholesale food suppliers.</p>
+                        </div>
+                        <div class="store-overlay">
+                            <a href="" class="btn btn-primary rounded-pill py-2 px-4 m-2">More Detail <i class="fa fa-arrow-right ms-2"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="store-item position-relative text-center">
+                        <img class="img-fluid" src="{{ url_for('static', filename='img/products/p3.png') }}" alt="">
+                        <div class="p-4">
+                            <div class="text-center mb-3">
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                            </div>
+                            <h4 class="mb-3">Premium Spices Mix</h4>
+                            <p>Authentic blend of premium spices and seasonings, carefully selected and mixed for superior flavor. Essential for restaurants, caterers, and food manufacturers.</p>
+                        </div>
+                        <div class="store-overlay">
+                            <a href="" class="btn btn-primary rounded-pill py-2 px-4 m-2">More Detail <i class="fa fa-arrow-right ms-2"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 text-center wow fadeInUp" data-wow-delay="0.1s">
+                    <a href="" class="btn btn-primary rounded-pill py-3 px-5">View More Products</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Store End -->
+
+    <!-- Testimonial Start -->
+    <div class="container-fluid testimonial py-5 my-5 parallax-testimonial">
+        <div class="container py-5">
+            <div class="section-title text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+                <p class="fs-5 fw-medium fst-italic text-white">Testimonials</p>
+                <h1 class="display-6 text-white">What our clients say about our service</h1>
+            </div>
+            <div class="owl-carousel testimonial-carousel wow fadeInUp" data-wow-delay="0.5s">
+                <div class="testimonial-item" style="background-image: url('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=711&fit=crop&crop=center');">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                    <div class="user-info">
+                        <img src="{{ url_for('static', filename='img/testimonial-1.jpg') }}" alt="Ahmed Al-Rashid">
+                        <div class="user-details">
+                            <h5>Ahmed Al-Rashid</h5>
+                            <span>Restaurant Owner</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-item" style="background-image: url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=711&fit=crop&crop=center');">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                    <div class="user-info">
+                        <img src="{{ url_for('static', filename='img/testimonial-2.jpg') }}" alt="Fatima Al-Zahra">
+                        <div class="user-details">
+                            <h5>Fatima Al-Zahra</h5>
+                            <span>Hotel Procurement Manager</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-item" style="background-image: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&h=711&fit=crop&crop=center');">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                    <div class="user-info">
+                        <img src="{{ url_for('static', filename='img/testimonial-3.jpg') }}" alt="Mohammed Al-Hamad">
+                        <div class="user-details">
+                            <h5>Mohammed Al-Hamad</h5>
+                            <span>Hypermarket Buyer</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-item" style="background-image: url('https://images.unsplash.com/photo-1541167760496-1628856ab772?w=400&h=711&fit=crop&crop=center');">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                    <div class="user-info">
+                        <img src="{{ url_for('static', filename='img/testimonial-1.jpg') }}" alt="Aisha Al-Kuwari">
+                        <div class="user-details">
+                            <h5>Aisha Al-Kuwari</h5>
+                            <span>Café Owner</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-item" style="background-image: url('https://images.unsplash.com/photo-1551218808-94e220e084d2?w=400&h=711&fit=crop&crop=center');">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                    <div class="user-info">
+                        <img src="{{ url_for('static', filename='img/testimonial-2.jpg') }}" alt="Omar Al-Farsi">
+                        <div class="user-details">
+                            <h5>Omar Al-Farsi</h5>
+                            <span>Food Service Director</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-item" style="background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=711&fit=crop&crop=center');">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                    <div class="user-info">
+                        <img src="{{ url_for('static', filename='img/testimonial-3.jpg') }}" alt="Noora Al-Mansouri">
+                        <div class="user-details">
+                            <h5>Noora Al-Mansouri</h5>
+                            <span>Institutional Buyer</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Testimonial End -->
+
+
+    <!-- Contact Start -->
+    <div class="container-xxl contact py-5">
+        <div class="container">
+            <div class="section-title text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+                <p class="fs-5 fw-medium fst-italic text-primary">Contact Us</p>
+                <h1 class="display-6">Contact us right now</h1>
+            </div>
+            <div class="row justify-content-center wow fadeInUp" data-wow-delay="0.1s">
+                <div class="col-lg-8">
+                    <p class="text-center mb-5">Contact us for your wholesale food supply needs. We serve Qatar's leading businesses with reliable distribution, quality products, and exceptional service. Get in touch to discuss your bulk supply requirements.</p>
+                    <div class="row g-5">
+                                <div class="col-md-4 text-center wow fadeInUp" data-wow-delay="0.3s">
+                                    <div class="btn-square mx-auto mb-3">
+                                        <i class="fa fa-envelope fa-2x text-white"></i>
+                                    </div>
+                                    <p class="mb-2">info@alrawabigroup.com</p>
+                                    <p class="mb-0">sales@alrawabigroup.com</p>
+                                </div>
+                                <div class="col-md-4 text-center wow fadeInUp" data-wow-delay="0.4s">
+                                    <div class="btn-square mx-auto mb-3">
+                                        <i class="fa fa-phone fa-2x text-white"></i>
+                                    </div>
+                                    <p class="mb-2">+974 4497 1777</p>
+                                    <p class="mb-0">+974 4497 1778</p>
+                                </div>
+                                <div class="col-md-4 text-center wow fadeInUp" data-wow-delay="0.5s">
+                                    <div class="btn-square mx-auto mb-3">
+                                        <i class="fa fa-map-marker-alt fa-2x text-white"></i>
+                                    </div>
+                                    <p class="mb-2">Industrial Area-37</p>
+                                    <p class="mb-0">Building No: 19, Doha-Qatar</p>
+                                </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Contact Start -->
+{% endblock %}

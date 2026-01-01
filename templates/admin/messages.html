@@ -1,0 +1,196 @@
+{% extends "admin/base.html" %}
+
+{% block page_title %}Contact Messages{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">Contact Messages</h2>
+        <p class="text-muted mb-0">Manage customer inquiries and feedback</p>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+        <span class="badge bg-primary badge-modern fs-6 px-3 py-2">
+            <i class="fas fa-envelope me-1"></i>{{ messages|length }} Total
+        </span>
+        {% set unread_count = messages|selectattr('is_read', 'equalto', False)|list|length %}
+        {% if unread_count > 0 %}
+        <span class="badge bg-danger badge-modern fs-6 px-3 py-2">
+            <i class="fas fa-exclamation-circle me-1"></i>{{ unread_count }} Unread
+        </span>
+        {% endif %}
+    </div>
+</div>
+
+{% if messages %}
+<div class="modern-card">
+    <div class="card-body p-0">
+        <div class="list-group list-group-flush">
+            {% for message in messages %}
+            <div class="list-group-item border-0 px-4 py-4 {{ 'bg-light' if not message.is_read else '' }}">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="flex-grow-1">
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="avatar-circle bg-primary text-white me-3">
+                                {{ message.name[0]|upper }}
+                            </div>
+                            <div>
+                                <h6 class="mb-0 fw-semibold">{{ message.name }}</h6>
+                                <small class="text-muted">{{ message.email }}</small>
+                            </div>
+                            {% if not message.is_read %}
+                                <span class="badge bg-danger badge-modern ms-2">
+                                    <i class="fas fa-circle me-1"></i>New
+                                </span>
+                            {% endif %}
+                        </div>
+
+                        {% if message.subject %}
+                        <div class="mb-2">
+                            <span class="badge bg-info badge-modern">
+                                <i class="fas fa-tag me-1"></i>{{ message.subject }}
+                            </span>
+                        </div>
+                        {% endif %}
+
+                        <div class="message-content bg-light p-3 rounded mb-2">
+                            <p class="mb-0 text-dark">{{ message.message }}</p>
+                        </div>
+
+                        <div class="d-flex align-items-center justify-content-between">
+                            <small class="text-muted">
+                                <i class="fas fa-clock me-1"></i>
+                                {{ message.created_at.strftime('%B %d, %Y at %I:%M %p') }}
+                            </small>
+                            <div class="btn-group btn-group-sm">
+                                {% if not message.is_read %}
+                                <a href="{{ url_for('admin_mark_message_read', id=message.id) }}"
+                                   class="btn btn-outline-success btn-modern"
+                                   title="Mark as Read">
+                                    <i class="fas fa-check"></i>
+                                </a>
+                                {% endif %}
+                                <button class="btn btn-outline-primary btn-modern"
+                                        title="Reply to Message"
+                                        onclick="alert('Reply functionality would be implemented here')">
+                                    <i class="fas fa-reply"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Message Stats Footer -->
+    <div class="card-footer bg-light">
+        <div class="row text-center">
+            <div class="col-md-3">
+                <div class="stats-icon mb-1">
+                    <i class="fas fa-envelope text-primary fa-lg"></i>
+                </div>
+                <div class="fw-semibold">{{ messages|length }}</div>
+                <small class="text-muted">Total Messages</small>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-icon mb-1">
+                    <i class="fas fa-eye text-success fa-lg"></i>
+                </div>
+                <div class="fw-semibold">{{ messages|selectattr('is_read', 'equalto', True)|list|length }}</div>
+                <small class="text-muted">Read Messages</small>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-icon mb-1">
+                    <i class="fas fa-clock text-warning fa-lg"></i>
+                </div>
+                <div class="fw-semibold">{{ messages|selectattr('is_read', 'equalto', False)|list|length }}</div>
+                <small class="text-muted">Unread Messages</small>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-icon mb-1">
+                    <i class="fas fa-calendar text-info fa-lg"></i>
+                </div>
+                <div class="fw-semibold">
+                    {% if messages %}
+                        {{ messages[0].created_at.strftime('%b %d') }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </div>
+                <small class="text-muted">Latest Message</small>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="text-center py-5">
+    <div class="modern-card d-inline-block p-5">
+        <div class="avatar-circle bg-light text-muted mx-auto mb-4" style="width: 80px; height: 80px; font-size: 2rem;">
+            <i class="fas fa-envelope-open"></i>
+        </div>
+        <h4 class="text-muted mb-3">No messages yet</h4>
+        <p class="text-muted mb-4">Contact messages from your website will appear here</p>
+        <div class="d-flex justify-content-center gap-2">
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-primary btn-modern">
+                <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
+            </a>
+            <a href="{{ url_for('home') }}" target="_blank" class="btn btn-outline-info btn-modern">
+                <i class="fas fa-external-link-alt me-1"></i>View Contact Page
+            </a>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Message Management Tips -->
+{% if messages %}
+<div class="modern-card mt-4">
+    <div class="card-body">
+        <h6 class="text-muted mb-3">
+            <i class="fas fa-lightbulb text-warning me-2"></i>Message Management Tips
+        </h6>
+        <div class="row">
+            <div class="col-md-6">
+                <h6 class="text-primary mb-2">Best Practices:</h6>
+                <ul class="text-muted small mb-0">
+                    <li>Respond to messages within 24 hours</li>
+                    <li>Mark messages as read after responding</li>
+                    <li>Keep track of important customer inquiries</li>
+                    <li>Use the subject line for quick identification</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h6 class="text-success mb-2">Quick Actions:</h6>
+                <div class="d-flex flex-wrap gap-2">
+                    <button class="btn btn-sm btn-outline-primary" onclick="alert('Bulk actions would be implemented here')">Mark All Read</button>
+                    <button class="btn btn-sm btn-outline-danger" onclick="alert('Export functionality would be implemented here')">Export Messages</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<style>
+.avatar-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.message-content {
+    border-left: 4px solid var(--admin-primary);
+    background: rgba(99, 102, 241, 0.05) !important;
+}
+
+.stats-icon {
+    opacity: 0.7;
+}
+</style>
+{% endblock %}

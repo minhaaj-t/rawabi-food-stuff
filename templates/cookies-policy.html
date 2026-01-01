@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Cookies Policy - AL RAWABI FOOD STUFF W.L.L{% endblock %}
+
+{% block content %}
+<!-- Full Screen Search Overlay Start -->
+    <div id="searchOverlay" class="search-overlay">
+        <div class="search-container">
+            <div class="search-content">
+                <button class="search-close" onclick="closeSearch()">&times;</button>
+                <div class="search-form">
+                    <input type="text" class="search-input" placeholder="Search..." id="searchInput">
+                    <button type="button" class="search-submit" onclick="performSearch()">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Full Screen Search Overlay End -->
+
+    <!-- Page Header Start -->
+    <div class="container-fluid page-header py-5 mb-5 wow fadeIn" data-wow-delay="0.1s">
+        <div class="container text-center py-5">
+            <h1 class="display-2 text-dark mb-4 animated slideInDown">Cookie Policy</h1>
+            <nav aria-label="breadcrumb animated slideInDown">
+                <ol class="breadcrumb justify-content-center mb-0">
+                    <li class="breadcrumb-item"><a href="{{ url_for('home') }}">Home</a></li>
+                    <li class="breadcrumb-item text-dark" aria-current="page">Cookie Policy</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+
+    <!-- Cookie Policy Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-8 mx-auto wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="section-title text-center">
+                        <p class="fs-5 fw-medium fst-italic text-primary">Privacy Policy</p>
+                        <h1 class="display-6">Cookie Policy</h1>
+                    </div>
+
+                    <div class="mb-5">
+                        <h3>What are Cookies?</h3>
+                        <p>Cookies are small text files that are stored on your computer or mobile device when you visit our website. They help us provide you with a better browsing experience by remembering your preferences and understanding how you use our site.</p>
+                    </div>
+
+                    <div class="mb-5">
+                        <h3>How We Use Cookies</h3>
+                        <p>We use cookies for the following purposes:</p>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><i class="fa fa-check text-primary me-3"></i><strong>Essential Cookies:</strong> Required for the website to function properly</li>
+                            <li class="mb-2"><i class="fa fa-check text-primary me-3"></i><strong>Analytics Cookies:</strong> Help us understand how visitors interact with our website</li>
+                            <li class="mb-2"><i class="fa fa-check text-primary me-3"></i><strong>Functional Cookies:</strong> Remember your preferences and settings</li>
+                            <li class="mb-2"><i class="fa fa-check text-primary me-3"></i><strong>Marketing Cookies:</strong> Used to deliver relevant advertisements</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-5">
+                        <h3>Types of Cookies We Use</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="border p-3 mb-3">
+                                    <h5 class="text-primary">Session Cookies</h5>
+                                    <p class="mb-0">Temporary cookies that expire when you close your browser</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="border p-3 mb-3">
+                                    <h5 class="text-primary">Persistent Cookies</h5>
+                                    <p class="mb-0">Cookies that remain on your device for a set period</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-5">
+                        <h3>Managing Cookies</h3>
+                        <p>You can control and manage cookies in various ways:</p>
+                        <ul>
+                            <li>Most web browsers allow you to control cookies through their settings</li>
+                            <li>You can delete all cookies that are already on your computer</li>
+                            <li>You can set most browsers to prevent cookies from being placed</li>
+                            <li>Note that disabling cookies may affect the functionality of our website</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-5">
+                        <h3>Third-party Cookies</h3>
+                        <p>Some cookies on our website are set by third-party services that appear on our pages. We have no control over these cookies, and they are subject to the respective third party's privacy policy.</p>
+                    </div>
+
+                    <div class="mb-5">
+                        <h3>Updates to This Policy</h3>
+                        <p>We may update this Cookie Policy from time to time. Any changes will be posted on this page with an updated revision date.</p>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <h5><i class="fa fa-info-circle me-2"></i>Contact Us</h5>
+                        <p class="mb-0">If you have any questions about our use of cookies, please contact us at <a href="mailto:info@alrawabigroup.com">info@alrawabigroup.com</a></p>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <a href="{{ url_for('home') }}" class="btn btn-primary rounded-pill py-3 px-5">Return to Home</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Cookie Policy End -->
+{% endblock %}

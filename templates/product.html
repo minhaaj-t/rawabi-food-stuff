@@ -1,0 +1,299 @@
+{% extends "base.html" %}
+
+{% block title %}Our Products - AL RAWABI FOOD STUFF W.L.L{% endblock %}
+
+{% block content %}
+<!-- Page Header Start -->
+    <div class="container-fluid page-header py-5 wow fadeIn" data-wow-delay="0.1s">
+        <div class="container text-center py-5">
+            <h1 class="display-2 text-dark mb-4 animated slideInDown">Products</h1>
+            <nav aria-label="breadcrumb animated slideInDown">
+                <ol class="breadcrumb justify-content-center mb-0">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item"><a href="#">Pages</a></li>
+                    <li class="breadcrumb-item text-dark" aria-current="page">Products</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+
+    <!-- Products Start -->
+    <div class="container-fluid product py-5">
+        <div class="container py-5">
+            <div class="section-title text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+                <p class="fs-5 fw-medium fst-italic text-primary">Our Products</p>
+                <h1 class="display-6">Tea has a complex positive effect on the body</h1>
+            </div>
+
+            <div class="row wow fadeInUp" data-wow-delay="0.3s">
+                <!-- Sidebar Filters -->
+                <div class="col-lg-3">
+                    <div class="bg-light p-4 rounded">
+                        <h5 class="mb-3">Search Products</h5>
+                        <div class="input-group mb-4">
+                            <input type="text" class="form-control" placeholder="Search..." id="productSearch">
+                            <button class="btn btn-primary" type="button">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+
+                        <h5 class="mb-3">Filter by Category</h5>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" value="green" id="greenTea">
+                            <label class="form-check-label" for="greenTea">
+                                Green Tea
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" value="black" id="blackTea">
+                            <label class="form-check-label" for="blackTea">
+                                Black Tea
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" value="spiced" id="spicedTea">
+                            <label class="form-check-label" for="spicedTea">
+                                Spiced Tea
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" value="organic" id="organicTea">
+                            <label class="form-check-label" for="organicTea">
+                                Organic Tea
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" value="herbal" id="herbalTea">
+                            <label class="form-check-label" for="herbalTea">
+                                Herbal Tea
+                            </label>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Products Grid -->
+                <div class="col-lg-9">
+                    <div class="row g-4" id="productsGrid">
+                        <div class="col-md-6 col-lg-4 product-item" data-category="green">
+                            <a href="" class="d-block product-item-link rounded">
+                                <img src="{{ url_for('static', filename='img/product-1.jpg') }}" alt="Green Tea" class="img-fluid rounded-top">
+                                <div class="bg-white shadow-sm text-center p-4">
+                                    <h4 class="text-primary">Green Tea</h4>
+                                    <span class="text-body">Diam dolor diam ipsum sit diam amet diam et eos. Clita erat ipsum</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-6 col-lg-4 product-item" data-category="black">
+                            <a href="" class="d-block product-item-link rounded">
+                                <img src="{{ url_for('static', filename='img/product-2.jpg') }}" alt="Black Tea" class="img-fluid rounded-top">
+                                <div class="bg-white shadow-sm text-center p-4">
+                                    <h4 class="text-primary">Black Tea</h4>
+                                    <span class="text-body">Diam dolor diam ipsum sit diam amet diam et eos. Clita erat ipsum</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-6 col-lg-4 product-item" data-category="spiced" >
+                            <a href="" class="d-block product-item-link rounded">
+                                <img src="{{ url_for('static', filename='img/product-3.jpg') }}" alt="Spiced Tea" class="img-fluid rounded-top">
+                                <div class="bg-white shadow-sm text-center p-4">
+                                    <h4 class="text-primary">Spiced Tea</h4>
+                                    <span class="text-body">Diam dolor diam ipsum sit diam amet diam et eos. Clita erat ipsum</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-6 col-lg-4 product-item" data-category="organic" >
+                            <a href="" class="d-block product-item-link rounded">
+                                <img src="{{ url_for('static', filename='img/product-4.jpg') }}" alt="Organic Tea" class="img-fluid rounded-top">
+                                <div class="bg-white shadow-sm text-center p-4">
+                                    <h4 class="text-primary">Organic Tea</h4>
+                                    <span class="text-body">Diam dolor diam ipsum sit diam amet diam et eos. Clita erat ipsum</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-6 col-lg-4 product-item" data-category="herbal" >
+                            <a href="" class="d-block product-item-link rounded">
+                                <img src="{{ url_for('static', filename='img/products/p1.png') }}" alt="Herbal Tea" class="img-fluid rounded-top">
+                                <div class="bg-white shadow-sm text-center p-4">
+                                    <h4 class="text-primary">Herbal Tea</h4>
+                                    <span class="text-body">Diam dolor diam ipsum sit diam amet diam et eos. Clita erat ipsum</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-6 col-lg-4 product-item" data-category="green" >
+                            <a href="" class="d-block product-item-link rounded">
+                                <img src="{{ url_for('static', filename='img/products/p2.png') }}" alt="Premium Green Tea" class="img-fluid rounded-top">
+                                <div class="bg-white shadow-sm text-center p-4">
+                                    <h4 class="text-primary">Premium Green Tea</h4>
+                                    <span class="text-body">Diam dolor diam ipsum sit diam amet diam et eos. Clita erat ipsum</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-6 col-lg-4 product-item" data-category="black" >
+                            <a href="" class="d-block product-item-link rounded">
+                                <img src="{{ url_for('static', filename='img/products/p3.png') }}" alt="Earl Grey Tea" class="img-fluid rounded-top">
+                                <div class="bg-white shadow-sm text-center p-4">
+                                    <h4 class="text-primary">Earl Grey Tea</h4>
+                                    <span class="text-body">Diam dolor diam ipsum sit diam amet diam et eos. Clita erat ipsum</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-6 col-lg-4 product-item" data-category="spiced" >
+                            <a href="" class="d-block product-item-link rounded">
+                                <img src="{{ url_for('static', filename='img/products/p4.png') }}" alt="Chai Tea" class="img-fluid rounded-top">
+                                <div class="bg-white shadow-sm text-center p-4">
+                                    <h4 class="text-primary">Chai Tea</h4>
+                                    <span class="text-body">Diam dolor diam ipsum sit diam amet diam et eos. Clita erat ipsum</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-6 col-lg-4 product-item" data-category="organic" >
+                            <a href="" class="d-block product-item-link rounded">
+                                <img src="{{ url_for('static', filename='img/products/p5.png') }}" alt="White Tea" class="img-fluid rounded-top">
+                                <div class="bg-white shadow-sm text-center p-4">
+                                    <h4 class="text-primary">White Tea</h4>
+                                    <span class="text-body">Diam dolor diam ipsum sit diam amet diam et eos. Clita erat ipsum</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-6 col-lg-4 product-item" data-category="herbal" >
+                            <a href="" class="d-block product-item-link rounded">
+                                <img src="{{ url_for('static', filename='img/products/p6.png') }}" alt="Mint Tea" class="img-fluid rounded-top">
+                                <div class="bg-white shadow-sm text-center p-4">
+                                    <h4 class="text-primary">Mint Tea</h4>
+                                    <span class="text-body">Diam dolor diam ipsum sit diam amet diam et eos. Clita erat ipsum</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-6 col-lg-4 product-item" data-category="green" >
+                            <a href="" class="d-block product-item-link rounded">
+                                <img src="{{ url_for('static', filename='img/products/p7.png') }}" alt="Jasmine Tea" class="img-fluid rounded-top">
+                                <div class="bg-white shadow-sm text-center p-4">
+                                    <h4 class="text-primary">Jasmine Tea</h4>
+                                    <span class="text-body">Diam dolor diam ipsum sit diam amet diam et eos. Clita erat ipsum</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-6 col-lg-4 product-item" data-category="black" >
+                            <a href="" class="d-block product-item-link rounded">
+                                <img src="{{ url_for('static', filename='img/products/product1.png') }}" alt="Darjeeling Tea" class="img-fluid rounded-top">
+                                <div class="bg-white shadow-sm text-center p-4">
+                                    <h4 class="text-primary">Darjeeling Tea</h4>
+                                    <span class="text-body">Diam dolor diam ipsum sit diam amet diam et eos. Clita erat ipsum</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Products End -->
+
+
+    <!-- Product Logos Start -->
+    <div class="container-fluid py-5">
+        <div class="container">
+            <div class="section-title text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+                <p class="fs-5 fw-medium fst-italic text-primary">Our Partners</p>
+                <h1 class="display-6">Trusted by Leading Brands</h1>
+            </div>
+            <div class="row g-4 justify-content-center">
+                <div class="col-lg-12">
+                    <div class="owl-carousel logo-carousel wow fadeInUp" data-wow-delay="0.5s">
+                        <div class="logo-item">
+                            <img src="{{ url_for('static', filename='img/rflogos/Abumnarah.png') }}" alt="Abumnarah" class="img-fluid">
+                        </div>
+                        <div class="logo-item">
+                            <img src="{{ url_for('static', filename='img/rflogos/Al-siha.png') }}" alt="Al-siha" class="img-fluid">
+                        </div>
+                        <div class="logo-item">
+                            <img src="{{ url_for('static', filename='img/rflogos/Amerikan-Speciality.png') }}" alt="Amerikan Speciality" class="img-fluid">
+                        </div>
+                        <div class="logo-item">
+                            <img src="{{ url_for('static', filename='img/rflogos/Belkis.png') }}" alt="Belkis" class="img-fluid">
+                        </div>
+                        <div class="logo-item">
+                            <img src="{{ url_for('static', filename='img/rflogos/Clean-cat-png.png') }}" alt="Clean Cat" class="img-fluid">
+                        </div>
+                        <div class="logo-item">
+                            <img src="{{ url_for('static', filename='img/rflogos/Domee.png') }}" alt="Domee" class="img-fluid">
+                        </div>
+                        <div class="logo-item">
+                            <img src="{{ url_for('static', filename='img/rflogos/Fransko.pngA_.png') }}" alt="Fransko" class="img-fluid">
+                        </div>
+                        <div class="logo-item">
+                            <img src="{{ url_for('static', filename='img/rflogos/Fresh-fresh-.png') }}" alt="Fresh Fresh" class="img-fluid">
+                        </div>
+                        <div class="logo-item">
+                            <img src="{{ url_for('static', filename='img/rflogos/Fruitomans.png') }}" alt="Fruitomans" class="img-fluid">
+                        </div>
+                        <div class="logo-item">
+                            <img src="{{ url_for('static', filename='img/rflogos/Galina-Logo.png') }}" alt="Galina" class="img-fluid">
+                        </div>
+                        <div class="logo-item">
+                            <img src="{{ url_for('static', filename='img/rflogos/Green-garden.png') }}" alt="Green Garden" class="img-fluid">
+                        </div>
+                        <div class="logo-item">
+                            <img src="{{ url_for('static', filename='img/rflogos/Hutesa.png') }}" alt="Hutesa" class="img-fluid">
+                        </div>
+                        <div class="logo-item">
+                            <img src="{{ url_for('static', filename='img/rflogos/JUMBO.png') }}" alt="JUMBO" class="img-fluid">
+                        </div>
+                        <div class="logo-item">
+                            <img src="{{ url_for('static', filename='img/rflogos/kerala-kitchen.png') }}" alt="Kerala Kitchen" class="img-fluid">
+                        </div>
+                        <div class="logo-item">
+                            <img src="{{ url_for('static', filename='img/rflogos/MAI-QATAR.png') }}" alt="MAI QATAR" class="img-fluid">
+                        </div>
+                        <div class="logo-item">
+                            <img src="{{ url_for('static', filename='img/rflogos/Mayyonise.jpg') }}" alt="Mayyonise" class="img-fluid">
+                        </div>
+                        <div class="logo-item">
+                            <img src="{{ url_for('static', filename='img/rflogos/Metro.png') }}" alt="Metro" class="img-fluid">
+                        </div>
+                        <div class="logo-item">
+                            <img src="{{ url_for('static', filename='img/rflogos/MilkMagic.png') }}" alt="Milk Magic" class="img-fluid">
+                        </div>
+                        <div class="logo-item">
+                            <img src="{{ url_for('static', filename='img/rflogos/MOONI.png') }}" alt="MOONI" class="img-fluid">
+                        </div>
+                        <div class="logo-item">
+                            <img src="{{ url_for('static', filename='img/rflogos/Mr.-Extra.png') }}" alt="Mr. Extra" class="img-fluid">
+                        </div>
+                        <div class="logo-item">
+                            <img src="{{ url_for('static', filename='img/rflogos/Parrot.png') }}" alt="Parrot" class="img-fluid">
+                        </div>
+                        <div class="logo-item">
+                            <img src="{{ url_for('static', filename='img/rflogos/Prima-1.png') }}" alt="Prima" class="img-fluid">
+                        </div>
+                        <div class="logo-item">
+                            <img src="{{ url_for('static', filename='img/rflogos/RAWABI-FRESH.png') }}" alt="RAWABI FRESH" class="img-fluid">
+                        </div>
+                        <div class="logo-item">
+                            <img src="{{ url_for('static', filename='img/rflogos/Rawabi-Gold.png') }}" alt="Rawabi Gold" class="img-fluid">
+                        </div>
+                        <div class="logo-item">
+                            <img src="{{ url_for('static', filename='img/rflogos/Royal-taj.png') }}" alt="Royal Taj" class="img-fluid">
+                        </div>
+                        <div class="logo-item">
+                            <img src="{{ url_for('static', filename='img/rflogos/single-Spoon.png') }}" alt="Single Spoon" class="img-fluid">
+                        </div>
+                        <div class="logo-item">
+                            <img src="{{ url_for('static', filename='img/rflogos/SONA-MASOORI-RICE.png') }}" alt="SONA MASOORI RICE" class="img-fluid">
+                        </div>
+                        <div class="logo-item">
+                            <img src="{{ url_for('static', filename='img/rflogos/Super-excel.png') }}" alt="Super Excel" class="img-fluid">
+                        </div>
+                        <div class="logo-item">
+                            <img src="{{ url_for('static', filename='img/rflogos/Winn.png') }}" alt="Winn" class="img-fluid">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Product Logos End -->
+{% endblock %}
