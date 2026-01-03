@@ -557,43 +557,6 @@
         });
         */
 
-        // Happy New Year Popup - Force show for testing
-        setTimeout(function() {
-            $('#newYearPopup').addClass('show').css('opacity', '1').css('visibility', 'visible');
-        }, 1000);
-
-        // Function to close the popup
-        window.closeNewYearPopup = function() {
-            $('#newYearPopup').removeClass('show');
-        };
-
-        // Close popup when clicking outside
-        $('#newYearPopup').on('click', function(e) {
-            if (e.target === this) {
-                closeNewYearPopup();
-            }
-        });
-
-        // Close button functionality - ensure it works
-        $(document).on('click', '.new-year-close', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            closeNewYearPopup();
-            return false;
-        });
-
-        // Continue button functionality
-        $(document).on('click', '.new-year-btn', function(e) {
-            e.preventDefault();
-            closeNewYearPopup();
-        });
-
-        // Keyboard support (ESC to close)
-        $(document).on('keydown', function(e) {
-            if (e.key === 'Escape' && $('#newYearPopup').hasClass('show')) {
-                closeNewYearPopup();
-            }
-        });
     });
 
 })(jQuery);
