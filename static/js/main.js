@@ -8,7 +8,7 @@
         // Initialize navbar state based on current scroll position
         var initialScrollTop = $(window).scrollTop();
         var windowHeight = $(window).height();
-        var triggerPoint = Math.max(windowHeight * 0.8, 600);
+        var triggerPoint = Math.max(windowHeight * 0.5, 350);
 
         if (initialScrollTop > triggerPoint) {
             $('.sticky-top').addClass('navbar-visible').removeClass('navbar-hidden');
@@ -30,7 +30,7 @@
     // Initiate the wowjs
     new WOW().init();
 
-    // Initialize Header Carousel
+    // Initialize Header Carousel with custom smooth animation
     $('#header-carousel').carousel({
         interval: 5000, // Auto slide every 5 seconds
         pause: 'hover', // Pause on hover
@@ -38,12 +38,54 @@
         keyboard: true // Allow keyboard navigation
     });
 
+    // Custom animation handling for smoother transitions
+    $('#header-carousel').on('slide.bs.carousel', function(e) {
+        var $carousel = $(this);
+        var $activeItem = $carousel.find('.carousel-item.active');
+        var direction = e.direction; // 'left' or 'right'
+
+        // Remove any existing animations and classes
+        $carousel.find('.carousel-item').removeClass('carousel-item-start carousel-item-end');
+
+        // Clear any lingering transforms
+        $carousel.find('.carousel-item').css('transform', '');
+
+        if (direction === 'left') {
+            // Moving to next slide
+            $activeItem.addClass('carousel-item-start');
+        } else {
+            // Moving to previous slide
+            $activeItem.addClass('carousel-item-end');
+        }
+    });
+
+    // Clean up after slide transition completes
+    $('#header-carousel').on('slid.bs.carousel', function(e) {
+        var $carousel = $(this);
+
+        // Remove animation classes and reset all positioning
+        setTimeout(function() {
+            $carousel.find('.carousel-item').removeClass('carousel-item-start carousel-item-end carousel-item-next carousel-item-prev');
+            $carousel.find('.carousel-item').css({
+                'transform': '',
+                'left': '',
+                'top': '',
+                'position': '',
+                'z-index': ''
+            });
+
+            // Ensure only the active item is visible
+            $carousel.find('.carousel-item').not('.active').hide();
+            $carousel.find('.carousel-item.active').show();
+        }, 50);
+    });
+
 
     // Sticky Navbar - Show after slider with smooth scroll effect
     $(window).scroll(function () {
         var scrollTop = $(this).scrollTop();
         var windowHeight = $(window).height();
-        var triggerPoint = Math.max(windowHeight * 0.8, 600); // Show after 80% of viewport height or minimum 600px (after slider)
+        var triggerPoint = Math.max(windowHeight * 0.5, 350); // Show after 50% of viewport height or minimum 350px (after slider)
 
         if (scrollTop > triggerPoint) {
             $('.sticky-top').addClass('navbar-visible').removeClass('navbar-hidden');

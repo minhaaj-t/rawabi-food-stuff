@@ -198,18 +198,200 @@ body {
 
 
 /*** Header ***/
+/* Carousel container wrapper */
+.container-fluid.px-0.mb-5 {
+    position: relative !important;
+    margin: 0 0 3rem 0 !important; /* Keep bottom margin only */
+    padding: 0 !important;
+    top: 0 !important;
+    left: 0 !important;
+    overflow: visible !important;
+}
+
 #header-carousel {
+    position: relative !important;
+    overflow: hidden !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    top: 0 !important;
+    left: 0 !important;
+    transform: none !important;
+    display: block !important;
+    height: auto !important;
+    min-height: 70vh !important;
+}
+
+/* Reset any Bootstrap carousel positioning */
+.carousel {
+    position: relative !important;
+    top: 0 !important;
+    left: 0 !important;
+}
+
+/* Carousel inner container - consolidated rules */
+.carousel-inner,
+#header-carousel .carousel-inner {
+    position: relative !important;
+    width: 100% !important;
+    overflow: hidden !important;
+    height: auto !important;
+    min-height: 70vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    top: 0 !important;
+    left: 0 !important;
+}
+
+.carousel-item {
     position: relative;
-    overflow: hidden;
     width: 100%;
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+/* Custom sliding animations */
+.carousel-item.active {
+    display: block !important;
+    z-index: 1 !important;
+}
+
+/* Let Bootstrap handle display naturally */
+
+.carousel-item-next,
+.carousel-item-prev {
+    display: block !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 2 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Smooth slide-in animations */
+.carousel-item-next {
+    animation: slideInFromRight 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) ease-out;
+}
+
+.carousel-item-prev {
+    animation: slideInFromLeft 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) ease-out;
+}
+
+.carousel-item.active.carousel-item-start {
+    animation: slideOutToLeft 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) ease-out;
+}
+
+.carousel-item.active.carousel-item-end {
+    animation: slideOutToRight 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) ease-out;
+}
+
+/* Custom keyframe animations with smooth easing */
+@keyframes slideInFromRight {
+    0% {
+        transform: translateX(100%) scale(0.95);
+        opacity: 0;
+        filter: blur(2px);
+    }
+    60% {
+        transform: translateX(30%) scale(0.97);
+        opacity: 0.8;
+        filter: blur(1px);
+    }
+    100% {
+        transform: translateX(0) scale(1);
+        opacity: 1;
+        filter: blur(0);
+    }
+}
+
+@keyframes slideInFromLeft {
+    0% {
+        transform: translateX(-100%) scale(0.95);
+        opacity: 0;
+        filter: blur(2px);
+    }
+    60% {
+        transform: translateX(-30%) scale(0.97);
+        opacity: 0.8;
+        filter: blur(1px);
+    }
+    100% {
+        transform: translateX(0) scale(1);
+        opacity: 1;
+        filter: blur(0);
+    }
+}
+
+@keyframes slideOutToLeft {
+    0% {
+        transform: translateX(0) scale(1);
+        opacity: 1;
+        filter: blur(0);
+    }
+    50% {
+        transform: translateX(-25%) scale(0.98);
+        opacity: 0.7;
+        filter: blur(1px);
+    }
+    100% {
+        transform: translateX(-100%) scale(0.95);
+        opacity: 0;
+        filter: blur(2px);
+    }
+}
+
+@keyframes slideOutToRight {
+    0% {
+        transform: translateX(0) scale(1);
+        opacity: 1;
+        filter: blur(0);
+    }
+    50% {
+        transform: translateX(25%) scale(0.98);
+        opacity: 0.7;
+        filter: blur(1px);
+    }
+    100% {
+        transform: translateX(100%) scale(0.95);
+        opacity: 0;
+        filter: blur(2px);
+    }
 }
 
 
 #header-carousel .carousel-item {
-    position: relative;
-    min-height: 100vh;
-    overflow: hidden;
-    width: 100%;
+    position: relative !important;
+    display: none !important;
+    min-height: 70vh !important;
+    overflow: hidden !important;
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    top: 0 !important;
+    left: 0 !important;
+    transform: none !important;
+}
+
+#header-carousel .carousel-item.active {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+#header-carousel /* Let Bootstrap handle display naturally */
+
+#header-carousel .carousel-item img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+    position: relative !important;
+    visibility: visible !important;
+    opacity: 1 !important;
 }
 
 #header-carousel video {
@@ -217,10 +399,10 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    height: 120vh; /* Slightly taller for parallax effect */
+    height: 85vh; /* Slightly taller for parallax effect */
     object-fit: cover;
     will-change: transform; /* Optimize for animations */
-    min-height: 100vh;
+    min-height: 70vh;
     z-index: 0;
 }
 
@@ -254,22 +436,25 @@ body {
     z-index: 5;
 }
 
-.carousel-control-prev,
-.carousel-control-next {
-    width: 60px;
-    height: 60px;
-    background: rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border: 2px solid rgba(255, 255, 255, 0.4);
-    border-radius: 50%;
-    top: 50%;
-    transform: translateY(-50%);
-    transition: all 0.4s ease;
-    opacity: 0;
-    visibility: hidden;
-    z-index: 10;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+#header-carousel .carousel-control-prev,
+#header-carousel .carousel-control-next {
+    width: 40px !important;
+    height: 40px !important;
+    background: rgba(255, 255, 255, 0.25) !important;
+    backdrop-filter: blur(15px) !important;
+    -webkit-backdrop-filter: blur(15px) !important;
+    border: 2px solid rgba(255, 255, 255, 0.4) !important;
+    border-radius: 50% !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    transition: all 0.4s ease !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    z-index: 10 !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
+    position: absolute !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 .carousel-control-prev {
@@ -282,23 +467,24 @@ body {
 
 #header-carousel:hover .carousel-control-prev,
 #header-carousel:hover .carousel-control-next {
-    opacity: 0.9;
-    visibility: visible;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(-50%) scale(1.1) !important;
 }
 
 .carousel-control-prev:hover,
 .carousel-control-next:hover {
-    background: rgba(255, 255, 255, 0.35);
-    border-color: rgba(255, 255, 255, 0.6);
-    opacity: 1;
-    transform: translateY(-50%) scale(1.1);
-    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+    background: rgba(255, 255, 255, 0.35) !important;
+    border-color: rgba(255, 255, 255, 0.6) !important;
+    opacity: 1 !important;
+    transform: translateY(-50%) scale(1.1) !important;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2) !important;
 }
 
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     background-color: transparent;
     border: none;
     background-image: none;
@@ -318,35 +504,35 @@ body {
 }
 
 .carousel-control-prev-icon::before {
-    border-width: 8px 12px 8px 0;
+    border-width: 6px 9px 6px 0;
     border-color: transparent #000000 transparent transparent;
-    margin-left: -2px;
+    margin-left: -1px;
 }
 
 .carousel-control-next-icon::before {
-    border-width: 8px 0 8px 12px;
+    border-width: 6px 0 6px 9px;
     border-color: transparent transparent transparent #000000;
-    margin-left: 2px;
+    margin-left: 1px;
 }
 
 /* Add glow effect on hover */
 .carousel-control-prev:hover,
 .carousel-control-next:hover {
-    box-shadow: 0 0 20px rgba(20, 167, 81, 0.5);
+    box-shadow: 0 0 20px rgba(20, 167, 81, 0.5) !important;
 }
 
 @media (max-width: 768px) {
     #header-carousel .carousel-item {
         position: relative;
-        min-height: 70vh;
+        min-height: 55vh;
         overflow: hidden;
     }
 
     #header-carousel .carousel-item img {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        position: relative !important;
     }
 
     .carousel-caption {
@@ -368,54 +554,56 @@ body {
     }
 
     /* Mobile Carousel Controls */
-    .carousel-control-prev,
-    .carousel-control-next {
-        width: 50px;
-        height: 50px;
-        left: 15px;
-        right: 15px;
-        background: rgba(255, 255, 255, 0.3);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 2px solid rgba(255, 255, 255, 0.5);
-        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.15);
-        opacity: 0;
-        visibility: hidden;
+    #header-carousel .carousel-control-prev,
+    #header-carousel .carousel-control-next {
+        width: 35px !important;
+        height: 35px !important;
+        left: 15px !important;
+        right: 15px !important;
+        background: rgba(255, 255, 255, 0.3) !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+        border: 2px solid rgba(255, 255, 255, 0.5) !important;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.15) !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
     }
 
     #header-carousel:hover .carousel-control-prev,
     #header-carousel:hover .carousel-control-next {
-        opacity: 0.9;
-        visibility: visible;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: translateY(-50%) scale(1.1) !important;
     }
 
     .carousel-control-prev-icon::before {
-        border-width: 6px 10px 6px 0;
+        border-width: 4px 7px 4px 0;
         border-color: transparent #000000 transparent transparent;
     }
 
     .carousel-control-next-icon::before {
-        border-width: 6px 0 6px 10px;
+        border-width: 4px 0 4px 7px;
         border-color: transparent transparent transparent #000000;
     }
 
     .carousel-control-prev:hover,
     .carousel-control-next:hover {
-        background: rgba(255, 255, 255, 0.4);
-        border-color: rgba(255, 255, 255, 0.7);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
-        opacity: 1;
+        background: rgba(255, 255, 255, 0.4) !important;
+        border-color: rgba(255, 255, 255, 0.7) !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25) !important;
+        opacity: 1 !important;
+        transform: translateY(-50%) scale(1.1) !important;
     }
 
 }
 
 @media (max-width: 576px) {
     #header-carousel .carousel-item {
-        min-height: 60vh;
+        min-height: 50vh;
     }
 
     #header-carousel video {
-        height: 80vh;
+        height: 60vh;
     }
 
     .carousel-caption h1.display-1 {
@@ -435,11 +623,11 @@ body {
 
 @media (min-width: 769px) and (max-width: 991px) {
     #header-carousel .carousel-item {
-        min-height: 85vh;
+        min-height: 65vh;
     }
 
     #header-carousel video {
-        height: 110vh;
+        height: 75vh;
     }
 
     .carousel-caption h1.display-1 {
@@ -454,11 +642,11 @@ body {
 
 @media (min-width: 1200px) {
     #header-carousel .carousel-item {
-        min-height: 100vh;
+        min-height: 70vh;
     }
 
     #header-carousel video {
-        height: 120vh;
+        height: 85vh;
     }
 
     .carousel-caption h1.display-1 {
@@ -1050,7 +1238,7 @@ body {
     }
 
     .carousel-caption {
-        min-height: 100vh !important;
+        min-height: 70vh !important;
         display: flex !important;
         align-items: center !important;
     }
