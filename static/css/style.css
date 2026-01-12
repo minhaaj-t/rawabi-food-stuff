@@ -90,8 +90,26 @@ body {
 
 /*** Navbar ***/
 .sticky-top {
-    top: -150px;
-    transition: .5s;
+    position: sticky !important;
+    top: -150px !important; /* Start hidden */
+    z-index: 1030;
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1) !important; /* Smooth easing transition */
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Navbar states for smooth reveal */
+.navbar-hidden {
+    top: -150px !important;
+    box-shadow: none !important;
+}
+
+.navbar-visible {
+    top: 0px !important;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1) !important;
 }
 
 .navbar .navbar-brand {
@@ -186,6 +204,7 @@ body {
     width: 100%;
 }
 
+
 #header-carousel .carousel-item {
     position: relative;
     min-height: 100vh;
@@ -219,18 +238,101 @@ body {
     padding: 0 15px;
 }
 
+/* Carousel Controls (Arrows) */
+#header-carousel {
+    position: relative;
+}
+
+#header-carousel::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--primary);
+    z-index: 5;
+}
+
 .carousel-control-prev,
 .carousel-control-next {
-    width: 15%;
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: all 0.4s ease;
+    opacity: 0;
+    visibility: hidden;
+    z-index: 10;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.carousel-control-prev {
+    left: 30px;
+}
+
+.carousel-control-next {
+    right: 30px;
+}
+
+#header-carousel:hover .carousel-control-prev,
+#header-carousel:hover .carousel-control-next {
+    opacity: 0.9;
+    visibility: visible;
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+    background: rgba(255, 255, 255, 0.35);
+    border-color: rgba(255, 255, 255, 0.6);
+    opacity: 1;
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
 }
 
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
-    width: 3.5rem;
-    height: 3.5rem;
-    border-radius: 3.5rem;
-    background-color: var(--dark);
-    border: 15px solid var(--dark);
+    width: 20px;
+    height: 20px;
+    background-color: transparent;
+    border: none;
+    background-image: none;
+    position: relative;
+}
+
+.carousel-control-prev-icon::before,
+.carousel-control-next-icon::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    transform: translate(-50%, -50%);
+}
+
+.carousel-control-prev-icon::before {
+    border-width: 8px 12px 8px 0;
+    border-color: transparent #000000 transparent transparent;
+    margin-left: -2px;
+}
+
+.carousel-control-next-icon::before {
+    border-width: 8px 0 8px 12px;
+    border-color: transparent transparent transparent #000000;
+    margin-left: 2px;
+}
+
+/* Add glow effect on hover */
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+    box-shadow: 0 0 20px rgba(20, 167, 81, 0.5);
 }
 
 @media (max-width: 768px) {
@@ -238,10 +340,6 @@ body {
         position: relative;
         min-height: 70vh;
         overflow: hidden;
-    }
-
-    #header-carousel video {
-        height: 90vh; /* Adjust for mobile parallax */
     }
 
     #header-carousel .carousel-item img {
@@ -268,6 +366,47 @@ body {
     .carousel-caption .fs-4 {
         font-size: 1.1rem !important;
     }
+
+    /* Mobile Carousel Controls */
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: 50px;
+        height: 50px;
+        left: 15px;
+        right: 15px;
+        background: rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.15);
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    #header-carousel:hover .carousel-control-prev,
+    #header-carousel:hover .carousel-control-next {
+        opacity: 0.9;
+        visibility: visible;
+    }
+
+    .carousel-control-prev-icon::before {
+        border-width: 6px 10px 6px 0;
+        border-color: transparent #000000 transparent transparent;
+    }
+
+    .carousel-control-next-icon::before {
+        border-width: 6px 0 6px 10px;
+        border-color: transparent transparent transparent #000000;
+    }
+
+    .carousel-control-prev:hover,
+    .carousel-control-next:hover {
+        background: rgba(255, 255, 255, 0.4);
+        border-color: rgba(255, 255, 255, 0.7);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+        opacity: 1;
+    }
+
 }
 
 @media (max-width: 576px) {
@@ -925,22 +1064,26 @@ body {
 /*** Search Button Styling ***/
 #searchBtn {
     background: transparent !important;
-    border: 2px solid var(--primary) !important;
+    border: 2px solid rgba(255, 255, 255, 0.3) !important;
     border-radius: 50% !important;
     width: 40px !important;
     height: 40px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    color: var(--primary) !important;
+    color: #666 !important;
     transition: all 0.3s ease !important;
     margin-left: 10px !important;
+    cursor: pointer !important;
+    position: relative !important;
+    z-index: 10 !important;
 }
 
 #searchBtn:hover {
-    background: var(--primary) !important;
-    color: white !important;
-    transform: scale(1.1) !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(255, 255, 255, 0.5) !important;
+    color: #333 !important;
+    transform: scale(1.05) !important;
 }
 
 /*** Mega Menu ***/
@@ -1015,14 +1158,16 @@ body {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.9);
-    z-index: 9999;
+    z-index: 1050;
     display: none;
     justify-content: center;
     align-items: center;
+    /* backdrop-filter: blur(5px); */
+    /* -webkit-backdrop-filter: blur(5px); */
 }
 
 .search-overlay.active {
-    display: flex;
+    display: flex !important;
 }
 
 .search-container {

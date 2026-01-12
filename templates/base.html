@@ -38,6 +38,24 @@
     </div>
     <!-- Spinner End -->
 
+    <!-- Full Screen Search Overlay Start -->
+    <div id="searchOverlay" class="search-overlay">
+        <div class="search-container">
+            <div class="search-content">
+                <button class="search-close" onclick="closeSearch()">&times;</button>
+                <div class="search-form">
+                    <input type="text" class="search-input" placeholder="Search products..." id="searchInput">
+                    <button type="button" class="search-submit" onclick="performSearch()">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+                <div class="search-dropdown" id="searchDropdown">
+                    <!-- Search results will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Full Screen Search Overlay End -->
 
     <!-- Navbar Start -->
     <div class="container-fluid bg-white sticky-top">
@@ -59,32 +77,13 @@
                         <a href="{{ url_for('contact') }}" class="nav-item nav-link {% if request.endpoint == 'contact' %}active{% endif %}">Contact</a>
                     </div>
                     <div class="border-start ps-4 d-none d-lg-block">
-                        <button type="button" class="btn btn-sm p-0" id="searchBtn" onclick="openSearch()"><i class="fas fa-search"></i></button>
+                        <button type="button" class="btn btn-sm p-0" id="searchBtn"><i class="fas fa-search"></i></button>
                     </div>
                 </div>
             </nav>
         </div>
     </div>
     <!-- Navbar End -->
-
-    <!-- Full Screen Search Overlay Start -->
-    <div id="searchOverlay" class="search-overlay">
-        <div class="search-container">
-            <div class="search-content">
-                <button class="search-close" onclick="closeSearch()">&times;</button>
-                <div class="search-form">
-                    <input type="text" class="search-input" placeholder="Search products..." id="searchInput">
-                    <button type="button" class="search-submit" onclick="performSearch()">
-                        <i class="fa fa-search"></i>
-                    </button>
-                </div>
-                <div class="search-dropdown" id="searchDropdown">
-                    <!-- Search results will be populated here -->
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Full Screen Search Overlay End -->
 
     <!-- Page Content Start -->
     {% block content %}{% endblock %}

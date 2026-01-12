@@ -3,57 +3,28 @@
 {% block title %}Wholesale Food Supply Qatar - AL RAWABI FOOD STUFF W.L.L{% endblock %}
 
 {% block content %}
-<!-- Full Screen Search Overlay Start -->
-    <div id="searchOverlay" class="search-overlay">
-        <div class="search-container">
-            <div class="search-content">
-                <button class="search-close" onclick="closeSearch()">&times;</button>
-                <div class="search-form">
-                    <input type="text" class="search-input" placeholder="Search..." id="searchInput">
-                    <button type="button" class="search-submit" onclick="performSearch()">
-                        <i class="fa fa-search"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Full Screen Search Overlay End -->
 
     <!-- Carousel Start -->
     <div class="container-fluid px-0 mb-5">
-        <div id="header-carousel" class="carousel slide">
+        <div id="header-carousel" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <video class="w-100" autoplay muted loop playsinline style="object-fit: cover; position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
-                        <source src="{{ url_for('static', filename='vid/banner-video1.mp4') }}" type="video/mp4">
-                    </video>
-                    <div class="carousel-caption" style="position: relative; z-index: 1;">
-                        <div class="container-fluid px-3 px-md-5">
-                            <div class="row justify-content-start align-items-center min-vh-100">
-                                <div class="col-12 col-md-8 col-lg-7 col-xl-6 text-start px-3 px-md-4">
-                                    <p class="fs-4 fs-md-3 fs-lg-4 text-white animated zoomIn mb-3 mb-md-4">Welcome to <strong style="color: #FDBC15;">AL RAWABI FOOD STUFF</strong></p>
-                                    <h1 class="display-1 display-md-2 display-lg-1 text-white mb-4 animated zoomIn" style="width: 100%; max-width: 800px; line-height: 1.1;">Qatar's Trusted Source for Bulk Food Supply</h1>
-                                    <a href="" class="btn btn-primary rounded-pill py-2 py-md-3 px-4 px-md-5 animated zoomIn mt-3">Explore More</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <img class="w-100" src="{{ url_for('static', filename='img/slides/1.png') }}" alt="AL RAWABI FOOD STUFF Slide 1" style="object-fit: cover; height: 100vh;">
                 </div>
                 <div class="carousel-item">
-                    <img class="w-100" src="{{ url_for('static', filename='img/carousel-2.jpg') }}" alt="Image">
-                    <div class="carousel-caption">
-                        <div class="container-fluid px-3 px-md-5">
-                            <div class="row justify-content-center align-items-center min-vh-100">
-                                <div class="col-12 col-md-8 col-lg-7 col-xl-6 text-start px-3 px-md-4">
-                                    <p class="fs-4 fs-md-3 fs-lg-4 text-white animated zoomIn mb-3 mb-md-4">Welcome to <strong class="text-dark">TEA House</strong></p>
-                                    <h1 class="display-1 display-md-2 display-lg-1 text-dark mb-4 animated zoomIn" style="width: 100%; max-width: 800px; line-height: 1.1;">Organic & Quality Tea Production</h1>
-                                    <a href="" class="btn btn-light rounded-pill py-2 py-md-3 px-4 px-md-5 animated zoomIn mt-3">Explore More</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <img class="w-100" src="{{ url_for('static', filename='img/slides/2.png') }}" alt="AL RAWABI FOOD STUFF Slide 2" style="object-fit: cover; height: 100vh;">
                 </div>
             </div>
+
+            <!-- Carousel Controls -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#header-carousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#header-carousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
         </div>
     </div>
     <!-- Carousel End -->

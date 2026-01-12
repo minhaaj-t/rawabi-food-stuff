@@ -1,27 +1,54 @@
 (function ($) {
     "use strict";
 
-    // Spinner
-    var spinner = function () {
-        setTimeout(function () {
-            if ($('#spinner').length > 0) {
-                $('#spinner').removeClass('show');
-            }
-        }, 1);
-    };
-    spinner();
+    // Wait for DOM to be ready
+    $(document).ready(function() {
+        console.log('Document ready, initializing search functionality');
+
+        // Initialize navbar state based on current scroll position
+        var initialScrollTop = $(window).scrollTop();
+        var windowHeight = $(window).height();
+        var triggerPoint = Math.max(windowHeight * 0.8, 600);
+
+        if (initialScrollTop > triggerPoint) {
+            $('.sticky-top').addClass('navbar-visible').removeClass('navbar-hidden');
+        } else {
+            $('.sticky-top').addClass('navbar-hidden').removeClass('navbar-visible');
+        }
+
+        // Spinner
+        var spinner = function () {
+            setTimeout(function () {
+                if ($('#spinner').length > 0) {
+                    $('#spinner').removeClass('show');
+                }
+            }, 1);
+        };
+        spinner();
     
     
     // Initiate the wowjs
     new WOW().init();
 
+    // Initialize Header Carousel
+    $('#header-carousel').carousel({
+        interval: 5000, // Auto slide every 5 seconds
+        pause: 'hover', // Pause on hover
+        wrap: true, // Continuous loop
+        keyboard: true // Allow keyboard navigation
+    });
 
-    // Sticky Navbar
+
+    // Sticky Navbar - Show after slider with smooth scroll effect
     $(window).scroll(function () {
-        if ($(this).scrollTop() > 300) {
-            $('.sticky-top').addClass('shadow-sm').css('top', '0px');
+        var scrollTop = $(this).scrollTop();
+        var windowHeight = $(window).height();
+        var triggerPoint = Math.max(windowHeight * 0.8, 600); // Show after 80% of viewport height or minimum 600px (after slider)
+
+        if (scrollTop > triggerPoint) {
+            $('.sticky-top').addClass('navbar-visible').removeClass('navbar-hidden');
         } else {
-            $('.sticky-top').removeClass('shadow-sm').css('top', '-150px');
+            $('.sticky-top').addClass('navbar-hidden').removeClass('navbar-visible');
         }
     });
     
@@ -235,166 +262,227 @@
     });
 
 
-    // Full Screen Search
-    window.openSearch = function() {
-        document.getElementById('searchOverlay').classList.add('active');
-        document.getElementById('searchInput').focus();
-        document.body.style.overflow = 'hidden';
-    };
+        // Full Screen Search
+        window.openSearch = function() {
+            console.log('openSearch function called');
+            const overlay = document.getElementById('searchOverlay');
+            const input = document.getElementById('searchInput');
 
-    window.closeSearch = function() {
-        document.getElementById('searchOverlay').classList.remove('active');
-        document.body.style.overflow = 'auto';
-        document.getElementById('searchInput').value = '';
-        hideSearchDropdown();
-    };
+            console.log('Overlay element:', overlay);
+            console.log('Input element:', input);
 
-    // Search functionality variables
-    var searchTimeout = null;
-    var currentSearchTerm = '';
+            if (overlay) {
+                overlay.style.display = 'flex';
+                overlay.classList.add('active');
+                console.log('Search overlay activated');
+                console.log('Overlay classes:', overlay.className);
+                console.log('Overlay computed style display:', window.getComputedStyle(overlay).display);
+            } else {
+                console.error('Search overlay element not found');
+            }
 
-    // Show search dropdown
-    function showSearchDropdown() {
-        document.getElementById('searchDropdown').classList.add('show');
-    }
+            if (input) {
+                setTimeout(() => input.focus(), 100);
+                console.log('Search input will be focused');
+            } else {
+                console.error('Search input element not found');
+            }
 
-    // Hide search dropdown
-    function hideSearchDropdown() {
-        document.getElementById('searchDropdown').classList.remove('show');
-    }
+            document.body.style.overflow = 'hidden';
+        };
 
-    // Perform search API call
-    function performSearchAPI(query) {
-        if (query.length < 2) {
+        window.closeSearch = function() {
+            const overlay = document.getElementById('searchOverlay');
+            if (overlay) {
+                overlay.classList.remove('active');
+                overlay.style.display = 'none';
+            }
+            document.body.style.overflow = 'auto';
+            const input = document.getElementById('searchInput');
+            if (input) {
+                input.value = '';
+            }
             hideSearchDropdown();
-            return;
+        };
+
+        // Search functionality variables
+        var searchTimeout = null;
+        var currentSearchTerm = '';
+
+        // Show search dropdown
+        function showSearchDropdown() {
+            document.getElementById('searchDropdown').classList.add('show');
         }
 
-        fetch('/api/search/products?q=' + encodeURIComponent(query))
-            .then(response => response.json())
-            .then(data => {
-                displaySearchResults(data, query);
-            })
-            .catch(error => {
-                console.error('Search error:', error);
+        // Hide search dropdown
+        function hideSearchDropdown() {
+            document.getElementById('searchDropdown').classList.remove('show');
+        }
+
+        // Perform search API call
+        function performSearchAPI(query) {
+            if (query.length < 2) {
                 hideSearchDropdown();
-            });
-    }
+                return;
+            }
 
-    // Display search results in dropdown
-    function displaySearchResults(results, query) {
-        var dropdown = document.getElementById('searchDropdown');
-
-        if (results.length === 0) {
-            dropdown.innerHTML = '<div class="search-no-results">No products found for "' + query + '"</div>';
-            showSearchDropdown();
-            return;
+            fetch('/api/search/products?q=' + encodeURIComponent(query))
+                .then(response => response.json())
+                .then(data => {
+                    displaySearchResults(data, query);
+                })
+                .catch(error => {
+                    console.error('Search error:', error);
+                    hideSearchDropdown();
+                });
         }
 
-        var html = '';
-        results.forEach(function(product) {
-            var imageHtml = product.image_path ?
-                '<img src="' + product.image_path + '" alt="' + product.name + '" class="search-result-image">' :
-                '<div class="search-result-image"><i class="fas fa-box"></i></div>';
+        // Display search results in dropdown
+        function displaySearchResults(results, query) {
+            var dropdown = document.getElementById('searchDropdown');
 
-            html += '<div class="search-result-item" onclick="selectProduct(' + product.id + ')">' +
-                imageHtml +
-                '<div class="search-result-content">' +
-                    '<div class="search-result-name">' + highlightText(product.name, query) + '</div>' +
-                    (product.brand ? '<div class="search-result-brand">' + product.brand + '</div>' : '') +
-                    (product.category ? '<div class="search-result-category">' + product.category + '</div>' : '') +
-                '</div>' +
-                '</div>';
+            if (results.length === 0) {
+                dropdown.innerHTML = '<div class="search-no-results">No products found for "' + query + '"</div>';
+                showSearchDropdown();
+                return;
+            }
+
+            var html = '';
+            results.forEach(function(product) {
+                var imageHtml = product.image_path ?
+                    '<img src="' + product.image_path + '" alt="' + product.name + '" class="search-result-image">' :
+                    '<div class="search-result-image"><i class="fas fa-box"></i></div>';
+
+                html += '<div class="search-result-item" onclick="selectProduct(' + product.id + ')">' +
+                    imageHtml +
+                    '<div class="search-result-content">' +
+                        '<div class="search-result-name">' + highlightText(product.name, query) + '</div>' +
+                        (product.brand ? '<div class="search-result-brand">' + product.brand + '</div>' : '') +
+                        (product.category ? '<div class="search-result-category">' + product.category + '</div>' : '') +
+                    '</div>' +
+                    '</div>';
+            });
+
+            dropdown.innerHTML = html;
+            showSearchDropdown();
+        }
+
+        // Highlight search text in results
+        function highlightText(text, query) {
+            if (!query) return text;
+            var regex = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            return text.replace(regex, '<mark>$1</mark>');
+        }
+
+        // Handle product selection
+        window.selectProduct = function(productId) {
+            // For now, just close the search. You can implement navigation to product page here
+            console.log('Selected product:', productId);
+            closeSearch();
+            // You can add: window.location.href = '/product/' + productId;
+        };
+
+        // Search input handler
+        function handleSearchInput() {
+            var searchInput = document.getElementById('searchInput');
+            var query = searchInput.value.trim();
+
+            if (query === currentSearchTerm) {
+                return;
+            }
+
+            currentSearchTerm = query;
+
+            // Clear previous timeout
+            if (searchTimeout) {
+                clearTimeout(searchTimeout);
+            }
+
+            if (query.length === 0) {
+                hideSearchDropdown();
+                return;
+            }
+
+            // Debounce search requests
+            searchTimeout = setTimeout(function() {
+                performSearchAPI(query);
+            }, 300);
+        }
+
+        window.performSearch = function() {
+            var searchTerm = document.getElementById('searchInput').value.trim();
+            if (searchTerm) {
+                // Perform full search or redirect to search results page
+                console.log('Performing full search for: ' + searchTerm);
+                closeSearch();
+            }
+        };
+
+        // Ensure search button works
+        const searchBtn = document.getElementById('searchBtn');
+        if (searchBtn) {
+            searchBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Search button clicked via event listener');
+                window.openSearch();
+            });
+            console.log('Search button event listener attached');
+        } else {
+            console.error('Search button element not found');
+        }
+
+        // Initialize search overlay on page load
+        const searchOverlay = document.getElementById('searchOverlay');
+        if (searchOverlay) {
+            console.log('Search overlay found on page load');
+            searchOverlay.style.display = 'none';
+            searchOverlay.classList.remove('active');
+        } else {
+            console.error('Search overlay not found on page load');
+        }
+
+        // Search input event listeners
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.addEventListener('input', handleSearchInput);
+        } else {
+            console.error('Search input element not found');
+        }
+
+        // Close search on ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && document.getElementById('searchOverlay').classList.contains('active')) {
+                closeSearch();
+            }
+            // Handle Enter key in search input
+            if (e.key === 'Enter' && document.getElementById('searchOverlay').classList.contains('active')) {
+                performSearch();
+            }
         });
 
-        dropdown.innerHTML = html;
-        showSearchDropdown();
-    }
-
-    // Highlight search text in results
-    function highlightText(text, query) {
-        if (!query) return text;
-        var regex = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
-        return text.replace(regex, '<mark>$1</mark>');
-    }
-
-    // Handle product selection
-    window.selectProduct = function(productId) {
-        // For now, just close the search. You can implement navigation to product page here
-        console.log('Selected product:', productId);
-        closeSearch();
-        // You can add: window.location.href = '/product/' + productId;
-    };
-
-    // Search input handler
-    function handleSearchInput() {
-        var searchInput = document.getElementById('searchInput');
-        var query = searchInput.value.trim();
-
-        if (query === currentSearchTerm) {
-            return;
+        // Close search when clicking outside
+        const overlayElement = document.getElementById('searchOverlay');
+        if (overlayElement) {
+            overlayElement.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeSearch();
+                }
+            });
         }
 
-        currentSearchTerm = query;
+        // Hide dropdown when clicking outside search area
+        document.addEventListener('click', function(e) {
+            var searchOverlay = document.getElementById('searchOverlay');
+            var searchDropdown = document.getElementById('searchDropdown');
+            var searchInput = document.getElementById('searchInput');
 
-        // Clear previous timeout
-        if (searchTimeout) {
-            clearTimeout(searchTimeout);
-        }
+            if (searchOverlay && searchOverlay.classList.contains('active') &&
+                searchInput && !searchInput.contains(e.target) &&
+                searchDropdown && !searchDropdown.contains(e.target)) {
+                hideSearchDropdown();
+            }
+        });
 
-        if (query.length === 0) {
-            hideSearchDropdown();
-            return;
-        }
-
-        // Debounce search requests
-        searchTimeout = setTimeout(function() {
-            performSearchAPI(query);
-        }, 300);
-    }
-
-    window.performSearch = function() {
-        var searchTerm = document.getElementById('searchInput').value.trim();
-        if (searchTerm) {
-            // Perform full search or redirect to search results page
-            console.log('Performing full search for: ' + searchTerm);
-            closeSearch();
-        }
-    };
-
-    // Search input event listeners
-    document.getElementById('searchInput').addEventListener('input', handleSearchInput);
-
-    // Close search on ESC key
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && document.getElementById('searchOverlay').classList.contains('active')) {
-            closeSearch();
-        }
-        // Handle Enter key in search input
-        if (e.key === 'Enter' && document.getElementById('searchOverlay').classList.contains('active')) {
-            performSearch();
-        }
-    });
-
-    // Close search when clicking outside
-    document.getElementById('searchOverlay').addEventListener('click', function(e) {
-        if (e.target === this) {
-            closeSearch();
-        }
-    });
-
-    // Hide dropdown when clicking outside search area
-    document.addEventListener('click', function(e) {
-        var searchOverlay = document.getElementById('searchOverlay');
-        var searchDropdown = document.getElementById('searchDropdown');
-        var searchInput = document.getElementById('searchInput');
-
-        if (searchOverlay.classList.contains('active') &&
-            !searchInput.contains(e.target) &&
-            !searchDropdown.contains(e.target)) {
-            hideSearchDropdown();
-        }
-    });
 
     // Parallax effect for carousel video background
     $(window).scroll(function() {
@@ -556,6 +644,8 @@
             }
         });
         */
+
+    });
 
     });
 
