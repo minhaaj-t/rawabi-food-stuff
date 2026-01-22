@@ -45,8 +45,9 @@
                 <button class="search-close" onclick="closeSearch()">&times;</button>
                 <div class="search-form">
                     <input type="text" class="search-input" placeholder="Search products..." id="searchInput">
-                    <button type="button" class="search-submit" onclick="performSearch()">
-                        <i class="fa fa-search"></i>
+                    <button type="button" class="search-submit" onclick="performSearch()" style="display: flex; align-items: center; justify-content: center;">
+                        <img src="{{ url_for('static', filename='img/magnifying-glass.png') }}" alt="Search" style="width: 20px; height: 20px; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+                        <i class="fa fa-search" style="display: none;"></i>
                     </button>
                 </div>
                 <div class="search-dropdown" id="searchDropdown">
@@ -82,7 +83,10 @@
                         <a href="{{ url_for('career') }}" class="nav-item nav-link {% if request.endpoint == 'career' %}active{% endif %}">Career</a>
                     </div>
                     <div class="border-start ps-4 d-none d-lg-block">
-                        <button type="button" class="btn btn-sm p-0" id="searchBtn"><i class="fas fa-search"></i></button>
+                        <button type="button" class="btn btn-sm p-0" id="searchBtn" style="display: flex; align-items: center; justify-content: center;">
+                            <img src="{{ url_for('static', filename='img/magnifying-glass.png') }}" alt="Search" style="width: 15px; height: 15px; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+                            <i class="fas fa-search" style="display: none;"></i>
+                        </button>
                     </div>
                 </div>
             </nav>
