@@ -271,82 +271,216 @@ body {
     padding: 0 !important;
 }
 
-/* Smooth slide-in animations */
+/* Enhanced smooth slide-in animations with fade and zoom */
 .carousel-item-next {
-    animation: slideInFromRight 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) ease-out;
+    animation: slideInFromRightEnhanced 1s cubic-bezier(0.4, 0, 0.2, 1) ease-out;
 }
 
 .carousel-item-prev {
-    animation: slideInFromLeft 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) ease-out;
+    animation: slideInFromLeftEnhanced 1s cubic-bezier(0.4, 0, 0.2, 1) ease-out;
 }
 
 .carousel-item.active.carousel-item-start {
-    animation: slideOutToLeft 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) ease-out;
+    animation: slideOutToLeftEnhanced 1s cubic-bezier(0.4, 0, 0.2, 1) ease-out;
 }
 
 .carousel-item.active.carousel-item-end {
-    animation: slideOutToRight 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) ease-out;
+    animation: slideOutToRightEnhanced 1s cubic-bezier(0.4, 0, 0.2, 1) ease-out;
 }
 
-/* Custom keyframe animations with smooth easing */
-@keyframes slideInFromRight {
+/* Ken Burns effect for active carousel items */
+.carousel-item.active img {
+    animation: kenBurnsEffect 8s ease-in-out infinite alternate;
+    transform-origin: center center;
+}
+
+/* Enhanced carousel item transitions */
+.carousel-item {
+    transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
+    overflow: hidden;
+}
+
+.carousel-item img {
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease-in-out, filter 0.6s ease-in-out;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+}
+
+/* Smooth image loading */
+.carousel-item img {
+    opacity: 0;
+    animation: fadeInImage 0.8s ease-in-out forwards;
+}
+
+.carousel-item.active img {
+    opacity: 1;
+}
+
+/* Prevent layout shift during transitions */
+.carousel-item.animating {
+    pointer-events: none;
+}
+
+.carousel-item.animating img {
+    pointer-events: none;
+}
+
+/* Enhanced keyframe animations with fade, zoom, and blur effects */
+@keyframes slideInFromRightEnhanced {
     0% {
-        transform: translateX(100%) scale(0.95);
+        transform: translateX(100%) scale(0.9) rotateY(15deg);
         opacity: 0;
-        filter: blur(2px);
-    }
-    60% {
-        transform: translateX(30%) scale(0.97);
-        opacity: 0.8;
-        filter: blur(1px);
-    }
-    100% {
-        transform: translateX(0) scale(1);
-        opacity: 1;
-        filter: blur(0);
-    }
-}
-
-@keyframes slideInFromLeft {
-    0% {
-        transform: translateX(-100%) scale(0.95);
-        opacity: 0;
-        filter: blur(2px);
-    }
-    60% {
-        transform: translateX(-30%) scale(0.97);
-        opacity: 0.8;
-        filter: blur(1px);
-    }
-    100% {
-        transform: translateX(0) scale(1);
-        opacity: 1;
-        filter: blur(0);
-    }
-}
-
-@keyframes slideOutToLeft {
-    0% {
-        transform: translateX(0) scale(1);
-        opacity: 1;
-        filter: blur(0);
+        filter: blur(4px) brightness(0.8);
     }
     50% {
-        transform: translateX(-25%) scale(0.98);
-        opacity: 0.7;
-        filter: blur(1px);
+        transform: translateX(20%) scale(0.95) rotateY(5deg);
+        opacity: 0.6;
+        filter: blur(2px) brightness(0.9);
     }
     100% {
-        transform: translateX(-100%) scale(0.95);
-        opacity: 0;
-        filter: blur(2px);
+        transform: translateX(0) scale(1) rotateY(0deg);
+        opacity: 1;
+        filter: blur(0) brightness(1);
     }
 }
 
-@keyframes slideOutToRight {
+@keyframes slideInFromLeftEnhanced {
     0% {
-        transform: translateX(0) scale(1);
+        transform: translateX(-100%) scale(0.9) rotateY(-15deg);
+        opacity: 0;
+        filter: blur(4px) brightness(0.8);
+    }
+    50% {
+        transform: translateX(-20%) scale(0.95) rotateY(-5deg);
+        opacity: 0.6;
+        filter: blur(2px) brightness(0.9);
+    }
+    100% {
+        transform: translateX(0) scale(1) rotateY(0deg);
         opacity: 1;
+        filter: blur(0) brightness(1);
+    }
+}
+
+@keyframes slideOutToLeftEnhanced {
+    0% {
+        transform: translateX(0) scale(1) rotateY(0deg);
+        opacity: 1;
+        filter: blur(0) brightness(1);
+    }
+    50% {
+        transform: translateX(-30%) scale(0.95) rotateY(-10deg);
+        opacity: 0.5;
+        filter: blur(2px) brightness(0.8);
+    }
+    100% {
+        transform: translateX(-100%) scale(0.9) rotateY(-15deg);
+        opacity: 0;
+        filter: blur(4px) brightness(0.7);
+    }
+}
+
+@keyframes slideOutToRightEnhanced {
+    0% {
+        transform: translateX(0) scale(1) rotateY(0deg);
+        opacity: 1;
+        filter: blur(0) brightness(1);
+    }
+    50% {
+        transform: translateX(30%) scale(0.95) rotateY(10deg);
+        opacity: 0.5;
+        filter: blur(2px) brightness(0.8);
+    }
+    100% {
+        transform: translateX(100%) scale(0.9) rotateY(15deg);
+        opacity: 0;
+        filter: blur(4px) brightness(0.7);
+    }
+}
+
+/* Ken Burns effect - subtle zoom and pan */
+@keyframes kenBurnsEffect {
+    0% {
+        transform: scale(1) translate(0, 0);
+    }
+    100% {
+        transform: scale(1.05) translate(-1%, -1%);
+    }
+}
+
+/* Fade transition animation */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: scale(1.05);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+}
+
+/* Zoom fade animation */
+@keyframes zoomFadeIn {
+    0% {
+        opacity: 0;
+        transform: scale(1.1);
+        filter: blur(3px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0);
+    }
+}
+
+@keyframes zoomFadeOut {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.9);
+        filter: blur(3px);
+    }
+}
+
+/* Image fade in animation */
+@keyframes fadeInImage {
+    0% {
+        opacity: 0;
+        transform: scale(1.02);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Enhanced carousel item active state */
+.carousel-item.active {
+    z-index: 2;
+}
+
+.carousel-item:not(.active) {
+    z-index: 1;
+}
         filter: blur(0);
     }
     50% {
@@ -438,23 +572,24 @@ body {
 
 #header-carousel .carousel-control-prev,
 #header-carousel .carousel-control-next {
-    width: 40px !important;
-    height: 40px !important;
-    background: rgba(255, 255, 255, 0.25) !important;
-    backdrop-filter: blur(15px) !important;
-    -webkit-backdrop-filter: blur(15px) !important;
-    border: 2px solid rgba(255, 255, 255, 0.4) !important;
+    width: 50px !important;
+    height: 50px !important;
+    background: rgba(255, 255, 255, 0.3) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 2px solid rgba(255, 255, 255, 0.5) !important;
     border-radius: 50% !important;
     top: 50% !important;
-    transform: translateY(-50%) !important;
-    transition: all 0.4s ease !important;
+    transform: translateY(-50%) scale(0.9) !important;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
     opacity: 0 !important;
     visibility: hidden !important;
     z-index: 10 !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 0 0 0 0 rgba(20, 167, 81, 0.4) !important;
     position: absolute !important;
     margin: 0 !important;
     padding: 0 !important;
+    cursor: pointer !important;
 }
 
 .carousel-control-prev {
@@ -469,16 +604,22 @@ body {
 #header-carousel:hover .carousel-control-next {
     opacity: 1 !important;
     visibility: visible !important;
-    transform: translateY(-50%) scale(1.1) !important;
+    transform: translateY(-50%) scale(1) !important;
 }
 
 .carousel-control-prev:hover,
 .carousel-control-next:hover {
-    background: rgba(255, 255, 255, 0.35) !important;
-    border-color: rgba(255, 255, 255, 0.6) !important;
+    background: rgba(255, 255, 255, 0.5) !important;
+    border-color: rgba(20, 167, 81, 0.8) !important;
     opacity: 1 !important;
-    transform: translateY(-50%) scale(1.1) !important;
-    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2) !important;
+    transform: translateY(-50%) scale(1.15) !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25), 0 0 0 4px rgba(20, 167, 81, 0.2) !important;
+}
+
+.carousel-control-prev:active,
+.carousel-control-next:active {
+    transform: translateY(-50%) scale(1.05) !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2) !important;
 }
 
 .carousel-control-prev-icon,
@@ -504,21 +645,28 @@ body {
 }
 
 .carousel-control-prev-icon::before {
-    border-width: 6px 9px 6px 0;
-    border-color: transparent #000000 transparent transparent;
-    margin-left: -1px;
+    border-width: 8px 12px 8px 0;
+    border-color: transparent #252C30 transparent transparent;
+    margin-left: -2px;
+    transition: all 0.3s ease !important;
 }
 
 .carousel-control-next-icon::before {
-    border-width: 6px 0 6px 9px;
-    border-color: transparent transparent transparent #000000;
-    margin-left: 1px;
+    border-width: 8px 0 8px 12px;
+    border-color: transparent transparent transparent #252C30;
+    margin-left: 2px;
+    transition: all 0.3s ease !important;
 }
 
-/* Add glow effect on hover */
-.carousel-control-prev:hover,
-.carousel-control-next:hover {
-    box-shadow: 0 0 20px rgba(20, 167, 81, 0.5) !important;
+/* Enhanced hover effects for icons */
+.carousel-control-prev:hover .carousel-control-prev-icon::before {
+    border-color: transparent #14A751 transparent transparent;
+    transform: translate(-50%, -50%) translateX(-2px);
+}
+
+.carousel-control-next:hover .carousel-control-next-icon::before {
+    border-color: transparent transparent transparent #14A751;
+    transform: translate(-50%, -50%) translateX(2px);
 }
 
 @media (max-width: 768px) {

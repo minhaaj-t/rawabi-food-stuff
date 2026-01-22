@@ -30,54 +30,101 @@
     // Initiate the wowjs
     new WOW().init();
 
-    // Initialize Header Carousel with custom smooth animation
-    $('#header-carousel').carousel({
-        interval: 5000, // Auto slide every 5 seconds
+    // Initialize Header Carousel with enhanced animations
+    var carousel = $('#header-carousel');
+    carousel.carousel({
+        interval: 6000, // Auto slide every 6 seconds (slightly longer for better viewing)
         pause: 'hover', // Pause on hover
         wrap: true, // Continuous loop
-        keyboard: true // Allow keyboard navigation
+        keyboard: true, // Allow keyboard navigation
+        ride: 'carousel' // Start cycling on load
     });
 
-    // Custom animation handling for smoother transitions
-    $('#header-carousel').on('slide.bs.carousel', function(e) {
+    // Enhanced animation handling with multiple effects
+    carousel.on('slide.bs.carousel', function(e) {
         var $carousel = $(this);
         var $activeItem = $carousel.find('.carousel-item.active');
+        var $nextItem = $carousel.find('.carousel-item').eq(e.to);
         var direction = e.direction; // 'left' or 'right'
 
         // Remove any existing animations and classes
-        $carousel.find('.carousel-item').removeClass('carousel-item-start carousel-item-end');
+        $carousel.find('.carousel-item').removeClass('carousel-item-start carousel-item-end animating');
+
+        // Add animating class to prevent flicker
+        $activeItem.addClass('animating');
+        $nextItem.addClass('animating');
 
         // Clear any lingering transforms
-        $carousel.find('.carousel-item').css('transform', '');
+        $carousel.find('.carousel-item').css({
+            'transform': '',
+            'will-change': 'transform, opacity'
+        });
 
+        // Prepare for animation based on direction
         if (direction === 'left') {
-            // Moving to next slide
+            // Moving to next slide - slide from right
             $activeItem.addClass('carousel-item-start');
+            $nextItem.css({
+                'transform': 'translateX(100%) scale(0.9)',
+                'opacity': '0'
+            });
         } else {
-            // Moving to previous slide
+            // Moving to previous slide - slide from left
             $activeItem.addClass('carousel-item-end');
+            $nextItem.css({
+                'transform': 'translateX(-100%) scale(0.9)',
+                'opacity': '0'
+            });
         }
+
+        // Add smooth transition
+        $nextItem.css({
+            'transition': 'transform 1s cubic-bezier(0.4, 0, 0.2, 1), opacity 1s ease-in-out'
+        });
     });
 
-    // Clean up after slide transition completes
-    $('#header-carousel').on('slid.bs.carousel', function(e) {
+    // Enhanced cleanup after slide transition completes
+    carousel.on('slid.bs.carousel', function(e) {
         var $carousel = $(this);
+        var $activeItem = $carousel.find('.carousel-item.active');
 
-        // Remove animation classes and reset all positioning
+        // Remove animation classes and reset positioning
         setTimeout(function() {
-            $carousel.find('.carousel-item').removeClass('carousel-item-start carousel-item-end carousel-item-next carousel-item-prev');
-            $carousel.find('.carousel-item').css({
+            $carousel.find('.carousel-item').removeClass('carousel-item-start carousel-item-end carousel-item-next carousel-item-prev animating');
+            
+            // Reset transforms for non-active items
+            $carousel.find('.carousel-item').not('.active').css({
                 'transform': '',
-                'left': '',
-                'top': '',
-                'position': '',
-                'z-index': ''
+                'opacity': '',
+                'transition': '',
+                'will-change': ''
             });
 
-            // Ensure only the active item is visible
-            $carousel.find('.carousel-item').not('.active').hide();
-            $carousel.find('.carousel-item.active').show();
-        }, 50);
+            // Ensure active item is properly displayed
+            $activeItem.css({
+                'transform': '',
+                'opacity': '1',
+                'will-change': 'transform'
+            });
+
+            // Restart Ken Burns effect on new active slide
+            $activeItem.find('img').css('animation', 'none');
+            setTimeout(function() {
+                $activeItem.find('img').css('animation', 'kenBurnsEffect 8s ease-in-out infinite alternate');
+            }, 10);
+        }, 100);
+    });
+
+    // Initialize Ken Burns effect on first slide
+    setTimeout(function() {
+        carousel.find('.carousel-item.active img').css('animation', 'kenBurnsEffect 8s ease-in-out infinite alternate');
+    }, 500);
+
+    // Pause Ken Burns on hover
+    carousel.on('mouseenter', function() {
+        $(this).find('.carousel-item.active img').css('animation-play-state', 'paused');
+    }).on('mouseleave', function() {
+        $(this).find('.carousel-item.active img').css('animation-play-state', 'running');
     });
 
 
