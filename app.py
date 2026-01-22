@@ -180,11 +180,18 @@ def send_email_direct(to_emails, subject, body, attachment_data=None, attachment
     Send email using direct SMTP connection (more reliable than Flask-Mail)
     Returns: (success: bool, error_message: str)
     """
+    server = None
     try:
         smtp_server = app.config['MAIL_SERVER']
         smtp_port = app.config['MAIL_PORT']
         smtp_username = app.config['MAIL_USERNAME']
         smtp_password = app.config['MAIL_PASSWORD']
+        
+        # Validate inputs
+        if not to_emails:
+            return (False, "No recipient email address provided")
+        if not subject or not body:
+            return (False, "Subject and body are required")
         
         # Create message
         msg = MIMEMultipart()
@@ -199,50 +206,109 @@ def send_email_direct(to_emails, subject, body, attachment_data=None, attachment
             msg['To'] = to_emails
             recipients = [to_emails]
         
-        # Add body
-        msg.attach(MIMEText(body, 'plain'))
+        # Validate email addresses
+        for email in recipients:
+            if '@' not in email or '.' not in email.split('@')[1]:
+                return (False, f"Invalid email address format: {email}")
+        
+        # Add body (support both plain and HTML)
+        if isinstance(body, str):
+            msg.attach(MIMEText(body, 'plain'))
+        else:
+            msg.attach(MIMEText(str(body), 'plain'))
         
         # Add attachment if provided
         if attachment_data and attachment_filename:
-            part = MIMEBase('application', 'octet-stream')
-            part.set_payload(attachment_data)
-            encoders.encode_base64(part)
-            part.add_header('Content-Disposition', f'attachment; filename= {attachment_filename}')
-            msg.attach(part)
-            print(f"Attachment added: {attachment_filename}")
+            try:
+                # Determine content type
+                if attachment_mimetype:
+                    maintype, subtype = attachment_mimetype.split('/', 1) if '/' in attachment_mimetype else ('application', 'octet-stream')
+                else:
+                    # Guess from filename extension
+                    ext = attachment_filename.lower().split('.')[-1] if '.' in attachment_filename else ''
+                    if ext in ['pdf']:
+                        maintype, subtype = 'application', 'pdf'
+                    elif ext in ['doc', 'docx']:
+                        maintype, subtype = 'application', 'msword'
+                    elif ext in ['jpg', 'jpeg']:
+                        maintype, subtype = 'image', 'jpeg'
+                    elif ext in ['png']:
+                        maintype, subtype = 'image', 'png'
+                    else:
+                        maintype, subtype = 'application', 'octet-stream'
+                
+                part = MIMEBase(maintype, subtype)
+                part.set_payload(attachment_data)
+                encoders.encode_base64(part)
+                # Properly encode filename for international characters
+                from email.header import Header
+                part.add_header('Content-Disposition', 'attachment', filename=Header(attachment_filename, 'utf-8').encode())
+                msg.attach(part)
+                print(f"[OK] Attachment added: {attachment_filename} ({len(attachment_data)} bytes)")
+            except Exception as e:
+                print(f"[WARN] Failed to add attachment: {str(e)}")
+                # Continue without attachment rather than failing completely
         
-        # Connect and send
-        print(f"Connecting to SMTP server: {smtp_server}:{smtp_port}")
-        server = smtplib.SMTP(smtp_server, smtp_port)
+        # Connect and send with timeout
+        print(f"[INFO] Connecting to SMTP server: {smtp_server}:{smtp_port}")
+        server = smtplib.SMTP(smtp_server, smtp_port, timeout=30)
         server.starttls()
-        print(f"Authenticating as: {smtp_username}")
+        print(f"[INFO] Authenticating as: {smtp_username}")
         server.login(smtp_username, smtp_password)
-        print(f"Sending email to: {recipients}")
+        print(f"[INFO] FROM: {smtp_username}")
+        print(f"[INFO] TO: {recipients}")
+        print(f"[INFO] SUBJECT: {subject}")
         server.sendmail(smtp_username, recipients, msg.as_string())
         server.quit()
-        print(f"Email sent successfully to: {recipients}")
+        server = None  # Mark as closed
+        print(f"[SUCCESS] Email sent successfully FROM {smtp_username} TO {recipients}")
         return (True, None)
         
     except smtplib.SMTPAuthenticationError as e:
         error_msg = f"SMTP Authentication failed. Please check your email credentials."
-        print(f"✗ {error_msg}")
-        print(f"Error details: {str(e)}")
+        print(f"[ERROR] {error_msg}")
+        print(f"[ERROR] Details: {str(e)}")
         return (False, error_msg)
     except smtplib.SMTPRecipientsRefused as e:
         error_msg = f"Invalid email address(es): {recipients}"
-        print(f"✗ {error_msg}")
-        print(f"Error details: {str(e)}")
+        print(f"[ERROR] {error_msg}")
+        print(f"[ERROR] Details: {str(e)}")
         return (False, error_msg)
     except smtplib.SMTPServerDisconnected as e:
         error_msg = f"SMTP server disconnected. Please check your internet connection and try again."
-        print(f"✗ {error_msg}")
-        print(f"Error details: {str(e)}")
+        print(f"[ERROR] {error_msg}")
+        print(f"[ERROR] Details: {str(e)}")
+        return (False, error_msg)
+    except smtplib.SMTPConnectError as e:
+        error_msg = f"Failed to connect to SMTP server. Check server address and port."
+        print(f"[ERROR] {error_msg}")
+        print(f"[ERROR] Details: {str(e)}")
+        return (False, error_msg)
+    except smtplib.SMTPDataError as e:
+        error_msg = f"SMTP server rejected the email data."
+        print(f"[ERROR] {error_msg}")
+        print(f"[ERROR] Details: {str(e)}")
+        return (False, error_msg)
+    except smtplib.SMTPException as e:
+        error_msg = f"SMTP error occurred: {str(e)}"
+        print(f"[ERROR] {error_msg}")
+        print(f"[ERROR] Details: {str(e)}")
         return (False, error_msg)
     except Exception as e:
         error_msg = f"Failed to send email: {str(e)}"
-        print(f"✗ {error_msg}")
-        print(traceback.format_exc())
+        print(f"[ERROR] {error_msg}")
+        print(f"[ERROR] Traceback: {traceback.format_exc()}")
         return (False, error_msg)
+    finally:
+        # Ensure server connection is closed
+        if server:
+            try:
+                server.quit()
+            except:
+                try:
+                    server.close()
+                except:
+                    pass
 
 @app.route('/api/career/apply', methods=['POST', 'OPTIONS'])
 def career_apply():
@@ -318,16 +384,21 @@ def career_apply():
             )
             db.session.add(application)
             db.session.commit()
-            print(f"✓ Application saved to database (ID: {application.id})")
+            print(f"[OK] Application saved to database (ID: {application.id})")
         except Exception as e:
-            print(f"✗ Database error: {str(e)}")
+            print(f"[ERROR] Database error: {str(e)}")
             db.session.rollback()
 
-        # Send email to Candidate using DIRECT SMTP
+        # EMAIL 1: Send email FROM developer@alrawabigroup.com TO Candidate
         candidate_email_sent = False
         candidate_error = None
         try:
-            print("\n--- Sending Candidate Confirmation Email ---")
+            print("\n" + "-"*60)
+            print("EMAIL 1: Sending Candidate Confirmation Email")
+            print(f"FROM: developer@alrawabigroup.com")
+            print(f"TO: {candidate_email}")
+            print("-"*60)
+            
             candidate_subject = f"Application Received: {job_title} - AL RAWABI FOOD STUFF"
             candidate_body = f"""Dear {first_name} {last_name},
 
@@ -346,22 +417,25 @@ AL RAWABI FOOD STUFF"""
             )
             
             if candidate_email_sent:
-                print("✓ Candidate confirmation email sent successfully")
+                print(f"[SUCCESS] EMAIL 1: Candidate confirmation sent to {candidate_email}")
             else:
-                print(f"✗ Candidate confirmation email FAILED: {candidate_error}")
+                print(f"[FAIL] EMAIL 1 FAILED: {candidate_error}")
         except Exception as e:
             candidate_error = f"Unexpected error: {str(e)}"
-            print(f"✗ CRITICAL ERROR: Candidate email failed: {candidate_error}")
+            print(f"[ERROR] EMAIL 1 CRITICAL ERROR: {candidate_error}")
             print(traceback.format_exc())
 
-        # Send email to HR and Team Manager using DIRECT SMTP
+        # EMAIL 2: Send email FROM developer@alrawabigroup.com TO HR and Manager
         staff_email_sent = False
         staff_error = None
         try:
-            print("\n--- Sending Staff Notification Email ---")
+            print("\n" + "-"*60)
+            print("EMAIL 2: Sending Staff Notification Email")
+            print(f"FROM: developer@alrawabigroup.com")
             hr_email = "minhaj.rawabi@gmail.com"
             manager_email = "rawabihelpdesk@gmail.com"
-            developer_email = "developer@alrawabigroup.com"
+            print(f"TO: {hr_email}, {manager_email}")
+            print("-"*60)
             
             staff_subject = f"New Job Application: {job_title} - {first_name} {last_name}"
             staff_body = f"""Hello,
@@ -383,7 +457,7 @@ Regards,
 Website System"""
             
             staff_email_sent, staff_error = send_email_direct(
-                to_emails=[hr_email, manager_email, developer_email],
+                to_emails=[hr_email, manager_email],
                 subject=staff_subject,
                 body=staff_body,
                 attachment_data=resume_data,
@@ -392,18 +466,18 @@ Website System"""
             )
             
             if staff_email_sent:
-                print("✓ Staff notification email sent successfully")
+                print(f"[SUCCESS] EMAIL 2: Staff notification sent to HR and Manager")
             else:
-                print(f"✗ Staff notification email FAILED: {staff_error}")
+                print(f"[FAIL] EMAIL 2 FAILED: {staff_error}")
         except Exception as e:
             staff_error = f"Unexpected error: {str(e)}"
-            print(f"✗ CRITICAL ERROR: Staff email failed: {staff_error}")
+            print(f"[ERROR] EMAIL 2 CRITICAL ERROR: {staff_error}")
             print(traceback.format_exc())
 
         # Determine response based on email sending results
         print("\n" + "="*60)
         if candidate_email_sent and staff_email_sent:
-            print("✓ APPLICATION PROCESS COMPLETED SUCCESSFULLY")
+            print("[SUCCESS] APPLICATION PROCESS COMPLETED SUCCESSFULLY")
             print("="*60 + "\n")
             response = jsonify({
                 'status': 'success', 
@@ -422,11 +496,11 @@ Website System"""
             error_message = " | ".join(error_messages)
             
             if candidate_email_sent:
-                print("⚠ APPLICATION SAVED BUT STAFF EMAIL FAILED")
+                print("[WARNING] APPLICATION SAVED BUT STAFF EMAIL FAILED")
             elif staff_email_sent:
-                print("⚠ APPLICATION SAVED BUT CANDIDATE EMAIL FAILED")
+                print("[WARNING] APPLICATION SAVED BUT CANDIDATE EMAIL FAILED")
             else:
-                print("✗ APPLICATION SAVED BUT ALL EMAILS FAILED")
+                print("[FAIL] APPLICATION SAVED BUT ALL EMAILS FAILED")
             print("="*60 + "\n")
             
             response = jsonify({
@@ -438,7 +512,7 @@ Website System"""
     
     except Exception as e:
         error_trace = traceback.format_exc()
-        print(f"\n✗ GENERAL PROCESS ERROR: {str(e)}")
+        print(f"\n[ERROR] GENERAL PROCESS ERROR: {str(e)}")
         print(error_trace)
         return jsonify({'status': 'error', 'message': str(e)}), 500
 

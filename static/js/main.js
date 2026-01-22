@@ -653,6 +653,8 @@
         }
     });
 
+    }); // End of first $(document).ready
+
     // Cookie Consent Dialog
     $(document).ready(function() {
         console.log('Document ready, jQuery version:', $.fn.jquery);
