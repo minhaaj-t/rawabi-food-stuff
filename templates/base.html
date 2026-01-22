@@ -70,7 +70,8 @@
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <div class="navbar-nav ms-auto">
                         <a href="https://rfoodinternational.com/wp-content/uploads/2025/08/CATALOUGE-RFI-01_compressed-1.pdf" class="nav-item nav-link px-3" target="_blank" title="Download Catalogue" style="border: 1px solid var(--primary); border-radius: 10px; margin: 12px 15px 12px 0; padding-top: 8px !important; padding-bottom: 8px !important; display: flex; align-items: center; height: fit-content; align-self: center;">
-                            <img src="{{ url_for('static', filename='img/download (1).png') }}" alt="Download" style="height: 18px; width: auto; vertical-align: middle; margin-right: 8px;">Catalogue
+                            <img src="{{ url_for('static', filename='img/download-icon.png') }}" alt="Download" style="height: 18px; width: auto; vertical-align: middle; margin-right: 8px;" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+                            <i class="fas fa-download" style="display: none; margin-right: 8px; font-size: 16px; vertical-align: middle;"></i>Catalogue
                         </a>
                         <a href="{{ url_for('home') }}" class="nav-item nav-link {% if request.endpoint == 'home' %}active{% endif %}">Home</a>
                         <a href="{{ url_for('about') }}" class="nav-item nav-link {% if request.endpoint == 'about' %}active{% endif %}">About</a>

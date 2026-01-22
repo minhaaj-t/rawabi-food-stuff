@@ -14,6 +14,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email import encoders
 import traceback
+import base64
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key-change-this-in-production'
@@ -174,6 +175,80 @@ def search_products():
 
     return jsonify(results)
 
+# Email Template Helper Function
+def get_logo_base64():
+    """Get logo as base64 encoded string for email embedding"""
+    try:
+        logo_path = os.path.join(app.root_path, 'static', 'img', 'logo.png')
+        if os.path.exists(logo_path):
+            with open(logo_path, 'rb') as f:
+                logo_data = f.read()
+            logo_base64 = base64.b64encode(logo_data).decode('utf-8')
+            return f"data:image/png;base64,{logo_base64}"
+    except Exception as e:
+        print(f"[WARN] Could not load logo for email: {str(e)}")
+    return None
+
+def create_html_email_template(title, content, logo_url=None):
+    """
+    Create HTML email template with theme colors and logo
+    Theme colors: Primary: #14A751, Secondary: #FB9F38, Light: #F5F8F2, Dark: #252C30
+    """
+    logo_html = ""
+    if logo_url:
+        logo_html = f'<img src="{logo_url}" alt="AL RAWABI FOOD STUFF Logo" style="width: 120px; height: auto; display: block; margin: 0 auto 20px;">'
+    
+    html_template = f"""
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{title}</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Open Sans', Arial, sans-serif; background-color: #F5F8F2;">
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #F5F8F2;">
+        <tr>
+            <td align="center" style="padding: 40px 20px;">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="max-width: 600px; background-color: #FFFFFF; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <!-- Header -->
+                    <tr>
+                        <td style="background-color: #14A751; padding: 30px 40px; text-align: center; border-radius: 8px 8px 0 0;">
+                            {logo_html}
+                        </td>
+                    </tr>
+                    <!-- Content -->
+                    <tr>
+                        <td style="padding: 40px;">
+                            {content}
+                        </td>
+                    </tr>
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: #252C30; padding: 30px 40px; text-align: center; border-radius: 0 0 8px 8px; color: #FFFFFF;">
+                            <p style="margin: 0 0 10px 0; font-size: 14px; color: #FFFFFF;">
+                                <strong>AL RAWABI FOOD STUFF W.L.L</strong>
+                            </p>
+                            <p style="margin: 0 0 5px 0; font-size: 12px; color: #F5F8F2;">
+                                Industrial Area-37, Building No: 19, Doha-Qatar
+                            </p>
+                            <p style="margin: 0 0 5px 0; font-size: 12px; color: #F5F8F2;">
+                                Phone: +974 4497 1777 | Email: info@alrawabigroup.com
+                            </p>
+                            <p style="margin: 15px 0 0 0; font-size: 11px; color: #F5F8F2; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 15px;">
+                                &copy; {datetime.now().year} AL RAWABI FOOD STUFF. All rights reserved.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
+"""
+    return html_template
+
 # Direct SMTP Email Function (More Reliable)
 def send_email_direct(to_emails, subject, body, attachment_data=None, attachment_filename=None, attachment_mimetype=None):
     """
@@ -212,10 +287,24 @@ def send_email_direct(to_emails, subject, body, attachment_data=None, attachment
                 return (False, f"Invalid email address format: {email}")
         
         # Add body (support both plain and HTML)
-        if isinstance(body, str):
-            msg.attach(MIMEText(body, 'plain'))
+        # Check if body is HTML (contains HTML tags)
+        is_html = isinstance(body, str) and ('<html' in body.lower() or '<div' in body.lower() or '<p' in body.lower() or '<br' in body.lower())
+        
+        if is_html:
+            # Create alternative for email clients that don't support HTML
+            plain_text = body
+            # Remove HTML tags for plain text version
+            import re
+            plain_text = re.sub(r'<[^>]+>', '', plain_text)
+            plain_text = plain_text.replace('&nbsp;', ' ').replace('&amp;', '&').replace('&lt;', '<').replace('&gt;', '>')
+            
+            # Create multipart alternative (HTML + plain text)
+            msg_alternative = MIMEMultipart('alternative')
+            msg_alternative.attach(MIMEText(plain_text, 'plain'))
+            msg_alternative.attach(MIMEText(body, 'html'))
+            msg.attach(msg_alternative)
         else:
-            msg.attach(MIMEText(str(body), 'plain'))
+            msg.attach(MIMEText(body if isinstance(body, str) else str(body), 'plain'))
         
         # Add attachment if provided
         if attachment_data and attachment_filename:
@@ -400,15 +489,38 @@ def career_apply():
             print("-"*60)
             
             candidate_subject = f"Application Received: {job_title} - AL RAWABI FOOD STUFF"
-            candidate_body = f"""Dear {first_name} {last_name},
-
-Thank you for applying for the position of {job_title} at AL RAWABI FOOD STUFF.
-
-We have received your application and our HR team will review it. If your profile matches our requirements, we will contact you for the next steps.
-
-Best regards,
-HR Department
-AL RAWABI FOOD STUFF"""
+            
+            # Create HTML email content
+            logo_url = get_logo_base64()
+            candidate_content = f"""
+            <h2 style="color: #14A751; margin-top: 0; font-size: 24px; font-weight: 600;">Application Received</h2>
+            <p style="color: #252C30; font-size: 16px; line-height: 1.6; margin: 20px 0;">
+                Dear <strong>{first_name} {last_name}</strong>,
+            </p>
+            <p style="color: #252C30; font-size: 16px; line-height: 1.6; margin: 20px 0;">
+                Thank you for applying for the position of <strong style="color: #14A751;">{job_title}</strong> at AL RAWABI FOOD STUFF.
+            </p>
+            <p style="color: #252C30; font-size: 16px; line-height: 1.6; margin: 20px 0;">
+                We have received your application and our HR team will review it. If your profile matches our requirements, we will contact you for the next steps.
+            </p>
+            <div style="margin: 30px 0; padding: 20px; background-color: #F5F8F2; border-left: 4px solid #14A751; border-radius: 4px;">
+                <p style="margin: 0; color: #252C30; font-size: 14px;">
+                    <strong>Application Details:</strong><br>
+                    Position: {job_title}<br>
+                    Submitted: {datetime.now().strftime('%B %d, %Y')}
+                </p>
+            </div>
+            <p style="color: #252C30; font-size: 16px; line-height: 1.6; margin: 30px 0 20px 0;">
+                Best regards,<br>
+                <strong style="color: #14A751;">HR Department</strong><br>
+                AL RAWABI FOOD STUFF
+            </p>
+            """
+            candidate_body = create_html_email_template(
+                title=candidate_subject,
+                content=candidate_content,
+                logo_url=logo_url
+            )
             
             candidate_email_sent, candidate_error = send_email_direct(
                 to_emails=[candidate_email],
@@ -438,23 +550,64 @@ AL RAWABI FOOD STUFF"""
             print("-"*60)
             
             staff_subject = f"New Job Application: {job_title} - {first_name} {last_name}"
-            staff_body = f"""Hello,
-
-A new job application has been submitted through the website.
-
-Candidate Details:
-Name: {first_name} {last_name}
-Email: {candidate_email}
-Phone: {phone}
-Job Title: {job_title}
-Experience: {experience}
-Current Position: {current_position}
-
-Cover Letter:
-{cover_letter}
-
-Regards,
-Website System"""
+            
+            # Create HTML email content for staff
+            logo_url = get_logo_base64()
+            cover_letter_html = cover_letter.replace('\n', '<br>') if cover_letter else 'N/A'
+            staff_content = f"""
+            <h2 style="color: #14A751; margin-top: 0; font-size: 24px; font-weight: 600;">New Job Application Received</h2>
+            <p style="color: #252C30; font-size: 16px; line-height: 1.6; margin: 20px 0;">
+                A new job application has been submitted through the website.
+            </p>
+            <div style="margin: 30px 0; padding: 25px; background-color: #F5F8F2; border-radius: 8px; border: 1px solid #E0E0E0;">
+                <h3 style="color: #14A751; margin-top: 0; margin-bottom: 20px; font-size: 18px; font-weight: 600;">Candidate Details</h3>
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="color: #252C30; font-size: 14px;">
+                    <tr>
+                        <td style="padding: 8px 0; width: 150px;"><strong>Name:</strong></td>
+                        <td style="padding: 8px 0;">{first_name} {last_name}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px 0;"><strong>Email:</strong></td>
+                        <td style="padding: 8px 0;"><a href="mailto:{candidate_email}" style="color: #14A751; text-decoration: none;">{candidate_email}</a></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px 0;"><strong>Phone:</strong></td>
+                        <td style="padding: 8px 0;"><a href="tel:{phone}" style="color: #14A751; text-decoration: none;">{phone}</a></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px 0;"><strong>Job Title:</strong></td>
+                        <td style="padding: 8px 0;"><span style="background-color: #14A751; color: #FFFFFF; padding: 4px 12px; border-radius: 4px; font-size: 12px;">{job_title}</span></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px 0;"><strong>Experience:</strong></td>
+                        <td style="padding: 8px 0;">{experience}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px 0;"><strong>Current Position:</strong></td>
+                        <td style="padding: 8px 0;">{current_position}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px 0; vertical-align: top;"><strong>Cover Letter:</strong></td>
+                        <td style="padding: 8px 0;">{cover_letter_html}</td>
+                    </tr>
+                </table>
+            </div>
+            <div style="margin: 20px 0; padding: 15px; background-color: #FFF9E6; border-left: 4px solid #FB9F38; border-radius: 4px;">
+                <p style="margin: 0; color: #252C30; font-size: 13px;">
+                    <strong>Note:</strong> Resume/CV is attached to this email.
+                </p>
+            </div>
+            <p style="color: #252C30; font-size: 16px; line-height: 1.6; margin: 30px 0 20px 0;">
+                Regards,<br>
+                <strong style="color: #14A751;">Website System</strong><br>
+                AL RAWABI FOOD STUFF
+            </p>
+            """
+            staff_body = create_html_email_template(
+                title=staff_subject,
+                content=staff_content,
+                logo_url=logo_url
+            )
             
             staff_email_sent, staff_error = send_email_direct(
                 to_emails=[hr_email, manager_email],
@@ -524,10 +677,34 @@ def test_email():
         test_email_address = request.args.get('email', 'developer@alrawabigroup.com')
         print(f"\n--- Testing Email Sending to {test_email_address} ---")
         
+        # Create HTML test email
+        logo_url = get_logo_base64()
+        test_content = """
+            <h2 style="color: #14A751; margin-top: 0; font-size: 24px; font-weight: 600;">Email System Test</h2>
+            <p style="color: #252C30; font-size: 16px; line-height: 1.6; margin: 20px 0;">
+                This is a test email to verify email functionality is working correctly.
+            </p>
+            <div style="margin: 30px 0; padding: 20px; background-color: #F5F8F2; border-left: 4px solid #14A751; border-radius: 4px;">
+                <p style="margin: 0; color: #252C30; font-size: 14px;">
+                    <strong>Test Details:</strong><br>
+                    Date: """ + datetime.now().strftime('%B %d, %Y at %I:%M %p') + """<br>
+                    Status: Email system is operational
+                </p>
+            </div>
+            <p style="color: #252C30; font-size: 16px; line-height: 1.6; margin: 30px 0 20px 0;">
+                If you received this email, the email system is working correctly!
+            </p>
+        """
+        test_body = create_html_email_template(
+            title="Test Email from AL RAWABI FOOD STUFF Website",
+            content=test_content,
+            logo_url=logo_url
+        )
+        
         success, error_msg = send_email_direct(
             to_emails=[test_email_address],
             subject="Test Email from AL RAWABI FOOD STUFF Website",
-            body="This is a test email to verify email functionality is working correctly."
+            body=test_body
         )
         
         if success:
