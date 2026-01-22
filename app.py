@@ -584,7 +584,8 @@ def career_apply():
             print("ERROR: Missing required fields")
             return jsonify({'status': 'error', 'message': 'Missing required fields'}), 400
 
-        # Handle file upload (Resume)
+        # Handle file upload (Resume) - Read directly into memory (no disk I/O)
+        # This approach works in read-only file systems (serverless/Lambda environments)
         resume_file = request.files.get('resume')
         resume_filename = None
         resume_data = None
@@ -592,18 +593,41 @@ def career_apply():
         
         if resume_file and resume_file.filename:
             print(f"Processing resume: {resume_file.filename}")
-            if not os.path.exists(app.config['UPLOAD_FOLDER']):
-                os.makedirs(app.config['UPLOAD_FOLDER'])
             
-            resume_filename = secure_filename(f"{datetime.now().strftime('%Y%m%d%H%M%S')}_{resume_file.filename}")
-            resume_path = os.path.join(app.config['UPLOAD_FOLDER'], resume_filename)
-            resume_file.save(resume_path)
-            
-            # Read data for attachment
-            with open(resume_path, 'rb') as f:
-                resume_data = f.read()
-            resume_mimetype = resume_file.content_type or 'application/pdf'
-            print(f"Resume saved: {resume_filename} ({len(resume_data)} bytes)")
+            # Read file data directly into memory without saving to disk
+            # This avoids "Read-only file system" errors in serverless environments
+            try:
+                # Get file data directly from the uploaded file object
+                resume_file.seek(0)  # Ensure we're at the start of the file
+                resume_data = resume_file.read()
+                resume_file.seek(0)  # Reset for potential future reads
+                
+                # Generate a safe filename for database storage (not for file system)
+                resume_filename = secure_filename(f"{datetime.now().strftime('%Y%m%d%H%M%S')}_{resume_file.filename}")
+                
+                # Determine MIME type
+                resume_mimetype = resume_file.content_type or 'application/pdf'
+                
+                # If content type is not provided, try to guess from filename
+                if not resume_mimetype or resume_mimetype == 'application/octet-stream':
+                    filename_lower = resume_file.filename.lower()
+                    if filename_lower.endswith('.pdf'):
+                        resume_mimetype = 'application/pdf'
+                    elif filename_lower.endswith(('.doc', '.docx')):
+                        resume_mimetype = 'application/msword'
+                    elif filename_lower.endswith(('.jpg', '.jpeg')):
+                        resume_mimetype = 'image/jpeg'
+                    elif filename_lower.endswith('.png'):
+                        resume_mimetype = 'image/png'
+                    else:
+                        resume_mimetype = 'application/pdf'  # Default
+                
+                print(f"[OK] Resume loaded into memory: {resume_filename} ({len(resume_data)} bytes, type: {resume_mimetype})")
+            except Exception as e:
+                print(f"[ERROR] Failed to read resume file: {str(e)}")
+                resume_data = None
+                resume_filename = None
+                resume_mimetype = None
 
         # Save to Database FIRST
         try:
