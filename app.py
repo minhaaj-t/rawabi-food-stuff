@@ -13,8 +13,11 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email import encoders
+from email.header import Header
 import traceback
 import base64
+import html
+import re
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key-change-this-in-production'
@@ -176,6 +179,34 @@ def search_products():
     return jsonify(results)
 
 # Email Template Helper Function
+def sanitize_unicode_for_email(text):
+    """
+    Replace problematic Unicode characters with ASCII equivalents
+    to prevent encoding errors in email sending
+    """
+    if not isinstance(text, str):
+        text = str(text)
+    
+    # Common Unicode characters that cause ASCII encoding issues
+    replacements = {
+        '\u2019': "'",  # Right single quotation mark
+        '\u2018': "'",  # Left single quotation mark
+        '\u201C': '"',  # Left double quotation mark
+        '\u201D': '"',  # Right double quotation mark
+        '\u2013': '-',  # En dash
+        '\u2014': '--', # Em dash
+        '\u2026': '...', # Ellipsis
+        '\u00A0': ' ',  # Non-breaking space
+        '\u2009': ' ',  # Thin space
+        '\u200B': '',   # Zero-width space
+        '\uFEFF': '',   # Zero-width no-break space
+    }
+    
+    for unicode_char, ascii_char in replacements.items():
+        text = text.replace(unicode_char, ascii_char)
+    
+    return text
+
 def get_logo_base64():
     """Get logo as base64 encoded string for email embedding"""
     try:
@@ -268,10 +299,13 @@ def send_email_direct(to_emails, subject, body, attachment_data=None, attachment
         if not subject or not body:
             return (False, "Subject and body are required")
         
-        # Create message
+        # Create message with UTF-8 encoding
         msg = MIMEMultipart()
         msg['From'] = smtp_username
-        msg['Subject'] = subject
+        
+        # Sanitize and encode subject with UTF-8
+        sanitized_subject = sanitize_unicode_for_email(subject)
+        msg['Subject'] = Header(sanitized_subject, 'utf-8')
         
         # Handle multiple recipients
         if isinstance(to_emails, list):
@@ -294,17 +328,29 @@ def send_email_direct(to_emails, subject, body, attachment_data=None, attachment
             # Create alternative for email clients that don't support HTML
             plain_text = body
             # Remove HTML tags for plain text version
-            import re
             plain_text = re.sub(r'<[^>]+>', '', plain_text)
-            plain_text = plain_text.replace('&nbsp;', ' ').replace('&amp;', '&').replace('&lt;', '<').replace('&gt;', '>')
+            # Decode HTML entities first
+            try:
+                plain_text = html.unescape(plain_text)
+            except:
+                pass
+            # Replace remaining HTML entities
+            plain_text = plain_text.replace('&nbsp;', ' ').replace('&amp;', '&').replace('&lt;', '<').replace('&gt;', '>').replace('&quot;', '"').replace('&#39;', "'").replace('&apos;', "'")
+            # Sanitize Unicode characters
+            plain_text = sanitize_unicode_for_email(plain_text)
             
-            # Create multipart alternative (HTML + plain text)
+            # Create multipart alternative (HTML + plain text) with UTF-8 encoding
             msg_alternative = MIMEMultipart('alternative')
-            msg_alternative.attach(MIMEText(plain_text, 'plain'))
-            msg_alternative.attach(MIMEText(body, 'html'))
+            msg_alternative.attach(MIMEText(plain_text, 'plain', 'utf-8'))
+            # Sanitize HTML body as well
+            html_body = sanitize_unicode_for_email(body)
+            msg_alternative.attach(MIMEText(html_body, 'html', 'utf-8'))
             msg.attach(msg_alternative)
         else:
-            msg.attach(MIMEText(body if isinstance(body, str) else str(body), 'plain'))
+            # Ensure body is properly encoded as UTF-8 and sanitize Unicode
+            body_str = body if isinstance(body, str) else str(body)
+            body_str = sanitize_unicode_for_email(body_str)
+            msg.attach(MIMEText(body_str, 'plain', 'utf-8'))
         
         # Add attachment if provided
         if attachment_data and attachment_filename:
@@ -330,7 +376,6 @@ def send_email_direct(to_emails, subject, body, attachment_data=None, attachment
                 part.set_payload(attachment_data)
                 encoders.encode_base64(part)
                 # Properly encode filename for international characters
-                from email.header import Header
                 part.add_header('Content-Disposition', 'attachment', filename=Header(attachment_filename, 'utf-8').encode())
                 msg.attach(part)
                 print(f"[OK] Attachment added: {attachment_filename} ({len(attachment_data)} bytes)")
@@ -347,7 +392,19 @@ def send_email_direct(to_emails, subject, body, attachment_data=None, attachment
         print(f"[INFO] FROM: {smtp_username}")
         print(f"[INFO] TO: {recipients}")
         print(f"[INFO] SUBJECT: {subject}")
-        server.sendmail(smtp_username, recipients, msg.as_string())
+        
+        # Send email with proper UTF-8 encoding
+        # msg.as_string() returns a string that should be UTF-8 compatible
+        # But we need to handle encoding errors gracefully
+        try:
+            email_string = msg.as_string()
+            server.sendmail(smtp_username, recipients, email_string)
+        except (UnicodeEncodeError, UnicodeDecodeError) as e:
+            # This should not happen if we sanitized properly, but handle it as a fallback
+            error_msg = f"Failed to send email due to encoding error: {str(e)}"
+            print(f"[ERROR] {error_msg}")
+            print(f"[ERROR] This indicates Unicode characters were not properly sanitized")
+            return (False, error_msg)
         server.quit()
         server = None  # Mark as closed
         print(f"[SUCCESS] Email sent successfully FROM {smtp_username} TO {recipients}")
@@ -418,15 +475,15 @@ def career_apply():
         print(f"Files: {list(request.files.keys())}")
         print("="*60)
         
-        # Get form data
-        first_name = request.form.get('firstName', '').strip()
-        last_name = request.form.get('lastName', '').strip()
+        # Get form data and sanitize Unicode characters
+        first_name = sanitize_unicode_for_email(request.form.get('firstName', '').strip())
+        last_name = sanitize_unicode_for_email(request.form.get('lastName', '').strip())
         candidate_email = request.form.get('email', '').strip()
         phone = request.form.get('phone', '').strip()
-        experience = request.form.get('experience', '').strip()
-        current_position = request.form.get('currentPosition', 'N/A').strip()
-        cover_letter = request.form.get('coverLetter', '').strip()
-        job_title = request.form.get('jobTitle', 'General Application').strip()
+        experience = sanitize_unicode_for_email(request.form.get('experience', '').strip())
+        current_position = sanitize_unicode_for_email(request.form.get('currentPosition', 'N/A').strip())
+        cover_letter = sanitize_unicode_for_email(request.form.get('coverLetter', '').strip())
+        job_title = sanitize_unicode_for_email(request.form.get('jobTitle', 'General Application').strip())
         
         print(f"Job Title: {job_title}")
         print(f"Candidate: {first_name} {last_name}")
