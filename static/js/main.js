@@ -687,9 +687,323 @@
         });
         */
 
-    });
+        // Career Page Functionality
+        if ($('.career-page').length > 0 || window.location.pathname.includes('career')) {
+            console.log('Career page detected, initializing career functionality');
+            initializeCareerPage();
+        }
 
-    });
+    }); // End of $(document).ready
+
+    // Career Page Data and Functions
+    const jobData = [
+        {
+            id: 'sales-manager',
+            title: 'Sales Manager',
+            department: 'sales',
+            type: 'full-time',
+            experience: 'senior',
+            location: 'Doha',
+            salary: 'Competitive',
+            posted: '2 days ago',
+            skills: 'Leadership, B2B Sales, Negotiation',
+            description: 'Lead our sales team in developing and maintaining strong relationships with key wholesale clients across Qatar\'s food retail sector.'
+        },
+        {
+            id: 'logistics-coordinator',
+            title: 'Logistics Coordinator',
+            department: 'logistics',
+            type: 'full-time',
+            experience: 'mid',
+            location: 'Industrial Area',
+            salary: 'Competitive',
+            posted: '1 week ago',
+            skills: 'Supply Chain, Warehouse Mgmt, ERP',
+            description: 'Oversee warehouse operations and distribution logistics to ensure timely delivery of wholesale food products to our clients.'
+        },
+        {
+            id: 'quality-specialist',
+            title: 'Quality Control Specialist',
+            department: 'quality',
+            type: 'full-time',
+            experience: 'mid',
+            location: 'Doha',
+            salary: 'Competitive',
+            posted: '3 days ago',
+            skills: 'Quality Assurance, HACCP, Testing',
+            description: 'Ensure product quality standards are maintained throughout our supply chain, from procurement to delivery.'
+        },
+        {
+            id: 'procurement-officer',
+            title: 'Procurement Officer',
+            department: 'procurement',
+            type: 'full-time',
+            experience: 'mid',
+            location: 'Doha',
+            salary: 'Competitive',
+            posted: '1 week ago',
+            skills: 'Negotiation, Supplier Relations, Cost Analysis',
+            description: 'Manage procurement activities, negotiate with suppliers, and ensure cost-effective sourcing of quality food products.'
+        },
+        {
+            id: 'marketing-coordinator',
+            title: 'Marketing Coordinator',
+            department: 'sales',
+            type: 'full-time',
+            experience: 'entry',
+            location: 'Doha',
+            salary: 'Competitive',
+            posted: '2 weeks ago',
+            skills: 'Digital Marketing, Social Media, Content Creation',
+            description: 'Support marketing initiatives, manage social media presence, and coordinate promotional activities for our wholesale brand.'
+        },
+        {
+            id: 'warehouse-supervisor',
+            title: 'Warehouse Supervisor',
+            department: 'logistics',
+            type: 'full-time',
+            experience: 'mid',
+            location: 'Industrial Area',
+            salary: 'Competitive',
+            posted: '5 days ago',
+            skills: 'Warehouse Mgmt, Inventory Control, Team Leadership',
+            description: 'Supervise warehouse operations, manage inventory, and ensure efficient storage and distribution of food products.'
+        }
+    ];
+
+    function initializeCareerPage() {
+        setupJobFilters();
+        setupJobSearch();
+        setupJobApplicationModal();
+        updateResultsCounter();
+    }
+
+    function setupJobFilters() {
+        $('#departmentFilter, #typeFilter, #experienceFilter').on('change', function() {
+            filterJobs();
+        });
+
+        $('#clearFilters').on('click', function() {
+            $('#departmentFilter').val('');
+            $('#typeFilter').val('');
+            $('#experienceFilter').val('');
+            $('#jobSearch').val('');
+            filterJobs();
+        });
+
+        $('#clearAllFilters').on('click', function() {
+            $('#clearFilters').click();
+        });
+    }
+
+    function setupJobSearch() {
+        let searchTimeout;
+        $('#jobSearch').on('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(function() {
+                filterJobs();
+            }, 300);
+        });
+    }
+
+    function filterJobs() {
+        const searchTerm = $('#jobSearch').val().toLowerCase();
+        const departmentFilter = $('#departmentFilter').val();
+        const typeFilter = $('#typeFilter').val();
+        const experienceFilter = $('#experienceFilter').val();
+
+        let visibleCount = 0;
+
+        $('.job-card').each(function() {
+            const $card = $(this);
+            const title = $card.data('title').toLowerCase();
+            const department = $card.data('department');
+            const type = $card.data('type');
+            const experience = $card.data('experience');
+
+            const matchesSearch = searchTerm === '' ||
+                title.includes(searchTerm) ||
+                $card.find('.job-skills').text().toLowerCase().includes(searchTerm) ||
+                $card.find('.text-muted').first().text().toLowerCase().includes(searchTerm);
+
+            const matchesDepartment = departmentFilter === '' || department === departmentFilter;
+            const matchesType = typeFilter === '' || type === typeFilter;
+            const matchesExperience = experienceFilter === '' || experience === experienceFilter;
+
+            if (matchesSearch && matchesDepartment && matchesType && matchesExperience) {
+                $card.removeClass('d-none').addClass('wow fadeInUp');
+                visibleCount++;
+            } else {
+                $card.addClass('d-none').removeClass('wow fadeInUp');
+            }
+        });
+
+        if (visibleCount === 0) {
+            $('#noResults').removeClass('d-none');
+            $('#jobCardsContainer').addClass('d-none');
+        } else {
+            $('#noResults').addClass('d-none');
+            $('#jobCardsContainer').removeClass('d-none');
+        }
+
+        updateResultsCounter(visibleCount);
+    }
+
+    function updateResultsCounter(visibleCount) {
+        const totalCount = $('.job-card').length;
+        const showingCount = visibleCount !== undefined ? visibleCount : $('.job-card:not(.d-none)').length;
+        $('#showingCount').text(showingCount);
+        $('#totalCount').text(totalCount);
+    }
+
+    function setupJobApplicationModal() {
+        $(document).on('click', '.apply-btn', function() {
+            const jobId = $(this).data('job-id');
+            const jobTitle = $(this).data('job-title');
+            openJobApplicationModal(jobId, jobTitle);
+        });
+
+        $('#submitApplication').off('click').on('click', function() {
+            submitJobApplication();
+        });
+
+        $('#resume, #portfolio').on('change', function() {
+            validateFileSize(this);
+        });
+    }
+
+    function openJobApplicationModal(jobId, jobTitle) {
+        const job = jobData.find(j => j.id === jobId);
+        if (job) {
+            $('#modalJobTitle').text(jobTitle);
+            $('#jobTitle').val(job.title);
+            $('#summaryJobTitle').text(job.title);
+            $('#summaryDepartment').text(getDepartmentName(job.department));
+            $('#summaryJobType').text(getJobTypeName(job.type));
+            $('#summaryLocation').text(job.location);
+            $('#summarySalary').text(job.salary);
+            $('#successJobTitle').text(job.title);
+
+            $('#jobApplicationForm')[0].reset();
+            $('#jobTitle').val(job.title);
+            $('#termsCheck').prop('checked', false);
+            $('#jobApplicationModal').modal('show');
+        }
+    }
+
+    function getDepartmentName(dept) {
+        const departments = {
+            'sales': 'Sales & Marketing',
+            'logistics': 'Logistics & Operations',
+            'quality': 'Quality Control',
+            'procurement': 'Procurement',
+            'finance': 'Finance & Admin'
+        };
+        return departments[dept] || dept;
+    }
+
+    function getJobTypeName(type) {
+        const types = {
+            'full-time': 'Full-time',
+            'part-time': 'Part-time',
+            'contract': 'Contract',
+            'internship': 'Internship'
+        };
+        return types[type] || type;
+    }
+
+    function validateFileSize(input) {
+        const file = input.files[0];
+        if (file) {
+            const maxSize = 5 * 1024 * 1024;
+            if (file.size > maxSize) {
+                alert('File size exceeds 5MB limit.');
+                input.value = '';
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function submitJobApplication() {
+        console.log('=== SUBMIT JOB APPLICATION CALLED ===');
+        const form = $('#jobApplicationForm')[0];
+        
+        if (!form.checkValidity()) {
+            console.warn('Form validation failed');
+            form.reportValidity();
+            return;
+        }
+
+        if (!$('#termsCheck').is(':checked')) {
+            console.warn('Terms not accepted');
+            alert('Please accept the terms and conditions.');
+            return;
+        }
+
+        const resumeInput = document.getElementById('resume');
+        if (!resumeInput.files[0]) {
+            console.warn('No resume file selected');
+            alert('Please upload your resume.');
+            return;
+        }
+
+        const submitBtn = $('#submitApplication');
+        const originalText = submitBtn.html();
+        submitBtn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2"></span>Submitting...');
+
+        const formData = new FormData(form);
+        console.log('Form data prepared, sending AJAX request...');
+        console.log('Job Title:', formData.get('jobTitle'));
+        console.log('Email:', formData.get('email'));
+        console.log('Resume file:', resumeInput.files[0].name);
+
+        $.ajax({
+            url: '/api/career/apply',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            timeout: 60000, // 60 second timeout
+            success: function(response) {
+                console.log('AJAX Success Response:', response);
+                submitBtn.prop('disabled', false).html(originalText);
+                
+                if (response.status === 'success') {
+                    // Only show success if emails were sent successfully
+                    $('#jobApplicationModal').modal('hide');
+                    $('#successModal').modal('show');
+                    
+                    // Reset form
+                    form.reset();
+                } else {
+                    // Show error message
+                    alert('Error: ' + (response.message || 'Unknown error occurred'));
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX Error:', status, error);
+                console.error('XHR Status:', xhr.status);
+                console.error('XHR Response:', xhr.responseText);
+                
+                submitBtn.prop('disabled', false).html(originalText);
+                
+                let msg = 'Submission failed. Please try again.';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    msg = xhr.responseJSON.message;
+                } else if (xhr.responseText) {
+                    try {
+                        const errorData = JSON.parse(xhr.responseText);
+                        msg = errorData.message || msg;
+                    } catch(e) {
+                        msg = xhr.responseText.substring(0, 200);
+                    }
+                }
+                
+                alert('Error: ' + msg);
+            }
+        });
+    }
 
 })(jQuery);
 

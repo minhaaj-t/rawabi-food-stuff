@@ -1,0 +1,719 @@
+{% extends "base.html" %}
+
+{% block title %}Careers - AL RAWABI FOOD STUFF W.L.L{% endblock %}
+
+{% block content %}
+<!-- Full Screen Search Overlay Start -->
+    <div id="searchOverlay" class="search-overlay">
+        <div class="search-container">
+            <div class="search-content">
+                <button class="search-close" onclick="closeSearch()">&times;</button>
+                <div class="search-form">
+                    <input type="text" class="search-input" placeholder="Search..." id="searchInput">
+                    <button type="button" class="search-submit" onclick="performSearch()">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Full Screen Search Overlay End -->
+
+    <!-- Page Header Start -->
+    <div class="container-fluid page-header py-5 mb-5 wow fadeIn career-page" data-wow-delay="0.1s">
+        <div class="container text-center py-5">
+            <h1 class="display-2 text-dark mb-4 animated slideInDown">Careers</h1>
+            <nav aria-label="breadcrumb animated slideInDown">
+                <ol class="breadcrumb justify-content-center mb-0">
+                    <li class="breadcrumb-item"><a href="{{ url_for('home') }}">Home</a></li>
+                    <li class="breadcrumb-item text-dark" aria-current="page">Careers</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+
+    <!-- Career Opportunities Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="section-title text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+                <p class="fs-5 fw-medium fst-italic text-primary">Join Our Team</p>
+                <h1 class="display-6">Career Opportunities at AL RAWABI FOOD STUFF</h1>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="section-title">
+                        <p class="fs-5 fw-medium fst-italic text-primary">Why Join Us?</p>
+                        <h2 class="display-6">Build Your Career in Qatar's Leading Food Supply Industry</h2>
+                    </div>
+                    <div class="mb-4">
+                        <h5>Growth & Development</h5>
+                        <p class="mb-0">We invest in our employees' professional development through training programs, certifications, and career advancement opportunities within our expanding organization.</p>
+                    </div>
+                    <div class="border-top mb-4"></div>
+                    <div class="mb-4">
+                        <h5>Competitive Compensation</h5>
+                        <p class="mb-0">Attractive salary packages, performance bonuses, health insurance, and comprehensive benefits designed to reward your dedication and expertise.</p>
+                    </div>
+                    <div class="border-top mb-4"></div>
+                    <div class="mb-4">
+                        <h5>Work-Life Balance</h5>
+                        <p class="mb-0">Flexible working hours, paid annual leave, and a supportive work environment that values both professional success and personal well-being.</p>
+                    </div>
+                </div>
+                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="row g-3">
+                        <div class="col-6 text-end">
+                            <img class="img-fluid bg-white w-100 mb-3 wow fadeIn" data-wow-delay="0.1s" src="{{ url_for('static', filename='img/about/1.png') }}" alt="" style="height: 200px; object-fit: cover;">
+                            <img class="img-fluid bg-white w-50 wow fadeIn" data-wow-delay="0.2s" src="{{ url_for('static', filename='img/about/3.png') }}" alt="" style="height: 100px; object-fit: cover;">
+                        </div>
+                        <div class="col-6">
+                            <img class="img-fluid bg-white w-50 mb-3 wow fadeIn" data-wow-delay="0.3s" src="{{ url_for('static', filename='img/about/4.png') }}" alt="" style="height: 100px; object-fit: cover;">
+                            <img class="img-fluid bg-white w-100 wow fadeIn" data-wow-delay="0.4s" src="{{ url_for('static', filename='img/about/2.png') }}" alt="" style="height: 200px; object-fit: cover;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Career Opportunities End -->
+
+    <!-- Job Search and Filter Start -->
+    <div class="container-fluid bg-light py-4">
+        <div class="container">
+            <div class="row g-4 align-items-center">
+                <!-- Search Bar -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
+                        <input type="text" class="form-control border-start-0 ps-0" id="jobSearch" placeholder="Search jobs by title, skills, or keywords...">
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="col-lg-2 col-md-3">
+                    <select class="form-select" id="departmentFilter">
+                        <option value="">All Departments</option>
+                        <option value="sales">Sales & Marketing</option>
+                        <option value="logistics">Logistics & Operations</option>
+                        <option value="quality">Quality Control</option>
+                        <option value="procurement">Procurement</option>
+                        <option value="finance">Finance & Admin</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-2 col-md-3">
+                    <select class="form-select" id="typeFilter">
+                        <option value="">Job Type</option>
+                        <option value="full-time">Full-time</option>
+                        <option value="part-time">Part-time</option>
+                        <option value="contract">Contract</option>
+                        <option value="internship">Internship</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <select class="form-select" id="experienceFilter">
+                        <option value="">Experience Level</option>
+                        <option value="entry">Entry Level (0-2 years)</option>
+                        <option value="mid">Mid Level (2-5 years)</option>
+                        <option value="senior">Senior Level (5+ years)</option>
+                        <option value="executive">Executive Level</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <button class="btn btn-outline-primary w-100" id="clearFilters">Clear Filters</button>
+                </div>
+            </div>
+
+            <!-- Results Counter -->
+            <div class="row mt-3">
+                <div class="col-12">
+                    <small class="text-muted" id="resultsCounter">Showing <span id="showingCount">6</span> of <span id="totalCount">6</span> job openings</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Job Search and Filter End -->
+
+    <!-- Current Openings Start -->
+    <div class="container-fluid product py-5 my-5">
+        <div class="container py-5">
+            <div class="section-title text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+                <p class="fs-5 fw-medium fst-italic text-primary">Available Positions</p>
+                <h1 class="display-6">Current Job Openings</h1>
+            </div>
+
+            <!-- Job Cards Container -->
+            <div id="jobCardsContainer" class="row g-4">
+                <!-- Job Card 1 -->
+                <div class="col-lg-4 col-md-6 job-card wow fadeInUp" data-wow-delay="0.1s"
+                     data-title="Sales Manager" data-department="sales" data-type="full-time" data-experience="senior">
+                    <div class="career-job-card position-relative h-100">
+                        <div class="card-header bg-primary text-white">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    <h5 class="mb-1">Sales Manager</h5>
+                                    <small class="opacity-75">Sales & Marketing</small>
+                                </div>
+                                <div class="badge bg-light text-primary">Hot</div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <div class="d-flex flex-wrap gap-2 mb-3">
+                                    <span class="badge bg-light text-primary">Full-time</span>
+                                    <span class="badge bg-light text-primary">5+ years</span>
+                                    <span class="badge bg-light text-primary">Qatar</span>
+                                </div>
+                                <p class="text-muted mb-3">Lead our sales team in developing and maintaining strong relationships with key wholesale clients across Qatar's food retail sector.</p>
+                                <div class="job-details">
+                                    <div class="row text-center">
+                                        <div class="col-4">
+                                            <small class="text-muted d-block">Salary</small>
+                                            <strong class="text-primary">Competitive</strong>
+                                        </div>
+                                        <div class="col-4">
+                                            <small class="text-muted d-block">Location</small>
+                                            <strong class="text-primary">Doha</strong>
+                                        </div>
+                                        <div class="col-4">
+                                            <small class="text-muted d-block">Posted</small>
+                                            <strong class="text-primary">2 days ago</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-0">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="job-skills">
+                                    <small class="text-muted">Skills: Leadership, B2B Sales, Negotiation</small>
+                                </div>
+                                <button class="btn btn-primary btn-sm apply-btn" data-job-id="sales-manager" data-job-title="Sales Manager">
+                                    Apply Now <i class="fas fa-arrow-right ms-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Job Card 2 -->
+                <div class="col-lg-4 col-md-6 job-card wow fadeInUp" data-wow-delay="0.2s"
+                     data-title="Logistics Coordinator" data-department="logistics" data-type="full-time" data-experience="mid">
+                    <div class="career-job-card position-relative h-100">
+                        <div class="card-header bg-primary text-white">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    <h5 class="mb-1">Logistics Coordinator</h5>
+                                    <small class="opacity-75">Logistics & Operations</small>
+                                </div>
+                                <div class="badge bg-light text-primary">New</div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <div class="d-flex flex-wrap gap-2 mb-3">
+                                    <span class="badge bg-light text-primary">Full-time</span>
+                                    <span class="badge bg-light text-primary">3+ years</span>
+                                    <span class="badge bg-light text-primary">Qatar</span>
+                                </div>
+                                <p class="text-muted mb-3">Oversee warehouse operations and distribution logistics to ensure timely delivery of wholesale food products to our clients.</p>
+                                <div class="job-details">
+                                    <div class="row text-center">
+                                        <div class="col-4">
+                                            <small class="text-muted d-block">Salary</small>
+                                            <strong class="text-primary">Competitive</strong>
+                                        </div>
+                                        <div class="col-4">
+                                            <small class="text-muted d-block">Location</small>
+                                            <strong class="text-primary">Industrial Area</strong>
+                                        </div>
+                                        <div class="col-4">
+                                            <small class="text-muted d-block">Posted</small>
+                                            <strong class="text-primary">1 week ago</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-0">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="job-skills">
+                                    <small class="text-muted">Skills: Supply Chain, Warehouse Mgmt, ERP</small>
+                                </div>
+                                <button class="btn btn-primary btn-sm apply-btn" data-job-id="logistics-coordinator" data-job-title="Logistics Coordinator">
+                                    Apply Now <i class="fas fa-arrow-right ms-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Job Card 3 -->
+                <div class="col-lg-4 col-md-6 job-card wow fadeInUp" data-wow-delay="0.3s"
+                     data-title="Quality Control Specialist" data-department="quality" data-type="full-time" data-experience="mid">
+                    <div class="career-job-card position-relative h-100">
+                        <div class="card-header bg-primary text-white">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    <h5 class="mb-1">Quality Control Specialist</h5>
+                                    <small class="opacity-75">Quality Control</small>
+                                </div>
+                                <div class="badge bg-light text-primary">Urgent</div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <div class="d-flex flex-wrap gap-2 mb-3">
+                                    <span class="badge bg-light text-primary">Full-time</span>
+                                    <span class="badge bg-light text-primary">2+ years</span>
+                                    <span class="badge bg-light text-primary">Qatar</span>
+                                </div>
+                                <p class="text-muted mb-3">Ensure product quality standards are maintained throughout our supply chain, from procurement to delivery.</p>
+                                <div class="job-details">
+                                    <div class="row text-center">
+                                        <div class="col-4">
+                                            <small class="text-muted d-block">Salary</small>
+                                            <strong class="text-primary">Competitive</strong>
+                                        </div>
+                                        <div class="col-4">
+                                            <small class="text-muted d-block">Location</small>
+                                            <strong class="text-primary">Doha</strong>
+                                        </div>
+                                        <div class="col-4">
+                                            <small class="text-muted d-block">Posted</small>
+                                            <strong class="text-primary">3 days ago</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-0">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="job-skills">
+                                    <small class="text-muted">Skills: Quality Assurance, HACCP, Testing</small>
+                                </div>
+                                <button class="btn btn-primary btn-sm apply-btn" data-job-id="quality-specialist" data-job-title="Quality Control Specialist">
+                                    Apply Now <i class="fas fa-arrow-right ms-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Job Card 4 -->
+                <div class="col-lg-4 col-md-6 job-card wow fadeInUp" data-wow-delay="0.4s"
+                     data-title="Procurement Officer" data-department="procurement" data-type="full-time" data-experience="mid">
+                    <div class="career-job-card position-relative h-100">
+                        <div class="card-header bg-primary text-white">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    <h5 class="mb-1">Procurement Officer</h5>
+                                    <small class="opacity-75">Procurement</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <div class="d-flex flex-wrap gap-2 mb-3">
+                                    <span class="badge bg-light text-primary">Full-time</span>
+                                    <span class="badge bg-light text-primary">3+ years</span>
+                                    <span class="badge bg-light text-primary">Qatar</span>
+                                </div>
+                                <p class="text-muted mb-3">Manage procurement activities, negotiate with suppliers, and ensure cost-effective sourcing of quality food products.</p>
+                                <div class="job-details">
+                                    <div class="row text-center">
+                                        <div class="col-4">
+                                            <small class="text-muted d-block">Salary</small>
+                                            <strong class="text-primary">Competitive</strong>
+                                        </div>
+                                        <div class="col-4">
+                                            <small class="text-muted d-block">Location</small>
+                                            <strong class="text-primary">Doha</strong>
+                                        </div>
+                                        <div class="col-4">
+                                            <small class="text-muted d-block">Posted</small>
+                                            <strong class="text-primary">1 week ago</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-0">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="job-skills">
+                                    <small class="text-muted">Skills: Negotiation, Supplier Relations, Cost Analysis</small>
+                                </div>
+                                <button class="btn btn-primary btn-sm apply-btn" data-job-id="procurement-officer" data-job-title="Procurement Officer">
+                                    Apply Now <i class="fas fa-arrow-right ms-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Job Card 5 -->
+                <div class="col-lg-4 col-md-6 job-card wow fadeInUp" data-wow-delay="0.5s"
+                     data-title="Marketing Coordinator" data-department="sales" data-type="full-time" data-experience="entry">
+                    <div class="career-job-card position-relative h-100">
+                        <div class="card-header bg-primary text-white">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    <h5 class="mb-1">Marketing Coordinator</h5>
+                                    <small class="opacity-75">Sales & Marketing</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <div class="d-flex flex-wrap gap-2 mb-3">
+                                    <span class="badge bg-light text-primary">Full-time</span>
+                                    <span class="badge bg-light text-primary">1+ years</span>
+                                    <span class="badge bg-light text-primary">Qatar</span>
+                                </div>
+                                <p class="text-muted mb-3">Support marketing initiatives, manage social media presence, and coordinate promotional activities for our wholesale brand.</p>
+                                <div class="job-details">
+                                    <div class="row text-center">
+                                        <div class="col-4">
+                                            <small class="text-muted d-block">Salary</small>
+                                            <strong class="text-primary">Competitive</strong>
+                                        </div>
+                                        <div class="col-4">
+                                            <small class="text-muted d-block">Location</small>
+                                            <strong class="text-primary">Doha</strong>
+                                        </div>
+                                        <div class="col-4">
+                                            <small class="text-muted d-block">Posted</small>
+                                            <strong class="text-primary">2 weeks ago</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-0">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="job-skills">
+                                    <small class="text-muted">Skills: Digital Marketing, Social Media, Content Creation</small>
+                                </div>
+                                <button class="btn btn-primary btn-sm apply-btn" data-job-id="marketing-coordinator" data-job-title="Marketing Coordinator">
+                                    Apply Now <i class="fas fa-arrow-right ms-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Job Card 6 -->
+                <div class="col-lg-4 col-md-6 job-card wow fadeInUp" data-wow-delay="0.6s"
+                     data-title="Warehouse Supervisor" data-department="logistics" data-type="full-time" data-experience="mid">
+                    <div class="career-job-card position-relative h-100">
+                        <div class="card-header bg-primary text-white">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    <h5 class="mb-1">Warehouse Supervisor</h5>
+                                    <small class="opacity-75">Logistics & Operations</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <div class="d-flex flex-wrap gap-2 mb-3">
+                                    <span class="badge bg-light text-primary">Full-time</span>
+                                    <span class="badge bg-light text-primary">4+ years</span>
+                                    <span class="badge bg-light text-primary">Qatar</span>
+                                </div>
+                                <p class="text-muted mb-3">Supervise warehouse operations, manage inventory, and ensure efficient storage and distribution of food products.</p>
+                                <div class="job-details">
+                                    <div class="row text-center">
+                                        <div class="col-4">
+                                            <small class="text-muted d-block">Salary</small>
+                                            <strong class="text-primary">Competitive</strong>
+                                        </div>
+                                        <div class="col-4">
+                                            <small class="text-muted d-block">Location</small>
+                                            <strong class="text-primary">Industrial Area</strong>
+                                        </div>
+                                        <div class="col-4">
+                                            <small class="text-muted d-block">Posted</small>
+                                            <strong class="text-primary">5 days ago</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-0">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="job-skills">
+                                    <small class="text-muted">Skills: Warehouse Mgmt, Inventory Control, Team Leadership</small>
+                                </div>
+                                <button class="btn btn-primary btn-sm apply-btn" data-job-id="warehouse-supervisor" data-job-title="Warehouse Supervisor">
+                                    Apply Now <i class="fas fa-arrow-right ms-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- No Results Message -->
+            <div id="noResults" class="text-center mt-5 d-none">
+                <div class="py-5">
+                    <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                    <h4 class="text-muted">No jobs found</h4>
+                    <p class="text-muted">Try adjusting your search criteria or filters</p>
+                    <button class="btn btn-outline-primary" id="clearAllFilters">Clear All Filters</button>
+                </div>
+            </div>
+
+            <div class="text-center mt-5">
+                <p class="mb-4">Don't see a position that matches your skills? We're always looking for talented individuals to join our growing team.</p>
+                <a href="mailto:hr@alrawabigroup.com?subject=General Application - AL RAWABI FOOD STUFF" class="btn btn-primary rounded-pill py-3 px-5">Send Us Your Resume</a>
+            </div>
+        </div>
+    </div>
+    <!-- Current Openings End -->
+
+    <!-- Job Application Modal Start -->
+    <div class="modal fade career-modal" id="jobApplicationModal" tabindex="-1" aria-labelledby="jobApplicationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="jobApplicationModalLabel">Apply for <span id="modalJobTitle"></span></h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="jobApplicationForm" enctype="multipart/form-data">
+                        <input type="hidden" id="jobTitle" name="jobTitle">
+                        <!-- Job Details Summary -->
+                        <div class="job-summary bg-light p-3 rounded mb-4">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6 class="text-primary mb-2"><i class="fas fa-briefcase me-2"></i>Position Details</h6>
+                                    <p class="mb-1"><strong>Job Title:</strong> <span id="summaryJobTitle"></span></p>
+                                    <p class="mb-1"><strong>Department:</strong> <span id="summaryDepartment"></span></p>
+                                    <p class="mb-0"><strong>Job Type:</strong> <span id="summaryJobType"></span></p>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="text-success mb-2"><i class="fas fa-map-marker-alt me-2"></i>Location & Salary</h6>
+                                    <p class="mb-1"><strong>Location:</strong> <span id="summaryLocation"></span></p>
+                                    <p class="mb-0"><strong>Salary Range:</strong> <span id="summarySalary"></span></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Personal Information -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="firstName" class="form-label">First Name *</label>
+                                <input type="text" class="form-control" id="firstName" name="firstName" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="lastName" class="form-label">Last Name *</label>
+                                <input type="text" class="form-control" id="lastName" name="lastName" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email Address *</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="phone" class="form-label">Phone Number *</label>
+                                <input type="tel" class="form-control" id="phone" name="phone" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="experience" class="form-label">Years of Experience</label>
+                            <select class="form-select" id="experience" name="experience">
+                                <option value="">Select experience level</option>
+                                <option value="0-1">0-1 years</option>
+                                <option value="1-2">1-2 years</option>
+                                <option value="2-3">2-3 years</option>
+                                <option value="3-5">3-5 years</option>
+                                <option value="5-7">5-7 years</option>
+                                <option value="7-10">7-10 years</option>
+                                <option value="10+">10+ years</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="currentPosition" class="form-label">Current Position</label>
+                            <input type="text" class="form-control" id="currentPosition" name="currentPosition" placeholder="Your current job title">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="coverLetter" class="form-label">Cover Letter</label>
+                            <textarea class="form-control" id="coverLetter" name="coverLetter" rows="4" placeholder="Tell us why you're interested in this position and what makes you a great fit..."></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="resume" class="form-label">Resume/CV *</label>
+                            <input type="file" class="form-control" id="resume" name="resume" accept=".pdf,.doc,.docx" required>
+                            <div class="form-text">Accepted formats: PDF, DOC, DOCX (Max 5MB)</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="portfolio" class="form-label">Portfolio/Additional Documents (Optional)</label>
+                            <input type="file" class="form-control" id="portfolio" name="portfolio" accept=".pdf,.doc,.docx,.zip" multiple>
+                            <div class="form-text">Certificates, portfolio, or additional documents</div>
+                        </div>
+
+                        <!-- Terms and Conditions -->
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="termsCheck" required>
+                                <label class="form-check-label" for="termsCheck">
+                                    I agree to the <a href="{{ url_for('cookies_policy') }}" target="_blank">Privacy Policy</a> and consent to the processing of my personal data for recruitment purposes.
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="submitApplication">
+                        <i class="fas fa-paper-plane me-2"></i>Submit Application
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Job Application Modal End -->
+
+    <!-- Success Modal Start -->
+    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="successModalLabel">Application Submitted Successfully!</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                    <h5>Thank you for your application!</h5>
+                    <p class="mb-0">We have received your application for the <strong id="successJobTitle"></strong> position. Our HR team will review your application and contact you within 3-5 business days if your profile matches our requirements.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Continue Browsing</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Success Modal End -->
+
+    <!-- Benefits Section Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="section-title text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+                <p class="fs-5 fw-medium fst-italic text-primary">Employee Benefits</p>
+                <h1 class="display-6">What We Offer</h1>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0 btn-lg-square bg-primary rounded-circle me-3">
+                            <i class="fa fa-check text-white"></i>
+                        </div>
+                        <span class="text-dark">Competitive Salary & Bonuses</span>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.2s">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0 btn-lg-square bg-primary rounded-circle me-3">
+                            <i class="fa fa-check text-white"></i>
+                        </div>
+                        <span class="text-dark">Health Insurance Coverage</span>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0 btn-lg-square bg-primary rounded-circle me-3">
+                            <i class="fa fa-check text-white"></i>
+                        </div>
+                        <span class="text-dark">Professional Development</span>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.4s">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0 btn-lg-square bg-primary rounded-circle me-3">
+                            <i class="fa fa-check text-white"></i>
+                        </div>
+                        <span class="text-dark">Paid Annual Leave</span>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0 btn-lg-square bg-primary rounded-circle me-3">
+                            <i class="fa fa-check text-white"></i>
+                        </div>
+                        <span class="text-dark">Transportation Allowance</span>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.6s">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0 btn-lg-square bg-primary rounded-circle me-3">
+                            <i class="fa fa-check text-white"></i>
+                        </div>
+                        <span class="text-dark">Performance Incentives</span>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0 btn-lg-square bg-primary rounded-circle me-3">
+                            <i class="fa fa-check text-white"></i>
+                        </div>
+                        <span class="text-dark">Work-Life Balance</span>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.8s">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0 btn-lg-square bg-primary rounded-circle me-3">
+                            <i class="fa fa-check text-white"></i>
+                        </div>
+                        <span class="text-dark">Team Building Activities</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Benefits Section End -->
+
+    <!-- Contact HR Start -->
+    <div class="container-xxl contact py-5">
+        <div class="container">
+            <div class="section-title text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+                <p class="fs-5 fw-medium fst-italic text-primary">Get In Touch</p>
+                <h1 class="display-6">Ready to Join Our Team?</h1>
+            </div>
+            <div class="row justify-content-center wow fadeInUp" data-wow-delay="0.1s">
+                <div class="col-lg-8">
+                    <p class="text-center mb-5">We're always interested in hearing from talented professionals who share our passion for quality food supply and customer service. Send us your resume and let's discuss how you can contribute to our continued success.</p>
+                    <div class="row g-5">
+                        <div class="col-md-6 text-center wow fadeInUp" data-wow-delay="0.3s">
+                            <div class="btn-square mx-auto mb-3">
+                                <i class="fa fa-envelope fa-2x text-white"></i>
+                            </div>
+                            <p class="mb-2">hr@alrawabigroup.com</p>
+                            <p class="mb-0">Human Resources Department</p>
+                        </div>
+                        <div class="col-md-6 text-center wow fadeInUp" data-wow-delay="0.4s">
+                            <div class="btn-square mx-auto mb-3">
+                                <i class="fa fa-phone fa-2x text-white"></i>
+                            </div>
+                            <p class="mb-2">+974 4497 1777</p>
+                            <p class="mb-0">Ext. 102 (HR Department)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Contact HR End -->
+{% endblock %}

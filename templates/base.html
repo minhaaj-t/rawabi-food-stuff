@@ -69,12 +69,16 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <div class="navbar-nav ms-auto">
+                        <a href="https://rfoodinternational.com/wp-content/uploads/2025/08/CATALOUGE-RFI-01_compressed-1.pdf" class="nav-item nav-link px-3" target="_blank" title="Download Catalogue" style="border: 1px solid var(--primary); border-radius: 10px; margin: 12px 15px 12px 0; padding-top: 8px !important; padding-bottom: 8px !important; display: flex; align-items: center; height: fit-content; align-self: center;">
+                            <img src="{{ url_for('static', filename='img/download (1).png') }}" alt="Download" style="height: 18px; width: auto; vertical-align: middle; margin-right: 8px;">Catalogue
+                        </a>
                         <a href="{{ url_for('home') }}" class="nav-item nav-link {% if request.endpoint == 'home' %}active{% endif %}">Home</a>
                         <a href="{{ url_for('about') }}" class="nav-item nav-link {% if request.endpoint == 'about' %}active{% endif %}">About</a>
                         <a href="{{ url_for('product') }}" class="nav-item nav-link {% if request.endpoint == 'product' %}active{% endif %}">Products</a>
                         <a href="{{ url_for('store') }}" class="nav-item nav-link {% if request.endpoint == 'store' %}active{% endif %}">Store</a>
                         <a href="{{ url_for('news') }}" class="nav-item nav-link {% if request.endpoint == 'news' %}active{% endif %}">News</a>
                         <a href="{{ url_for('contact') }}" class="nav-item nav-link {% if request.endpoint == 'contact' %}active{% endif %}">Contact</a>
+                        <a href="{{ url_for('career') }}" class="nav-item nav-link {% if request.endpoint == 'career' %}active{% endif %}">Career</a>
                     </div>
                     <div class="border-start ps-4 d-none d-lg-block">
                         <button type="button" class="btn btn-sm p-0" id="searchBtn"><i class="fas fa-search"></i></button>
@@ -115,12 +119,12 @@
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <h4 class="text-primary mb-4">Business Hours</h4>
-                    <p class="mb-1">Monday - Friday</p>
-                    <h6 class="text-light">09:00 am - 07:00 pm</h6>
-                    <p class="mb-1">Saturday</p>
-                    <h6 class="text-light">09:00 am - 12:00 pm</h6>
-                    <p class="mb-1">Sunday</p>
-                    <h6 class="text-light">Closed</h6>
+                    <p class="mb-1">24/7 Full-Time Support</p>
+                    <h6 class="text-light">Round-the-clock service</h6>
+                    <p class="mb-1">Emergency Support</p>
+                    <h6 class="text-light">Available anytime</h6>
+                    <p class="mb-1">Customer Service</p>
+                    <h6 class="text-light">Always online</h6>
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <h4 class="text-primary mb-4">Newsletter</h4>
@@ -166,7 +170,7 @@
     <script src="{{ url_for('static', filename='lib/owlcarousel/owl.carousel.min.js') }}"></script>
 
     <!-- Template Javascript -->
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}?v={{ range(1, 10000) | random }}"></script>
 
     <!-- Cookie Consent Dialog Start -->
     <div id="cookieConsentDialog" class="cookie-consent-overlay">
