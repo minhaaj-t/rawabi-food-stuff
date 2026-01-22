@@ -219,7 +219,8 @@ body {
     transform: none !important;
     display: block !important;
     height: auto !important;
-    min-height: 70vh !important;
+    min-height: 55vh !important;
+    max-height: 60vh !important;
 }
 
 /* Reset any Bootstrap carousel positioning */
@@ -236,7 +237,8 @@ body {
     width: 100% !important;
     overflow: hidden !important;
     height: auto !important;
-    min-height: 70vh !important;
+    min-height: 55vh !important;
+    max-height: 60vh !important;
     margin: 0 !important;
     padding: 0 !important;
     top: 0 !important;
@@ -499,7 +501,8 @@ body {
 #header-carousel .carousel-item {
     position: relative !important;
     display: none !important;
-    min-height: 70vh !important;
+    min-height: 55vh !important;
+    max-height: 60vh !important;
     overflow: hidden !important;
     width: 100% !important;
     height: auto !important;
@@ -771,7 +774,8 @@ body {
 
 @media (min-width: 769px) and (max-width: 991px) {
     #header-carousel .carousel-item {
-        min-height: 65vh;
+        min-height: 50vh;
+        max-height: 55vh;
     }
 
     #header-carousel video {
@@ -790,7 +794,8 @@ body {
 
 @media (min-width: 1200px) {
     #header-carousel .carousel-item {
-        min-height: 70vh;
+        min-height: 55vh;
+        max-height: 60vh;
     }
 
     #header-carousel video {
@@ -1616,11 +1621,13 @@ body {
 /*** Carousel Caption Responsive Height ***/
 @media (min-width: 992px) {
     #header-carousel .carousel-item {
-        min-height: 100vh;
+        min-height: 55vh;
+        max-height: 60vh;
     }
 
     .carousel-caption {
-        min-height: 70vh !important;
+        min-height: 55vh !important;
+        max-height: 60vh !important;
         display: flex !important;
         align-items: center !important;
     }
@@ -1654,6 +1661,14 @@ body {
     border-color: rgba(255, 255, 255, 0.5) !important;
     color: #333 !important;
     transform: scale(1.05) !important;
+}
+
+#searchBtn:hover img {
+    transform: scale(1.15) !important;
+}
+
+#searchBtn img {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 /*** Mega Menu ***/

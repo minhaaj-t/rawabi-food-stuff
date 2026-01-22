@@ -83,9 +83,9 @@
                         <a href="{{ url_for('career') }}" class="nav-item nav-link {% if request.endpoint == 'career' %}active{% endif %}">Career</a>
                     </div>
                     <div class="border-start ps-4 d-none d-lg-block">
-                        <button type="button" class="btn btn-sm p-0" id="searchBtn" style="display: flex; align-items: center; justify-content: center;">
-                            <img src="{{ url_for('static', filename='img/magnifying-glass.png') }}" alt="Search" style="width: 15px; height: 15px; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
-                            <i class="fas fa-search" style="display: none;"></i>
+                        <button type="button" class="btn btn-sm p-0" id="searchBtn" style="display: flex; align-items: center; justify-content: center; min-width: 40px; min-height: 40px;">
+                            <img src="{{ url_for('static', filename='img/magnifying-glass.png') }}" alt="Search" style="width: 22px; height: 22px; object-fit: contain; transition: transform 0.3s ease;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+                            <i class="fas fa-search" style="display: none; font-size: 18px;"></i>
                         </button>
                     </div>
                 </div>
