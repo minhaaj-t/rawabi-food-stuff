@@ -258,18 +258,11 @@ def sanitize_unicode_for_email(text):
     
     return text
 
-def get_logo_base64():
-    """Get logo as base64 encoded string for email embedding"""
-    try:
-        logo_path = os.path.join(app.root_path, 'static', 'img', 'logo.png')
-        if os.path.exists(logo_path):
-            with open(logo_path, 'rb') as f:
-                logo_data = f.read()
-            logo_base64 = base64.b64encode(logo_data).decode('utf-8')
-            return f"data:image/png;base64,{logo_base64}"
-    except Exception as e:
-        print(f"[WARN] Could not load logo for email: {str(e)}")
-    return None
+def get_logo_url():
+    """Get logo URL for email template - uses production URL"""
+    # Production logo URL
+    logo_url = "https://rawabi-food-stuff.vercel.app/static/img/logo.png"
+    return logo_url
 
 def create_html_email_template(title, content, logo_url=None):
     """
@@ -361,7 +354,10 @@ def send_email_direct(to_emails, subject, body, attachment_data=None, attachment
         
         # Create message with UTF-8 encoding
         msg = MIMEMultipart('mixed')
-        msg['From'] = smtp_username
+        
+        # Set From header with display name
+        display_name = "Rawabi Food Stuff - HR"
+        msg['From'] = Header(f'{display_name} <{smtp_username}>', 'utf-8')
         
         # Encode subject with UTF-8 using Header
         msg['Subject'] = Header(subject, 'utf-8')
@@ -411,15 +407,30 @@ def send_email_direct(to_emails, subject, body, attachment_data=None, attachment
             body_str = sanitize_unicode_for_email(body_str)
             msg.attach(MIMEText(body_str, 'plain', 'utf-8'))
         
-        # Add attachment if provided
+        # Add attachments if provided
+        # Support both single attachment (backward compatible) and multiple attachments
+        attachments = []
         if attachment_data and attachment_filename:
+            # Single attachment (backward compatible)
+            if isinstance(attachment_data, list) and isinstance(attachment_filename, list):
+                # Multiple attachments
+                attachments = list(zip(attachment_data, attachment_filename, 
+                                     [attachment_mimetype] * len(attachment_data) if not isinstance(attachment_mimetype, list) else attachment_mimetype))
+            else:
+                # Single attachment
+                attachments = [(attachment_data, attachment_filename, attachment_mimetype)]
+        
+        # Add all attachments
+        for att_data, att_filename, att_mimetype in attachments:
+            if not att_data or not att_filename:
+                continue
             try:
                 # Determine content type
-                if attachment_mimetype:
-                    maintype, subtype = attachment_mimetype.split('/', 1) if '/' in attachment_mimetype else ('application', 'octet-stream')
+                if att_mimetype:
+                    maintype, subtype = att_mimetype.split('/', 1) if '/' in att_mimetype else ('application', 'octet-stream')
                 else:
                     # Guess from filename extension
-                    ext = attachment_filename.lower().split('.')[-1] if '.' in attachment_filename else ''
+                    ext = att_filename.lower().split('.')[-1] if '.' in att_filename else ''
                     if ext in ['pdf']:
                         maintype, subtype = 'application', 'pdf'
                     elif ext in ['doc', 'docx']:
@@ -428,19 +439,21 @@ def send_email_direct(to_emails, subject, body, attachment_data=None, attachment
                         maintype, subtype = 'image', 'jpeg'
                     elif ext in ['png']:
                         maintype, subtype = 'image', 'png'
+                    elif ext in ['zip']:
+                        maintype, subtype = 'application', 'zip'
                     else:
                         maintype, subtype = 'application', 'octet-stream'
                 
                 part = MIMEBase(maintype, subtype)
-                part.set_payload(attachment_data)
+                part.set_payload(att_data)
                 encoders.encode_base64(part)
                 # Properly encode filename for international characters
-                part.add_header('Content-Disposition', 'attachment', filename=Header(attachment_filename, 'utf-8').encode())
+                part.add_header('Content-Disposition', 'attachment', filename=Header(att_filename, 'utf-8').encode())
                 msg.attach(part)
-                print(f"[OK] Attachment added: {attachment_filename} ({len(attachment_data)} bytes)")
+                print(f"[OK] Attachment added: {att_filename} ({len(att_data)} bytes, type: {att_mimetype or maintype + '/' + subtype})")
             except Exception as e:
-                print(f"[WARN] Failed to add attachment: {str(e)}")
-                # Continue without attachment rather than failing completely
+                print(f"[WARN] Failed to add attachment {att_filename}: {str(e)}")
+                # Continue without this attachment rather than failing completely
         
         # Connect and send with timeout
         print(f"[INFO] Connecting to SMTP server: {smtp_server}:{smtp_port}")
@@ -629,6 +642,76 @@ def career_apply():
                 resume_filename = None
                 resume_mimetype = None
 
+        # Handle portfolio/additional documents (Optional) - Multiple files supported
+        portfolio_files = request.files.getlist('portfolio')  # Get all portfolio files
+        portfolio_data_list = []
+        portfolio_filename_list = []
+        portfolio_mimetype_list = []
+        
+        # Filter out empty file objects
+        valid_portfolio_files = [pf for pf in portfolio_files if pf and pf.filename]
+        
+        if valid_portfolio_files:
+            print(f"Processing {len(valid_portfolio_files)} portfolio file(s)...")
+            for idx, portfolio_file in enumerate(valid_portfolio_files):
+                try:
+                    # Read file data directly into memory
+                    portfolio_file.seek(0)
+                    portfolio_data = portfolio_file.read()
+                    portfolio_file.seek(0)
+                    
+                    # Generate safe filename
+                    portfolio_filename = secure_filename(f"{datetime.now().strftime('%Y%m%d%H%M%S')}_{idx+1}_{portfolio_file.filename}")
+                    
+                    # Determine MIME type
+                    portfolio_mimetype = portfolio_file.content_type
+                    if not portfolio_mimetype or portfolio_mimetype == 'application/octet-stream':
+                        filename_lower = portfolio_file.filename.lower()
+                        if filename_lower.endswith('.pdf'):
+                            portfolio_mimetype = 'application/pdf'
+                        elif filename_lower.endswith(('.doc', '.docx')):
+                            portfolio_mimetype = 'application/msword'
+                        elif filename_lower.endswith('.zip'):
+                            portfolio_mimetype = 'application/zip'
+                        elif filename_lower.endswith(('.jpg', '.jpeg')):
+                            portfolio_mimetype = 'image/jpeg'
+                        elif filename_lower.endswith('.png'):
+                            portfolio_mimetype = 'image/png'
+                        else:
+                            portfolio_mimetype = 'application/octet-stream'
+                    
+                    portfolio_data_list.append(portfolio_data)
+                    portfolio_filename_list.append(portfolio_filename)
+                    portfolio_mimetype_list.append(portfolio_mimetype)
+                    
+                    print(f"[OK] Portfolio file {idx+1} loaded: {portfolio_filename} ({len(portfolio_data)} bytes, type: {portfolio_mimetype})")
+                except Exception as e:
+                    print(f"[ERROR] Failed to read portfolio file {idx+1} ({portfolio_file.filename}): {str(e)}")
+                    # Continue processing other files
+        
+        # Combine resume and portfolio files for email attachments
+        all_attachment_data = []
+        all_attachment_filenames = []
+        all_attachment_mimetypes = []
+        
+        # Add resume first (if exists)
+        if resume_data and resume_filename:
+            all_attachment_data.append(resume_data)
+            all_attachment_filenames.append(resume_file.filename if resume_file else resume_filename)
+            all_attachment_mimetypes.append(resume_mimetype)
+        
+        # Add portfolio files
+        all_attachment_data.extend(portfolio_data_list)
+        # Use original filenames from valid_portfolio_files for email attachments
+        portfolio_original_filenames = []
+        for pf in valid_portfolio_files:
+            if pf and pf.filename:
+                portfolio_original_filenames.append(pf.filename)
+        all_attachment_filenames.extend(portfolio_original_filenames)
+        all_attachment_mimetypes.extend(portfolio_mimetype_list)
+        
+        print(f"[INFO] Total attachments prepared: {len(all_attachment_data)} file(s)")
+
         # Save to Database FIRST
         try:
             application = CareerApplication(
@@ -662,7 +745,7 @@ def career_apply():
             candidate_subject = f"Application Received: {job_title} - AL RAWABI FOOD STUFF"
             
             # Create HTML email content
-            logo_url = get_logo_base64()
+            logo_url = get_logo_url()
             candidate_content = f"""
             <h2 style="color: #14A751; margin-top: 0; font-size: 24px; font-weight: 600;">Application Received</h2>
             <p style="color: #252C30; font-size: 16px; line-height: 1.6; margin: 20px 0;">
@@ -723,7 +806,7 @@ def career_apply():
             staff_subject = f"New Job Application: {job_title} - {first_name} {last_name}"
             
             # Create HTML email content for staff
-            logo_url = get_logo_base64()
+            logo_url = get_logo_url()
             cover_letter_html = cover_letter.replace('\n', '<br>') if cover_letter else 'N/A'
             staff_content = f"""
             <h2 style="color: #14A751; margin-top: 0; font-size: 24px; font-weight: 600;">New Job Application Received</h2>
@@ -765,7 +848,7 @@ def career_apply():
             </div>
             <div style="margin: 20px 0; padding: 15px; background-color: #FFF9E6; border-left: 4px solid #FB9F38; border-radius: 4px;">
                 <p style="margin: 0; color: #252C30; font-size: 13px;">
-                    <strong>Note:</strong> Resume/CV is attached to this email.
+                    <strong>Note:</strong> {'Resume/CV and portfolio documents are' if portfolio_data_list else 'Resume/CV is'} attached to this email.
                 </p>
             </div>
             <p style="color: #252C30; font-size: 16px; line-height: 1.6; margin: 30px 0 20px 0;">
@@ -780,13 +863,14 @@ def career_apply():
                 logo_url=logo_url
             )
             
+            # Send email with all attachments (resume + portfolio files)
             staff_email_sent, staff_error = send_email_direct(
                 to_emails=[hr_email, manager_email],
                 subject=staff_subject,
                 body=staff_body,
-                attachment_data=resume_data,
-                attachment_filename=resume_file.filename if resume_file else None,
-                attachment_mimetype=resume_mimetype
+                attachment_data=all_attachment_data if all_attachment_data else None,
+                attachment_filename=all_attachment_filenames if all_attachment_filenames else None,
+                attachment_mimetype=all_attachment_mimetypes if all_attachment_mimetypes else None
             )
             
             if staff_email_sent:
@@ -849,7 +933,7 @@ def test_email():
         print(f"\n--- Testing Email Sending to {test_email_address} ---")
         
         # Create HTML test email
-        logo_url = get_logo_base64()
+        logo_url = get_logo_url()
         test_content = """
             <h2 style="color: #14A751; margin-top: 0; font-size: 24px; font-weight: 600;">Email System Test</h2>
             <p style="color: #252C30; font-size: 16px; line-height: 1.6; margin: 20px 0;">
