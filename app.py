@@ -18,6 +18,7 @@ import traceback
 import base64
 import html
 import re
+import unicodedata
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key-change-this-in-production'
@@ -187,23 +188,73 @@ def sanitize_unicode_for_email(text):
     if not isinstance(text, str):
         text = str(text)
     
-    # Common Unicode characters that cause ASCII encoding issues
+    # Comprehensive list of Unicode characters that cause ASCII encoding issues
     replacements = {
+        # Quotation marks
         '\u2019': "'",  # Right single quotation mark
         '\u2018': "'",  # Left single quotation mark
         '\u201C': '"',  # Left double quotation mark
         '\u201D': '"',  # Right double quotation mark
+        '\u2032': "'",  # Prime (minutes)
+        '\u2033': '"',  # Double prime (seconds)
+        # Dashes
         '\u2013': '-',  # En dash
         '\u2014': '--', # Em dash
+        '\u2015': '--', # Horizontal bar
+        # Ellipsis and spaces
         '\u2026': '...', # Ellipsis
         '\u00A0': ' ',  # Non-breaking space
         '\u2009': ' ',  # Thin space
         '\u200B': '',   # Zero-width space
         '\uFEFF': '',   # Zero-width no-break space
+        '\u2008': ' ',  # Punctuation space
+        '\u2007': ' ',  # Figure space
+        # Symbols - CRITICAL: These cause the most encoding errors
+        '\u00A9': '(c)', # Copyright symbol ©
+        '\u00AE': '(R)', # Registered trademark ®
+        '\u2122': '(TM)', # Trademark ™
+        '\u2022': '*',  # Bullet point
+        '\u2020': '+',  # Dagger
+        '\u2021': '++', # Double dagger
+        '\u2190': '<-', # Left arrow
+        '\u2192': '->', # Right arrow
+        '\u2191': '^',  # Up arrow
+        '\u2193': 'v',  # Down arrow
+        # Currency and math
+        '\u20AC': 'EUR', # Euro
+        '\u00A3': 'GBP', # Pound
+        '\u00A5': 'JPY', # Yen
+        '\u00A2': 'cent', # Cent
+        '\u00D7': 'x',  # Multiplication
+        '\u00F7': '/',  # Division
+        # Fractions
+        '\u00BC': '1/4', # 1/4
+        '\u00BD': '1/2', # 1/2
+        '\u00BE': '3/4', # 3/4
     }
     
+    # Apply replacements
     for unicode_char, ascii_char in replacements.items():
         text = text.replace(unicode_char, ascii_char)
+    
+    # Fallback: Replace any remaining non-ASCII characters with their closest ASCII equivalent
+    # This is a safety net for any characters we might have missed
+    try:
+        # Try to encode as ASCII to find problematic characters
+        text.encode('ascii')
+    except UnicodeEncodeError:
+        # If encoding fails, replace non-ASCII characters
+        try:
+            # Normalize and replace problematic characters
+            normalized = unicodedata.normalize('NFKD', text)
+            text = ''.join(
+                c if ord(c) < 128 else 
+                (unicodedata.normalize('NFKD', c).encode('ascii', 'ignore').decode('ascii') or '?')
+                for c in normalized
+            )
+        except Exception:
+            # Last resort: remove all non-ASCII characters
+            text = text.encode('ascii', 'ignore').decode('ascii')
     
     return text
 
@@ -225,6 +276,10 @@ def create_html_email_template(title, content, logo_url=None):
     Create HTML email template with theme colors and logo
     Theme colors: Primary: #14A751, Secondary: #FB9F38, Light: #F5F8F2, Dark: #252C30
     """
+    # Sanitize title and content to prevent encoding issues
+    title = sanitize_unicode_for_email(title)
+    content = sanitize_unicode_for_email(content)
+    
     logo_html = ""
     if logo_url:
         logo_html = f'<img src="{logo_url}" alt="AL RAWABI FOOD STUFF Logo" style="width: 120px; height: auto; display: block; margin: 0 auto 20px;">'
@@ -267,7 +322,7 @@ def create_html_email_template(title, content, logo_url=None):
                                 Phone: +974 4497 1777 | Email: info@alrawabigroup.com
                             </p>
                             <p style="margin: 15px 0 0 0; font-size: 11px; color: #F5F8F2; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 15px;">
-                                &copy; {datetime.now().year} AL RAWABI FOOD STUFF. All rights reserved.
+                                (c) {datetime.now().year} AL RAWABI FOOD STUFF. All rights reserved.
                             </p>
                         </td>
                     </tr>
@@ -278,6 +333,8 @@ def create_html_email_template(title, content, logo_url=None):
 </body>
 </html>
 """
+    # Sanitize the entire template string to catch any Unicode that might have been inserted
+    html_template = sanitize_unicode_for_email(html_template)
     return html_template
 
 # Direct SMTP Email Function (More Reliable)
@@ -299,13 +356,15 @@ def send_email_direct(to_emails, subject, body, attachment_data=None, attachment
         if not subject or not body:
             return (False, "Subject and body are required")
         
+        # Sanitize subject before creating message
+        subject = sanitize_unicode_for_email(subject)
+        
         # Create message with UTF-8 encoding
-        msg = MIMEMultipart()
+        msg = MIMEMultipart('mixed')
         msg['From'] = smtp_username
         
-        # Sanitize and encode subject with UTF-8
-        sanitized_subject = sanitize_unicode_for_email(subject)
-        msg['Subject'] = Header(sanitized_subject, 'utf-8')
+        # Encode subject with UTF-8 using Header
+        msg['Subject'] = Header(subject, 'utf-8')
         
         # Handle multiple recipients
         if isinstance(to_emails, list):
@@ -394,16 +453,47 @@ def send_email_direct(to_emails, subject, body, attachment_data=None, attachment
         print(f"[INFO] SUBJECT: {subject}")
         
         # Send email with proper UTF-8 encoding
-        # msg.as_string() returns a string that should be UTF-8 compatible
-        # But we need to handle encoding errors gracefully
+        # All content has been sanitized before creating the message
         try:
+            # Get the message as string
+            # msg.as_string() returns a properly formatted RFC 2822 email string
             email_string = msg.as_string()
+            
+            # Final safety check: ensure the string can be encoded as UTF-8
+            # This catches any Unicode characters that might have slipped through
+            try:
+                email_string.encode('utf-8')
+            except UnicodeEncodeError as encode_err:
+                # If UTF-8 encoding fails, there's still a Unicode character
+                print(f"[WARN] UTF-8 encoding check failed, sanitizing email string...")
+                print(f"[WARN] Error: {str(encode_err)}")
+                # Sanitize the email string, but preserve email structure
+                # Only sanitize the content parts, not headers/boundaries
+                email_string = sanitize_unicode_for_email(email_string)
+            
+            # Send the email
+            # sendmail() accepts a string - Python's email library handles encoding
             server.sendmail(smtp_username, recipients, email_string)
-        except (UnicodeEncodeError, UnicodeDecodeError) as e:
-            # This should not happen if we sanitized properly, but handle it as a fallback
+        except (UnicodeEncodeError, UnicodeDecodeError, TypeError) as e:
+            # Comprehensive error handling
             error_msg = f"Failed to send email due to encoding error: {str(e)}"
             print(f"[ERROR] {error_msg}")
-            print(f"[ERROR] This indicates Unicode characters were not properly sanitized")
+            
+            # Extract character position if available for debugging
+            error_str = str(e)
+            if 'position' in error_str:
+                try:
+                    pos_part = error_str.split('position')[1].split(':')[0].strip()
+                    pos = int(pos_part)
+                    print(f"[ERROR] Problematic character at position: {pos}")
+                    if pos < len(email_string):
+                        problem_char = email_string[max(0, pos-10):pos+10]
+                        print(f"[ERROR] Context around error: {repr(problem_char)}")
+                        print(f"[ERROR] Problematic character: {repr(email_string[pos])} (Unicode: U+{ord(email_string[pos]):04X})")
+                except Exception as parse_err:
+                    print(f"[ERROR] Could not parse error position: {str(parse_err)}")
+            
+            print(f"[ERROR] Full error details: {traceback.format_exc()}")
             return (False, error_msg)
         server.quit()
         server = None  # Mark as closed
